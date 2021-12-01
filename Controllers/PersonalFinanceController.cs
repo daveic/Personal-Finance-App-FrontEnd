@@ -28,6 +28,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+
+            int TransactionSum = 0;
+            foreach (var item in Transactions)
+            {
+                TransactionSum += item.TrsValue;
+            }
+
+
+
             /*          
                         DateTime dateTime = Convert.ToDateTime(SelectedDate);
                         UniqueData uniqueData = new UniqueData();
@@ -65,23 +74,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
 
-           private IEnumerable<T> GetAllItems<T> (string type)
-    {
-            IEnumerable<T> detections = null;
-            string path = "GetAll" + type;
-            using (var client = new HttpClient())
+        private IEnumerable<T> GetAllItems<T> (string type)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<T>>();
-                readTask.Wait();
-                detections = readTask.Result;
+                IEnumerable<T> detections = null;
+                string path = "GetAll" + type;
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                    var responseTask = client.GetAsync(path);
+                    responseTask.Wait();
+                    var result = responseTask.Result;
+                    var readTask = result.Content.ReadAsAsync<List<T>>();
+                    readTask.Wait();
+                    detections = readTask.Result;
+                }
+                return (detections);
             }
-
-            return (detections);
-    }
 public ActionResult Credit_Details (int id)
 {
     Credit credit = null;
@@ -549,18 +557,8 @@ public ActionResult Ticket_Edit(Ticket t)
         }
         public IEnumerable<Ticket> GetTickets()
         {
-            IEnumerable<Ticket> tickets = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllTickets");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Ticket>>();
-                readTask.Wait();
-                tickets = readTask.Result;
-            }
-            return tickets;
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            return Tickets;
         }
         public ActionResult Credits()
         {
@@ -572,18 +570,8 @@ public ActionResult Ticket_Edit(Ticket t)
         }
         public IEnumerable<Credit> GetCredits()
         {
-            IEnumerable<Credit> credits = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllCredits");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Credit>>();
-                readTask.Wait();
-                credits = readTask.Result;
-            }
-            return credits;
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits));
+            return Credits;
         }
         public ActionResult Debits()
         {
@@ -595,38 +583,17 @@ public ActionResult Ticket_Edit(Ticket t)
         }
         public IEnumerable<Debit> GetDebits()
         {
-            IEnumerable<Debit> debits = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllDebits");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Debit>>();
-                readTask.Wait();
-                debits = readTask.Result;
-            }
-            return debits;
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
+            return Debits;
         }
         public ActionResult Transactions(int page = 0)
         {
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Transaction> detections = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllTransactions");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Transaction>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-
             //Pagination
             const int PageSize = 3;
-            var count = detections.Count();
-            var data = detections.Skip(page * PageSize).Take(PageSize).ToList();
+            var count = Transactions.Count();
+            var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
 
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
             this.ViewBag.Page = page;
@@ -640,19 +607,10 @@ public ActionResult Ticket_Edit(Ticket t)
         }
         public ActionResult KnownMovements()
         {
+            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements));
             ViewModel viewModel = new ViewModel();
-            IEnumerable<KnownMovement> detections = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllKnownMovements");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<KnownMovement>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-            viewModel.KnownMovements = detections;
+
+            viewModel.KnownMovements = KnownMovements;
             viewModel.KnownMovement = new KnownMovement();
             int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             viewModel.state = sendFlag;
