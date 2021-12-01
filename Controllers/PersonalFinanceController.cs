@@ -22,44 +22,44 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Credit> credits = null;
-            IEnumerable<Debit> debits = null;
-            IEnumerable<Bank> banks = null;
-            IEnumerable<Deposit> deposits = null;
-            IEnumerable<Ticket> tickets = null;
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
-/*          
-            DateTime dateTime = Convert.ToDateTime(SelectedDate);
-            UniqueData uniqueData = new UniqueData();
-            TempStatistics tempStatistics = new TempStatistics();
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits));
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
+            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            /*          
+                        DateTime dateTime = Convert.ToDateTime(SelectedDate);
+                        UniqueData uniqueData = new UniqueData();
+                        TempStatistics tempStatistics = new TempStatistics();
 
-            tempStatistics.Region = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Region));
-            tempStatistics.Province = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Province));
-            tempStatistics.City = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.City));
+                        tempStatistics.Region = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Region));
+                        tempStatistics.Province = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Province));
+                        tempStatistics.City = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.City));
 
-            var UniqueDate = detections.GroupBy(x => x.DateTime)
-                                       .OrderBy(x => x.Key)
-                                       .Select(x => new { DateTime = x.Key })
-                                       .ToList();
-            
-            uniqueData.UniqueDate = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
-            uniqueData.UniqueCity = tempStatistics.City.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
-            uniqueData.UniqueProvince = tempStatistics.Province.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
-            uniqueData.UniqueRegion = tempStatistics.Region.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
+                        var UniqueDate = detections.GroupBy(x => x.DateTime)
+                                                   .OrderBy(x => x.Key)
+                                                   .Select(x => new { DateTime = x.Key })
+                                                   .ToList();
 
-            if (!String.IsNullOrEmpty(SelectedDate)) detections = detections.AsQueryable().Where(x => x.DateTime == dateTime);
-            if (!String.IsNullOrEmpty(SelectedCity)) detections = detections.Where(s => s.WorldLocation.City == SelectedCity);
-            if (!String.IsNullOrEmpty(SelectedProvince)) detections = detections.Where(x => x.WorldLocation.Province == SelectedProvince);
-            if (!String.IsNullOrEmpty(SelectedRegion)) detections = detections.Where(x => x.WorldLocation.Region == SelectedRegion);
+                        uniqueData.UniqueDate = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
+                        uniqueData.UniqueCity = tempStatistics.City.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
+                        uniqueData.UniqueProvince = tempStatistics.Province.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
+                        uniqueData.UniqueRegion = tempStatistics.Region.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
 
-            //Pagination
-            const int PageSize = 3;
-            var count = detections.Count();
-            var data = detections.Skip(page * PageSize).Take(PageSize).ToList();
+                        if (!String.IsNullOrEmpty(SelectedDate)) detections = detections.AsQueryable().Where(x => x.DateTime == dateTime);
+                        if (!String.IsNullOrEmpty(SelectedCity)) detections = detections.Where(s => s.WorldLocation.City == SelectedCity);
+                        if (!String.IsNullOrEmpty(SelectedProvince)) detections = detections.Where(x => x.WorldLocation.Province == SelectedProvince);
+                        if (!String.IsNullOrEmpty(SelectedRegion)) detections = detections.Where(x => x.WorldLocation.Region == SelectedRegion);
 
-            this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
-            this.ViewBag.Page = page;
-       */
+                        //Pagination
+                        const int PageSize = 3;
+                        var count = detections.Count();
+                        var data = detections.Skip(page * PageSize).Take(PageSize).ToList();
+
+                        this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
+                        this.ViewBag.Page = page;
+                   */
             viewModel.Transactions = Transactions;
         //    viewModel.UniqueData = uniqueData;
             return View(viewModel);
@@ -118,7 +118,7 @@ public ActionResult Transaction_Details(int id)
     Transaction transaction = null;
     using (var client = new HttpClient())
     {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/PersonalFinanceAPI/");
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
         var responseTask = client.GetAsync($"GetTransactionId?id={id}");
         responseTask.Wait();
         var result = responseTask.Result;
@@ -539,33 +539,13 @@ public ActionResult Ticket_Edit(Ticket t)
         //GET ALL Methods
         public IEnumerable<Bank> GetBanks()
         {
-            IEnumerable<Bank> banks = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllBanks");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Bank>>();
-                readTask.Wait();
-                banks = readTask.Result;
-            }
-            return banks;
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
+            return Banks;
         }
         public IEnumerable<Deposit> GetDeposits()
         {
-            IEnumerable<Deposit> deposits = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllDeposits");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Deposit>>();
-                readTask.Wait();
-                deposits = readTask.Result;
-            }
-            return deposits;
+            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
+            return Deposits;
         }
         public IEnumerable<Ticket> GetTickets()
         {
