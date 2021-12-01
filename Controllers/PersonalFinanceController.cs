@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using WeatherReportsFrontEnd.Models;
+using PersonalFinanceFrontEnd.Models;
 
 
 
-namespace WeatherReportsFrontEnd.Controllers
+namespace PersonalFinanceFrontEnd.Controllers
 {        
 
     public class PersonalFinanceController : Controller
@@ -22,18 +22,13 @@ namespace WeatherReportsFrontEnd.Controllers
         {
             
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Transaction> detections = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync("GetAllTransactions");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<Transaction>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-/*
+            IEnumerable<Credit> credits = null;
+            IEnumerable<Debit> debits = null;
+            IEnumerable<Bank> banks = null;
+            IEnumerable<Deposit> deposits = null;
+            IEnumerable<Ticket> tickets = null;
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
+/*          
             DateTime dateTime = Convert.ToDateTime(SelectedDate);
             UniqueData uniqueData = new UniqueData();
             TempStatistics tempStatistics = new TempStatistics();
@@ -65,440 +60,457 @@ namespace WeatherReportsFrontEnd.Controllers
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
             this.ViewBag.Page = page;
        */
-            viewModel.Transactions = detections;
+            viewModel.Transactions = Transactions;
         //    viewModel.UniqueData = uniqueData;
             return View(viewModel);
         }
-       
-        public ActionResult Credit_Details (int id)
-        {
-            Credit credit = null;
+
+           private IEnumerable<T> GetAllItems<T> (string type)
+    {
+            IEnumerable<T> detections = null;
+            string path = "GetAll" + type;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetCreditId?id={id}");
+                var responseTask = client.GetAsync(path);
                 responseTask.Wait();
                 var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Credit>();
+                var readTask = result.Content.ReadAsAsync<List<T>>();
                 readTask.Wait();
-                credit = readTask.Result;
+                detections = readTask.Result;
             }
-            return PartialView(credit);
-        }
-        public ActionResult Debit_Details(int id)
-        {
-            Debit debit = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetDebitId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Debit>();
-                readTask.Wait();
-                debit = readTask.Result;
-            }
-            return PartialView(debit);
-        }
-        public ActionResult Transaction_Details(int id)
-        {
-            Transaction transaction = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetTransactionId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Transaction>();
-                readTask.Wait();
-                transaction = readTask.Result;
-            }
-            return PartialView(transaction);
-        }
-        public ActionResult KnownMovement_Details(int id)
-        {
-            KnownMovement KnownMovement = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetKnownMovementId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<KnownMovement>();
-                readTask.Wait();
-                KnownMovement = readTask.Result;
-            }
-            return PartialView(KnownMovement);
-        }
-        public ActionResult Bank_Details(int id)
-        {
-            Bank Bank = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetBankId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Bank>();
-                readTask.Wait();
-                Bank = readTask.Result;
-            }
-            return PartialView(Bank);
-        }
-        public ActionResult Deposit_Details(int id)
-        {
-            Deposit Deposit = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetDepositId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Deposit>();
-                readTask.Wait();
-                Deposit = readTask.Result;
-            }
-            return PartialView(Deposit);
-        }
-        public ActionResult Ticket_Details(int id)
-        {
-            Ticket ticket = null;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync($"GetTicketId?id={id}");
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<Ticket>();
-                readTask.Wait();
-                ticket = readTask.Result;
-            }
-            return PartialView(ticket);
-        }
 
-        //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-        public ActionResult Credit_Delete(int id)
-        {
-            return Credit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Credit_Delete(Credit c)
-        {
-            int credId = c.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteCredit?id={credId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagCred"] = 1;
-                    return RedirectToAction(nameof(Credits));
-                }
-            }
-            return View();
-        }
-        public ActionResult Debit_Delete(int id)
-        {
-            return Debit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Debit_Delete(Debit d)
-        {
-            int debitId = d.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteDebit?id={debitId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagDeb"] = 1;
-                    return RedirectToAction(nameof(Debits));
-                }
-            }
-            return View();
-        }
-        public ActionResult Transaction_Delete(int id)
-        {
-            return Transaction_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Transaction_Delete(Transaction d)
-        {
-            int transactionId = d.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteTransaction?id={transactionId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagTr"] = 1;
-                    return RedirectToAction(nameof(Transactions));
-                }
-            }
-            return View();
-        }
-        public ActionResult KnownMovement_Delete(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Delete(KnownMovement k)
-        {
-            int KnownMovementId = k.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteKnownMovement?id={KnownMovementId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagKM"] = 1;
-                    return RedirectToAction(nameof(KnownMovements));
-                }
-            }
-            return View();
-        }
-        public ActionResult Bank_Delete(int id)
-        {
-            return Bank_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Bank_Delete(Bank b)
-        {
-            int BankId = b.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteBank?id={BankId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagB"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
-        }
-        public ActionResult Deposit_Delete(int id)
-        {
-            return Deposit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Deposit_Delete(Deposit d)
-        {
-            int DepositId = d.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteDeposit?id={DepositId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagD"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
-        }
-        public ActionResult Ticket_Delete(int id)
-        {
-            return Ticket_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Ticket_Delete(Ticket t)
-        {
-            int TicketId = t.ID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteTicket?id={TicketId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagT"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
-        }
+            return (detections);
+    }
+public ActionResult Credit_Details (int id)
+{
+    Credit credit = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetCreditId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Credit>();
+        readTask.Wait();
+        credit = readTask.Result;
+    }
+    return PartialView(credit);
+}
+public ActionResult Debit_Details(int id)
+{
+    Debit debit = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetDebitId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Debit>();
+        readTask.Wait();
+        debit = readTask.Result;
+    }
+    return PartialView(debit);
+}
+public ActionResult Transaction_Details(int id)
+{
+    Transaction transaction = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetTransactionId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Transaction>();
+        readTask.Wait();
+        transaction = readTask.Result;
+    }
+    return PartialView(transaction);
+}
+public ActionResult KnownMovement_Details(int id)
+{
+    KnownMovement KnownMovement = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetKnownMovementId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<KnownMovement>();
+        readTask.Wait();
+        KnownMovement = readTask.Result;
+    }
+    return PartialView(KnownMovement);
+}
+public ActionResult Bank_Details(int id)
+{
+    Bank Bank = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetBankId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Bank>();
+        readTask.Wait();
+        Bank = readTask.Result;
+    }
+    return PartialView(Bank);
+}
+public ActionResult Deposit_Details(int id)
+{
+    Deposit Deposit = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetDepositId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Deposit>();
+        readTask.Wait();
+        Deposit = readTask.Result;
+    }
+    return PartialView(Deposit);
+}
+public ActionResult Ticket_Details(int id)
+{
+    Ticket ticket = null;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var responseTask = client.GetAsync($"GetTicketId?id={id}");
+        responseTask.Wait();
+        var result = responseTask.Result;
+        var readTask = result.Content.ReadAsAsync<Ticket>();
+        readTask.Wait();
+        ticket = readTask.Result;
+    }
+    return PartialView(ticket);
+}
 
-        //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-        public ActionResult Credit_Edit(int id)
+//DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
+public ActionResult Credit_Delete(int id)
+{
+    return Credit_Details(id);
+}
+[HttpPost]
+public ActionResult Credit_Delete(Credit c)
+{
+    int credId = c.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteCredit?id={credId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Credit_Details(id);
+            TempData["sendFlagCred"] = 1;
+            return RedirectToAction(nameof(Credits));
         }
-        [HttpPost]
-        public ActionResult Credit_Edit(Credit c)
+    }
+    return View();
+}
+public ActionResult Debit_Delete(int id)
+{
+    return Debit_Details(id);
+}
+[HttpPost]
+public ActionResult Debit_Delete(Debit d)
+{
+    int debitId = d.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteDebit?id={debitId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Credit>("UpdateCredit", c);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagCred"] = 2;
-                    return RedirectToAction(nameof(Credits));
-                }
-            }
-            return View();
+            TempData["sendFlagDeb"] = 1;
+            return RedirectToAction(nameof(Debits));
         }
-        public ActionResult Debit_Edit(int id)
+    }
+    return View();
+}
+public ActionResult Transaction_Delete(int id)
+{
+    return Transaction_Details(id);
+}
+[HttpPost]
+public ActionResult Transaction_Delete(Transaction d)
+{
+    int transactionId = d.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteTransaction?id={transactionId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Debit_Details(id);
+            TempData["sendFlagTr"] = 1;
+            return RedirectToAction(nameof(Transactions));
         }
-        [HttpPost]
-        public ActionResult Debit_Edit(Debit d)
+    }
+    return View();
+}
+public ActionResult KnownMovement_Delete(int id)
+{
+    return KnownMovement_Details(id);
+}
+[HttpPost]
+public ActionResult KnownMovement_Delete(KnownMovement k)
+{
+    int KnownMovementId = k.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteKnownMovement?id={KnownMovementId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Debit>("UpdateDebit", d);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagDeb"] = 2;
-                    return RedirectToAction(nameof(Debits));
-                }
-            }
-            return View();
+            TempData["sendFlagKM"] = 1;
+            return RedirectToAction(nameof(KnownMovements));
         }
-        public ActionResult Transaction_Edit(int id)
+    }
+    return View();
+}
+public ActionResult Bank_Delete(int id)
+{
+    return Bank_Details(id);
+}
+[HttpPost]
+public ActionResult Bank_Delete(Bank b)
+{
+    int BankId = b.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteBank?id={BankId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Transaction_Details(id);
+            TempData["sendFlagB"] = 1;
+            return RedirectToAction(nameof(Wallet));
         }
-        [HttpPost]
-        public ActionResult Transaction_Edit(Transaction t)
+    }
+    return View();
+}
+public ActionResult Deposit_Delete(int id)
+{
+    return Deposit_Details(id);
+}
+[HttpPost]
+public ActionResult Deposit_Delete(Deposit d)
+{
+    int DepositId = d.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteDeposit?id={DepositId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Transaction>("UpdateTransaction", t);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagTr"] = 2;
-                    return RedirectToAction(nameof(Transactions));
-                }
-            }
-            return View();
+            TempData["sendFlagD"] = 1;
+            return RedirectToAction(nameof(Wallet));
         }
-        public ActionResult KnownMovement_Edit(int id)
+    }
+    return View();
+}
+public ActionResult Ticket_Delete(int id)
+{
+    return Ticket_Details(id);
+}
+[HttpPost]
+public ActionResult Ticket_Delete(Ticket t)
+{
+    int TicketId = t.ID;
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.DeleteAsync($"DeleteTicket?id={TicketId}");
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return KnownMovement_Details(id);
+            TempData["sendFlagT"] = 1;
+            return RedirectToAction(nameof(Wallet));
         }
-        [HttpPost]
-        public ActionResult KnownMovement_Edit(KnownMovement k)
+    }
+    return View();
+}
+
+//EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
+public ActionResult Credit_Edit(int id)
+{
+    return Credit_Details(id);
+}
+[HttpPost]
+public ActionResult Credit_Edit(Credit c)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Credit>("UpdateCredit", c);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<KnownMovement>("UpdateKnownMovement", k);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagKM"] = 2;
-                    return RedirectToAction(nameof(KnownMovements));
-                }
-            }
-            return View();
+            TempData["sendFlagCred"] = 2;
+            return RedirectToAction(nameof(Credits));
         }
-        public ActionResult Bank_Edit(int id)
+    }
+    return View();
+}
+public ActionResult Debit_Edit(int id)
+{
+    return Debit_Details(id);
+}
+[HttpPost]
+public ActionResult Debit_Edit(Debit d)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Debit>("UpdateDebit", d);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Bank_Details(id);
+            TempData["sendFlagDeb"] = 2;
+            return RedirectToAction(nameof(Debits));
         }
-        [HttpPost]
-        public ActionResult Bank_Edit(Bank b)
+    }
+    return View();
+}
+public ActionResult Transaction_Edit(int id)
+{
+    return Transaction_Details(id);
+}
+[HttpPost]
+public ActionResult Transaction_Edit(Transaction t)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Transaction>("UpdateTransaction", t);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Bank>("UpdateBank", b);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagB"] = 2;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
+            TempData["sendFlagTr"] = 2;
+            return RedirectToAction(nameof(Transactions));
         }
-        public ActionResult Deposit_Edit(int id)
+    }
+    return View();
+}
+public ActionResult KnownMovement_Edit(int id)
+{
+    return KnownMovement_Details(id);
+}
+[HttpPost]
+public ActionResult KnownMovement_Edit(KnownMovement k)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<KnownMovement>("UpdateKnownMovement", k);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Deposit_Details(id);
+            TempData["sendFlagKM"] = 2;
+            return RedirectToAction(nameof(KnownMovements));
         }
-        [HttpPost]
-        public ActionResult Deposit_Edit(Deposit d)
+    }
+    return View();
+}
+public ActionResult Bank_Edit(int id)
+{
+    return Bank_Details(id);
+}
+[HttpPost]
+public ActionResult Bank_Edit(Bank b)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Bank>("UpdateBank", b);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Deposit>("UpdateDeposit", d);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagD"] = 2;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
+            TempData["sendFlagB"] = 2;
+            return RedirectToAction(nameof(Wallet));
         }
-        public ActionResult Ticket_Edit(int id)
+    }
+    return View();
+}
+public ActionResult Deposit_Edit(int id)
+{
+    return Deposit_Details(id);
+}
+[HttpPost]
+public ActionResult Deposit_Edit(Deposit d)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Deposit>("UpdateDeposit", d);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            return Deposit_Details(id);
+            TempData["sendFlagD"] = 2;
+            return RedirectToAction(nameof(Wallet));
         }
-        [HttpPost]
-        public ActionResult Ticket_Edit(Ticket t)
+    }
+    return View();
+}
+public ActionResult Ticket_Edit(int id)
+{
+    return Deposit_Details(id);
+}
+[HttpPost]
+public ActionResult Ticket_Edit(Ticket t)
+{
+    using (var client = new HttpClient())
+    {
+        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+        var postTask = client.PutAsJsonAsync<Ticket>("UpdateTicket", t);
+        postTask.Wait();
+        var result = postTask.Result;
+        if (result.IsSuccessStatusCode)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<Ticket>("UpdateTicket", t);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagT"] = 2;
-                    return RedirectToAction(nameof(Wallet));
-                }
-            }
-            return View();
+            TempData["sendFlagT"] = 2;
+            return RedirectToAction(nameof(Wallet));
         }
+    }
+    return View();
+}
 
 
 
 
 
 
-        /*    private List<AreaListItem> GetAreaListItem (IEnumerable<IGrouping<string, TempDetection>> areaGroup)
-            {
-                List<AreaListItem> AreaList = new List<AreaListItem>();
-                foreach (var item in areaGroup) {
-                    AreaListItem areaListItem = new AreaListItem();
-                    areaListItem.AreaName = item.Key;
-                    areaListItem.TempData.MaxTemp = item.OrderByDescending(g => g.TempMax).FirstOrDefault().TempMax;
-                    areaListItem.TempData.MinTemp = item.OrderByDescending(g => g.TempMin).Last().TempMin;
-                    AreaList.Add(areaListItem);
-                    }
-                 return (AreaList);
+/*    private List<AreaListItem> GetAreaListItem (IEnumerable<IGrouping<string, TempDetection>> areaGroup)
+    {
+        List<AreaListItem> AreaList = new List<AreaListItem>();
+        foreach (var item in areaGroup) {
+            AreaListItem areaListItem = new AreaListItem();
+            areaListItem.AreaName = item.Key;
+            areaListItem.TempData.MaxTemp = item.OrderByDescending(g => g.TempMax).FirstOrDefault().TempMax;
+            areaListItem.TempData.MinTemp = item.OrderByDescending(g => g.TempMin).Last().TempMin;
+            AreaList.Add(areaListItem);
             }
-            */
+         return (AreaList);
+    }
+    */
         //CREDITS DEBITS Intermediate view
         public ActionResult Credits_Debits()
         {

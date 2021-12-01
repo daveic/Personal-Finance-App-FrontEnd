@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WeatherReportsFrontEnd.Models
+namespace PersonalFinanceFrontEnd.Models
 {
     public class TempDetection
     {

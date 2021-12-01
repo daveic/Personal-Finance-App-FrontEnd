@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 
 
-namespace WeatherReportsFrontEnd.Models
+namespace PersonalFinanceFrontEnd.Models
 {
     public class TempStatistics
     {

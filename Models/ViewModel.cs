@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace WeatherReportsFrontEnd.Models
+namespace PersonalFinanceFrontEnd.Models
 {
     public class ViewModel
     {
@@ -20,8 +20,6 @@ namespace WeatherReportsFrontEnd.Models
         public Credit Credit { get; set; }
         public IEnumerable<Debit> Debits { get; set; }
         public Debit Debit { get; set; }
-        public TempStatistics TempStatistics { get; set; }
-        public UniqueData UniqueData { get; set; }
         public int state { get; internal set; }
     }
 }

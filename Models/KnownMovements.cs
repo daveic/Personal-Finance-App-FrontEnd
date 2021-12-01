@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WeatherReportsFrontEnd.Models
+namespace PersonalFinanceFrontEnd.Models
 {
     public class KnownMovement
     {
