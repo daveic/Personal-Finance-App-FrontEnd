@@ -1,0 +1,188 @@
+﻿@model ViewModel
+<h2>Archivio Transazioni</h2>
+<br />
+<!-- Modal ADD-->
+<div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuova transazione</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="Transaction_Add" model="Model.Transaction" />
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<!-- Modal EDIT-->
+<div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDiv">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal DELETE-->
+<div class="modal fade" id="deleteitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivDel">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal DETAILS-->
+<div class="modal fade" id="detailsitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivDet">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.state == 1)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
+    </div>
+}
+else if (Model.state == 2)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione modificata correttamente.</p>
+    </div>
+}
+else if (Model.state == 3)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione creata correttamente.</p>
+    </div>
+}
+
+<div class="card shadow p-3 border-info mb-3" style="margin: 0 auto;">
+    <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button></div>
+    <div class="card-body">
+        <div class="table-responsive-xl">
+            <table class="table table-striped table-hover">
+
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Codice Transazione</th>
+                        <th scope="col">Titolo</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Importo</th>
+                        <th scope="col">Note</th>
+                        <th scope="col">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Transactions)
+                    {
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.TrsCode</td>
+                            <td>@item.TrsTitle</td>
+                            <td>@item.TrsDateTime.ToString("dd/MM/yyyy")</td>
+                            <td>@item.TrsValue</td>
+                            <td>@item.TrsNote</td>
+                            <td style='white-space: nowrap'>
+                                <div class="btn-group">
+                                    <a href="#" type="button" class="btn btn-secondary" onclick="Details(@item.ID)">Details</a>
+                                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                        <li><a href="#" class="btn btn-danger dropdown-item" onclick="Edit(@item.ID)">Edit</a></li>
+                                        <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10"></div>
+        <div class="col-1" style='white-space: nowrap'>
+            <div>
+                <ul class="pagination pagination-sm">
+                    @if (ViewBag.Page > 0)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" style="margin-left: 40px; background-color: #2574A9" href="@Url.Action("Transactions", new { page = ViewBag.Page - 1 })">&laquo; Precedente</a>
+                        </li>
+                    }
+                    @if (ViewBag.Page < ViewBag.MaxPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions", new { page = ViewBag.Page + 1 })">Successivo &raquo;</a>
+                        </li>
+                    }
+
+                </ul>
+            </div>           
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#edititem").modal("show");
+            })
+        }
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+        function Details(ClientID) {
+            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+    </script>
+}

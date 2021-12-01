@@ -1,0 +1,24 @@
+﻿@model WeatherReportsFrontEnd.Models.Credit
+
+<form asp-action="Credit_Details" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                Di seguito i dettagli del credito selezionato:
+                <br /><br />Credito n°: @Model.ID
+                <br />Codice Credito: @Model.CredCode
+                <br />Titolo: @Model.CredTitle
+                <br />Debitore: @Model.DebName
+                <br />Importo: @Model.CredValue
+                <br />Data inserimento: @Model.CredDateTime
+                <br /><br />Note: <br />@Model.CredNote
+                <br /><br />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+    </div>
+</form>

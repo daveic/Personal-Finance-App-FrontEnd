@@ -1,0 +1,42 @@
+﻿@model WeatherReportsFrontEnd.Models.Debit
+
+<form asp-action="Debit_Delete" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                Stai per eliminare il seguente debito:
+                <br /><br />Credito n°: @Model.ID
+                <br />Titolo: @Model.DebTitle
+                <br />Debitore: @Model.CredName
+                <br />Importo: @Model.DebValue
+                <br /><br />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <b>Vuoi confermare?</b>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+        <button type="submit" class="btn btn-danger">Elimina</button>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

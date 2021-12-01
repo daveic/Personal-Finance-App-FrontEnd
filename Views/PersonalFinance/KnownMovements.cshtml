@@ -1,0 +1,190 @@
+﻿@model ViewModel
+<h2>Movimenti ricorrenti e noti</h2>
+<br />
+<!-- Modal ADD-->
+
+<div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuovo movimento</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="KnownMovement_Add" model="Model.KnownMovement" />
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<!-- Modal EDIT-->
+<div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDiv">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal DELETE-->
+<div class="modal fade" id="deleteitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivDel">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.state == 1)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
+    </div>
+}
+else if (Model.state == 2)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione modificata correttamente.</p>
+    </div>
+}
+else if (Model.state == 3)
+{
+    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Transazione creata correttamente.</p>
+    </div>
+}
+
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-9">
+        <div class="card shadow p-3 border-warning mb-3" style="margin: 0 auto;">
+            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi movimento</button></div>
+            <div class="card-body">
+                <div class="table-responsive-xl">
+                    <table class="table table-striped table-hover">
+
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Titolo</th>
+                                <th scope="col">Importo</th>
+                                <th scope="col">Note</th>
+                                <th scope="col">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.KnownMovements)
+                            {
+                                <tr>
+                                    <td>@item.ID</td>
+                                    <td>@item.KMType</td>
+                                    <td>@item.KMTitle</td>
+                                    <td>@item.KMValue</td>
+                                    <td>@item.KMNote</td>
+                                    <td style='white-space: nowrap'>
+                                        <div class="btn-group">
+                                            <a href="#" type="button" class="btn btn-secondary" onclick="Edit(@item.ID)">Edit</a>
+                                            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                                <span class="visually-hidden">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                                <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header">In/Out Fissi</div>
+            <div class="card-body">
+                <h4 class="card-title">PREVISIONI MOVIMENTI</h4>
+                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br />La somma verrà utilizzata nella sezione dedicata alle previsioni per stimare un andamento futuro del proprio wallet.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts {
+    <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/KnownMovement_Edit/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#edititem").modal("show");
+            })
+        }
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/KnownMovement_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+        function Details(ClientID) {
+            var url = "/PersonalFinance/KnownMovement_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

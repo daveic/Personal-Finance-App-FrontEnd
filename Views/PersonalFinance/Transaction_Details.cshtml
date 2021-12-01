@@ -1,0 +1,23 @@
+﻿@model WeatherReportsFrontEnd.Models.Transaction
+
+<form asp-action="Transaction_Details" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                Di seguito i dettagli della transazione selezionata:
+                <br /><br />Transazione n°: @Model.ID
+                <br />Codice Transazione: @Model.TrsCode
+                <br />Titolo: @Model.TrsTitle
+                <br />Importo: @Model.TrsValue
+                <br />Data inserimento: @Model.TrsDateTime
+                <br /><br />Note: <br />@Model.TrsNote
+                <br /><br />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+    </div>
+</form>

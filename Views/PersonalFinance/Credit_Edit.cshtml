@@ -1,0 +1,69 @@
+﻿@model WeatherReportsFrontEnd.Models.Credit
+
+
+
+
+<form asp-action="Credit_Edit" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <h4>Modifica credito con ID: @Model.ID</h4>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="CredCode">Codice Credito</label>
+                <input type="text" class="form-control" asp-for="CredCode" style="background-color: #444">
+                <span asp-validation-for="CredCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="CredTitle">Titolo</label>
+                <input type="text" class="form-control" asp-for="CredTitle" style="background-color: #444">
+                <span asp-validation-for="CredTitle" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="DebName">Debitore</label>
+                <input type="text" class="form-control" asp-for="DebName" style="background-color: #444">
+                <span asp-validation-for="DebName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="CredValue">Importo</label>
+                <input type="text" class="form-control" asp-for="CredValue" placeholder="€" style="background-color: #444">
+                <span asp-validation-for="CredValue" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="recipient-name" class="col-form-label" asp-for="CredDateTime">Data inserimento</label>
+                <input type="date" class="form-control" asp-for="CredDateTime" style="background-color: #444">
+                <span asp-validation-for="CredDateTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="message-text" class="col-form-label" asp-for="CredNote">Note:</label>
+                <textarea class="form-control" id="message-text" asp-for="CredNote" style="background-color: #444"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

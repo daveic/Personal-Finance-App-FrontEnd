@@ -1,0 +1,42 @@
+﻿@model WeatherReportsFrontEnd.Models.Ticket
+
+<form asp-action="Ticket_Delete" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                Stai per eliminare il seguente ticket:
+                <br /><br />Deposito n°: @Model.ID
+                <br />Gestore: @Model.TicketName
+                <br />N° ticket residui: @Model.NumTicket
+                <br />Valore ticket: @Model.TicketValue
+                <br /><br />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <b>Vuoi confermare?</b>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+        <button type="submit" class="btn btn-danger">Elimina</button>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

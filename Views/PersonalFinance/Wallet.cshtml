@@ -1,0 +1,356 @@
+﻿@model ViewModel
+
+<h2>Wallet</h2>
+
+<br />
+<!-- Modal ADD-->
+<div class="modal fade" id="newbank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuovo</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="Bank_Add" model="Model.Bank" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="newdeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuovo</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="Deposit_Add" model="Model.Deposit" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="newticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuovo</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="Ticket_Add" model="Model.Ticket" />
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<!-- Modal EDIT-->
+<div class="modal fade" id="editbank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivbe">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editdeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivde">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivte">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal DELETE-->
+<div class="modal fade" id="deletebank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivbd">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deletedeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivdd">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivtd">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-10">
+        <h3>Conti correnti e carte</h3>
+    </div>
+</div>
+<div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+    <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newbank" data-whatever="getbootstrap">Aggiungi conto</button></div>
+    <div class="card-body">
+        <div class="table-responsive-xl">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Banca</th>
+                        <th scope="col">IBAN</th>
+                        <th scope="col">Saldo attuale (in €)</th>
+                        <th scope="col">Note</th>
+                        <th scope="col">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Banks)
+                    {
+                    <tr>
+                        <td>@item.ID</td>
+                        <td>@item.BankName</td>
+                        <td>@item.Iban</td>
+                        <td type="number">@item.BankValue</td>
+                        <td>@item.BankNote</td>
+                        <td style='white-space: nowrap'>
+                            <a href="#" class="btn btn-secondary btn-sm" onclick="EditBank(@item.ID)">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" onclick="DeleteBank(@item.ID)">Delete</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-sm-10">
+                <h3>Depositi</h3>
+            </div>
+        </div>
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newdeposit" data-whatever="getbootstrap">Aggiungi deposito</button></div>
+            <div class="card-body">
+                <div class="table-responsive-xl">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Banca</th>
+                                <th scope="col">Data inizio</th>
+                                <th scope="col">Data fine</th>
+                                <th scope="col">Valore (in €)</th>
+                                <th scope="col">% rendita</th>
+                                <th scope="col">Note</th>
+                                <th scope="col">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Deposits)
+                            {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.BankName</td>
+                                <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                <td type="number">@item.DepValue</td>
+                                <td>@item.PercGrow</td>
+                                <td>@item.BankNote</td>
+                                <td style='white-space: nowrap'>
+                                    <a href="#" class="btn btn-secondary btn-sm" onclick="EditDeposit(@item.ID)">Edit</a>
+                                    <a href="#" class="btn btn-danger btn-sm" onclick="DeleteDeposit(@item.ID)">Delete</a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <div class="row">
+            <div class="col-sm-10">
+                <h3>Ticket</h3>
+            </div>
+        </div>
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newticket" data-whatever="getbootstrap">Aggiungi ticket</button></div>
+            <div class="card-body">
+                <div class="table-responsive-xl">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Gestore</th>
+                                <th scope="col">Valore (in €)</th>
+                                <th scope="col">Numero</th>
+                                <th scope="col">Note</th>
+                                <th scope="col">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Tickets)
+                            {
+                                <tr>
+                                    <td>@item.ID</td>
+                                    <td>@item.TicketName</td>
+                                    <td>@item.TicketValue</td>
+                                    <td type="number">@item.NumTicket</td>
+                                    <td>@item.TicketNote</td>
+                                    <td style='white-space: nowrap'>
+                                        <a href="#" class="btn btn-secondary btn-sm" onclick="EditTicket(@item.ID)">Edit</a>
+                                        <a href="#" class="btn btn-danger btn-sm" onclick="DeleteTicket(@item.ID)">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script>
+        function EditBank(ClientID) {
+            var url = "/PersonalFinance/Bank_Edit/" + ClientID;
+            $("#ModalBodyDivbe").load(url, function () {
+                $("#editbank").modal("show");
+            })
+        }
+        function DeleteBank(ClientID) {
+            var url = "/PersonalFinance/Bank_Delete/" + ClientID;
+            $("#ModalBodyDivbd").load(url, function () {
+                $("#deletebank").modal("show");
+            })
+        }
+        
+        function EditDeposit(ClientID) {
+            var url = "/PersonalFinance/Deposit_Edit/" + ClientID;
+            $("#ModalBodyDivde").load(url, function () {
+                $("#editdeposit").modal("show");
+            })
+        }
+        function DeleteDeposit(ClientID) {
+            var url = "/PersonalFinance/Deposit_Delete/" + ClientID;
+            $("#ModalBodyDivdd").load(url, function () {
+                $("#deletedeposit").modal("show");
+            })
+        }
+
+        function EditTicket(ClientID) {
+            var url = "/PersonalFinance/Ticket_Edit/" + ClientID;
+            $("#ModalBodyDivte").load(url, function () {
+                $("#editticket").modal("show");
+            })
+        }
+        function DeleteTicket(ClientID) {
+            var url = "/PersonalFinance/Ticket_Delete/" + ClientID;
+            $("#ModalBodyDivtd").load(url, function () {
+                $("#deleteticket").modal("show");
+            })
+        }
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

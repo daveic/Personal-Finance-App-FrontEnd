@@ -1,0 +1,30 @@
+﻿@model WeatherReportsFrontEnd.Models.Debit
+
+<form asp-action="Debit_Details" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                Di seguito i dettagli del debito selezionato:
+                <br /><br />Debito n°: @Model.ID
+                <br />Codice Debito: @Model.DebCode
+                <br />Titolo: @Model.DebTitle
+                <br />Creditore: @Model.CredName
+                <br />Importo: @Model.DebValue€
+                <br />Data scadenza: @Model.DebDateTime
+                <br />Data inserimento: @Model.DebInsDate
+                <br />N° rate: @Model.RtNum
+                <br />N° rate pagate: @Model.RtPaid
+                <br />N° rate residue: @(Model.RtNum - Model.RtPaid)
+                <br />Importo singola rata: @(Model.DebValue/Model.RtNum)
+                <br />Importo rimanente: @Model.RemainToPay€
+                <br /><br />Note: <br />@Model.DebNote
+                <br /><br />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+    </div>
+</form>

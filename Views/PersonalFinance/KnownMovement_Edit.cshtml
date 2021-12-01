@@ -1,0 +1,41 @@
+﻿@model WeatherReportsFrontEnd.Models.KnownMovement
+
+
+<form asp-action="KnownMovement_Edit" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="ID" />
+        <div class="form-row">
+            <h4>Modifica movimento con ID: @Model.ID</h4>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="recipient-name" class="col-form-label" asp-for="KMTitle">Titolo</label>
+                <input type="text" class="form-control" asp-for="KMTitle" style="background-color: #444">
+                <span asp-validation-for="KMTitle" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="KMType">Tipo</label>
+                <input type="text" class="form-control" asp-for="KMType" style="background-color: #444">
+                <span asp-validation-for="KMType" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="KMValue">Importo</label>
+                <input type="text" class="form-control" asp-for="KMValue" style="background-color: #444">
+                <span asp-validation-for="KMValue" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="message-text" class="col-form-label" asp-for="KMNote">Note:</label>
+                <textarea class="form-control" id="message-text" asp-for="KMNote" style="background-color: #444"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,61 @@
+﻿@model WeatherReportsFrontEnd.Models.Transaction
+
+
+<form asp-action="Transaction_Add" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="TrsCode">Codice Transazione</label>
+                <input type="text" class="form-control" asp-for="TrsCode" style="background-color: #444">
+                <span asp-validation-for="TrsCode" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
+                <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
+                <span asp-validation-for="TrsTitle" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="TrsValue">Importo</label>
+                <input type="text" class="form-control" asp-for="TrsValue" style="background-color: #444" value="" placeholder="€">
+                <span asp-validation-for="TrsValue" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
+                <input type="date" class="form-control" id="theDate" asp-for="TrsDateTime" style="background-color: #444" value="gg/mm/YYY">
+                <span asp-validation-for="TrsDateTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="message-text" class="col-form-label" asp-for="TrsNote">Note:</label>
+                <textarea class="form-control" id="message-text" asp-for="TrsNote" style="background-color: #444"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+        </div>
+    </div>
+</form>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day + "T00:00";
+            $("#theDate").attr("value", today);
+        });
+    </script>
+}
