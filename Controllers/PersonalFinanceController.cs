@@ -112,6 +112,7 @@ public ActionResult Debit_Details(int id)
     }
     return PartialView(debit);
 }
+
 public ActionResult Transaction_Details(int id)
 {
     Transaction transaction = null;
