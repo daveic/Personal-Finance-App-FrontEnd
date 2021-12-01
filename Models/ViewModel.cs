@@ -21,5 +21,10 @@ namespace PersonalFinanceFrontEnd.Models
         public IEnumerable<Debit> Debits { get; set; }
         public Debit Debit { get; set; }
         public int state { get; internal set; }
+        public int TransactionSum { get; set; }
+        public int CreditSum { get; set; }
+        public int DebitSum { get; set; }
+        public int TotWithDebits { get; set; }
+        public int TotNoDebits { get; set; }
     }
 }

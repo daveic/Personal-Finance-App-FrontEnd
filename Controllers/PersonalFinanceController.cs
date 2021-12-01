@@ -34,7 +34,20 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 TransactionSum += item.TrsValue;
             }
-
+            int CreditSum = 0;
+            foreach (var item in Credits)
+            {
+                CreditSum += item.CredValue;
+            }
+            int DebitSum = 0;
+            foreach (var item in Debits)
+            {
+                DebitSum += item.DebValue;
+            }
+            // Totale saldo + crediti - debiti
+            int TotWithDebits = TransactionSum + CreditSum - DebitSum;
+            // Totale saldo + crediti
+            int TotNoDebits = TransactionSum + CreditSum;
 
 
             /*          
@@ -69,7 +82,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                         this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
                         this.ViewBag.Page = page;
                    */
-            viewModel.Transactions = Transactions;
+            viewModel.TransactionSum = TransactionSum;
+            viewModel.CreditSum = CreditSum;
+            viewModel.DebitSum = DebitSum;
+            viewModel.TotWithDebits = TotWithDebits;
+            viewModel.TotNoDebits = TotNoDebits;
         //    viewModel.UniqueData = uniqueData;
             return View(viewModel);
         }
