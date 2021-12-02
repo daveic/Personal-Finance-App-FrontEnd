@@ -37,5 +37,23 @@
         </div>
     </div>
 </div>
-
-
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-6">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header">TOTALE + CREDITI - DEBITI</div>
+            <div class="card-body">
+                <h4 class="card-title">Saldo totale: @Model.TotWithDebits €</h4>
+                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header">TOTALE + CREDITI</div>
+            <div class="card-body">
+                <h4 class="card-title">Saldo totale: @Model.TotNoDebits €</h4>
+                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+            </div>
+        </div>
+    </div>
+</div>
