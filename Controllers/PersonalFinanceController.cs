@@ -92,127 +92,72 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
         private IEnumerable<T> GetAllItems<T> (string type)
+        {
+            IEnumerable<T> detections = null;
+            string path = "GetAll" + type;
+            using (var client = new HttpClient())
             {
-                IEnumerable<T> detections = null;
-                string path = "GetAll" + type;
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                    var responseTask = client.GetAsync(path);
-                    responseTask.Wait();
-                    var result = responseTask.Result;
-                    var readTask = result.Content.ReadAsAsync<List<T>>();
-                    readTask.Wait();
-                    detections = readTask.Result;
-                }
-                return (detections);
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<List<T>>();
+                readTask.Wait();
+                detections = readTask.Result;
             }
-public ActionResult Credit_Details (int id)
-{
-    Credit credit = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetCreditId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Credit>();
-        readTask.Wait();
-        credit = readTask.Result;
-    }
-    return PartialView(credit);
-}
-public ActionResult Debit_Details(int id)
-{
-    Debit debit = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetDebitId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Debit>();
-        readTask.Wait();
-        debit = readTask.Result;
-    }
-    return PartialView(debit);
-}
-
-public ActionResult Transaction_Details(int id)
-{
-    Transaction transaction = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetTransactionId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Transaction>();
-        readTask.Wait();
-        transaction = readTask.Result;
-    }
-    return PartialView(transaction);
-}
-public ActionResult KnownMovement_Details(int id)
-{
-    KnownMovement KnownMovement = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetKnownMovementId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<KnownMovement>();
-        readTask.Wait();
-        KnownMovement = readTask.Result;
-    }
-    return PartialView(KnownMovement);
-}
-public ActionResult Bank_Details(int id)
-{
-    Bank Bank = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetBankId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Bank>();
-        readTask.Wait();
-        Bank = readTask.Result;
-    }
-    return PartialView(Bank);
-}
-public ActionResult Deposit_Details(int id)
-{
-    Deposit Deposit = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetDepositId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Deposit>();
-        readTask.Wait();
-        Deposit = readTask.Result;
-    }
-    return PartialView(Deposit);
-}
-public ActionResult Ticket_Details(int id)
-{
-    Ticket ticket = null;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var responseTask = client.GetAsync($"GetTicketId?id={id}");
-        responseTask.Wait();
-        var result = responseTask.Result;
-        var readTask = result.Content.ReadAsAsync<Ticket>();
-        readTask.Wait();
-        ticket = readTask.Result;
-    }
-    return PartialView(ticket);
-}
+            return (detections);
+        }
+        private T GetItemID<T>(string type, int id) where T : new()
+        {
+            T detection = new T();     
+            string path = "Get" + type + "Id?id=" + id;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<T>();
+                readTask.Wait();
+                detection = readTask.Result;
+            }
+            return (detection);
+        }
+        public ActionResult Credit_Details (int id)
+        {
+            Credit Credit = GetItemID<Credit>(nameof(Credit), id); 
+            return PartialView(Credit);
+        }
+        public ActionResult Debit_Details(int id)
+        {
+            Debit Debit = GetItemID<Debit>(nameof(Debit), id);
+            return PartialView(Debit);
+        }
+        public ActionResult Transaction_Details(int id)
+        {
+            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);   
+            return PartialView(Transaction);
+        }
+        public ActionResult KnownMovement_Details(int id)
+        {
+            KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
+            return PartialView(KnownMovement);
+        }
+        public ActionResult Bank_Details(int id)
+        {
+            Bank Bank = GetItemID<Bank>(nameof(Bank), id);
+            return PartialView(Bank);
+        }
+        public ActionResult Deposit_Details(int id)
+        {
+            Deposit Deposit = GetItemID<Deposit>(nameof(Deposit), id);
+            return PartialView(Deposit);
+        }
+        public ActionResult Ticket_Details(int id)
+        {
+            Ticket Ticket = GetItemID<Ticket>(nameof(Ticket), id);
+            return PartialView(Ticket);
+        }
 
 //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
 public ActionResult Credit_Delete(int id)
