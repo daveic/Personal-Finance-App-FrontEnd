@@ -57,3 +57,101 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
+
+
+</script>
+
+<div id="chart_div"></div>
+
+
+<script>
+    google.charts.load('current', { packages: ['corechart', 'line'] });
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+
+        var items = @Html.Raw(ViewBag.Transactions);
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'X');
+        data.addColumn('number', 'Dogs');
+           var n = 0;
+ 
+        for (i = 0; i < items.length; i++) {
+            str = items[i].TrsDateTime;
+            str = str.substring(0, str.indexOf('T'))
+            data.addRows([
+                [str, items[i].TrsValue]
+            ]);
+
+             }
+        /*     var currentDate = items[1].TrsDateTime;
+
+             var date = currentDate.getDate();
+             var month = currentDate.getMonth(); //Be careful! January is 0 not 1
+             var year = currentDate.getFullYear();
+             /*
+             for (i = 0; i < items.length; {
+             data.addRows([
+                 [items[i].TrsDateTime, n + 1]
+             ]);
+     [new Date(2012, 6, 13), 23]
+             }
+
+     */
+
+        var options = {
+            hAxis: {
+                title: 'Tempo'
+            },
+            vAxis: {
+                title: 'Saldo'
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+    }
+    var options = {
+        'title': 'How Much Pizza I Ate Last Night',
+        'width': 400,
+        'height': 300
+    };
+
+</script>
+<!--
+
+    <script src="~/js/drawBasic.js"></script>
+   // <script>drawBasic('') </script>
+    <div id="chart_div"></div>
+-->

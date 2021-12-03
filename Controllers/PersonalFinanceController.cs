@@ -49,7 +49,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             // Totale saldo + crediti
             int TotNoDebits = TransactionSum + CreditSum;
 
-
+            
             /*          
                         DateTime dateTime = Convert.ToDateTime(SelectedDate);
                         UniqueData uniqueData = new UniqueData();
@@ -82,6 +82,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                         this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
                         this.ViewBag.Page = page;
                    */
+            foreach (var item in Transactions)
+            {
+                item.TrsDateTime = item.TrsDateTime.Date;
+            }
+            string json = JsonConvert.SerializeObject(Transactions);
+            ViewBag.Transactions = json;
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
             viewModel.DebitSum = DebitSum;
