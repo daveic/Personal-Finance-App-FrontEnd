@@ -28,6 +28,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances));
 
             int TransactionSum = 0;
             foreach (var item in Transactions)
@@ -82,12 +83,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                         this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
                         this.ViewBag.Page = page;
                    */
-            foreach (var item in Transactions)
+            foreach (var item in Balances)
             {
-                item.TrsDateTime = item.TrsDateTime.Date;
+                item.BalDateTime = item.BalDateTime.Date;
             }
-            string json = JsonConvert.SerializeObject(Transactions);
-            ViewBag.Transactions = json;
+            string json = JsonConvert.SerializeObject(Balances);
+            ViewBag.Balances = json;
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
             viewModel.DebitSum = DebitSum;

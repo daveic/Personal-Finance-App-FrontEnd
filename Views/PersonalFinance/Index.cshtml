@@ -95,7 +95,7 @@
            var n = 0;
 
         for (i = 0; i < items.length; i++) {
-            str = items[i].TrsDateTime;
+            str = items[i].BalDateTime;
             var strDay = str. //converti giorno, mese e anno
             str = str.substring(0, str.indexOf('T'))
             data.addRows([
@@ -221,12 +221,12 @@
     };
     var i = 0;
 
-    var items = @Html.Raw(ViewBag.Transactions);
+    var items = @Html.Raw(ViewBag.Balances);
     var values = new Array(items.length);
     var strDate = new Array(items.length);
     for (i = 0; i < items.length; i++) {
-        strDate[i] = items[i].TrsDateTime;
-        values[i] = items[i].TrsValue;
+        strDate[i] = items[i].BalDateTime;
+        values[i] = items[i].ActBalance;
      //   strDate[i] = strDate[i].substring(0, strDate[i].indexOf('T'))
     }
    /* const weight = [60.0, 60.2, 59.1, 61.4, 59.9, 60.2, 59.8, 58.6, 59.6, 59.2];
