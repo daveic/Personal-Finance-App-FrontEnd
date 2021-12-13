@@ -18,7 +18,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
-        public ActionResult Index(string selectedYear, string SelectedProvince, string SelectedRegion, string SelectedDate, int page=0)
+        public ActionResult Index(string selectedYear, string selectedMonth, string SelectedRegion, string SelectedDate, int page=0)
         {
             
             ViewModel viewModel = new ViewModel();
@@ -50,10 +50,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             // Totale saldo + crediti
             int TotNoDebits = TransactionSum + CreditSum;
 
-                          var UniqueDate = Balances.GroupBy(x => x.BalDateTime.Year)
-                                                   .OrderBy(x => x.Key)
-                                                   .Select(x => new { DateTime = x.Key })
-                                                   .ToList();
+            var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
+                                    .OrderBy(x => x.Key)
+                                    .Select(x => new { Year = x.Key })
+                                    .ToList();
+
+
             /*          
                         DateTime dateTime = Convert.ToDateTime(SelectedDate);
                         UniqueData uniqueData = new UniqueData();
@@ -86,11 +88,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlist = new List<SelectListItem>();
 
             //loop through the SQL query result,
-            for (int i = 0; i < 5; i++)
+            foreach (var year in UniqueYear)
             {
-                SelectListItem subitem = new SelectListItem() { Text = "Item" + i.ToString(), Value = i.ToString() };
-                if (i == 3)
-                    subitem.Selected = true; //set the default selected value
+                SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+               
                 itemlist.Add(subitem);
             }
             ViewBag.ItemList = itemlist;
@@ -98,9 +99,27 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-            ViewBag.uniqueYear = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
             if (!String.IsNullOrEmpty(selectedYear)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Year.ToString() == selectedYear);
+            var UniqueMonth = Balances.GroupBy(x => x.BalDateTime.Month)
+                        .OrderBy(x => x.Key)
+                        .Select(x => new { Month = x.Key })
+                        .ToList();
+            List<SelectListItem> itemlistMonth = new List<SelectListItem>();
+            //loop through the SQL query result,
+            foreach (var month in UniqueMonth)
+            {
+                SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+
+                itemlistMonth.Add(subitem);
+            }
+            ViewBag.ItemListMonth = itemlistMonth;
+
+
+            if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Month.ToString() == selectedMonth);
+            
+            
+            
+            
             foreach (var item in Balances)
             {
                 item.BalDateTime = item.BalDateTime.Date;
@@ -109,13 +128,12 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             ViewBag.Balances = json;
 
-            ViewBag.uniqueYear = UniqueDate;
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
             viewModel.DebitSum = DebitSum;
             viewModel.TotWithDebits = TotWithDebits;
             viewModel.TotNoDebits = TotNoDebits;
-        //    viewModel.UniqueData = uniqueData;
+
             return View(viewModel);
         }
 
