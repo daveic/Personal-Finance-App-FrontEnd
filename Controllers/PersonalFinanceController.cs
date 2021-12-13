@@ -18,7 +18,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
-        public ActionResult Index(string SelectedYear, string SelectedProvince, string SelectedRegion, string SelectedDate, int page=0)
+        public ActionResult Index(string selectedYear, string SelectedProvince, string SelectedRegion, string SelectedDate, int page=0)
         {
             
             ViewModel viewModel = new ViewModel();
@@ -28,6 +28,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances));
 
             int TransactionSum = 0;
             foreach (var item in Transactions)
@@ -49,8 +50,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             // Totale saldo + crediti
             int TotNoDebits = TransactionSum + CreditSum;
 
-            if (!String.IsNullOrEmpty(SelectedYear)) ViewBag.Transactions = Transactions.Where(x => x.TrsDateTime.Year.ToString() == SelectedYear);
-        
+                          var UniqueDate = Balances.GroupBy(x => x.BalDateTime.Year)
+                                                   .OrderBy(x => x.Key)
+                                                   .Select(x => new { DateTime = x.Key })
+                                                   .ToList();
             /*          
                         DateTime dateTime = Convert.ToDateTime(SelectedDate);
                         UniqueData uniqueData = new UniqueData();
@@ -60,18 +63,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                         tempStatistics.Province = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Province));
                         tempStatistics.City = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.City));
 
-                        var UniqueDate = detections.GroupBy(x => x.DateTime)
-                                                   .OrderBy(x => x.Key)
-                                                   .Select(x => new { DateTime = x.Key })
-                                                   .ToList();
+
 
                         uniqueData.UniqueDate = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
                         uniqueData.UniqueCity = tempStatistics.City.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
                         uniqueData.UniqueProvince = tempStatistics.Province.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
                         uniqueData.UniqueRegion = tempStatistics.Region.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
 
-                        if (!String.IsNullOrEmpty(SelectedDate)) detections = detections.AsQueryable().Where(x => x.DateTime == dateTime);
                         
+                        if (!String.IsNullOrEmpty(SelectedCity)) detections = detections.Where(s => s.WorldLocation.City == SelectedCity);
                         if (!String.IsNullOrEmpty(SelectedProvince)) detections = detections.Where(x => x.WorldLocation.Province == SelectedProvince);
                         if (!String.IsNullOrEmpty(SelectedRegion)) detections = detections.Where(x => x.WorldLocation.Region == SelectedRegion);
 
@@ -83,12 +83,33 @@ namespace PersonalFinanceFrontEnd.Controllers
                         this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
                         this.ViewBag.Page = page;
                    */
-            foreach (var item in Transactions)
+            List<SelectListItem> itemlist = new List<SelectListItem>();
+
+            //loop through the SQL query result,
+            for (int i = 0; i < 5; i++)
             {
-                item.TrsDateTime = item.TrsDateTime.Date;
+                SelectListItem subitem = new SelectListItem() { Text = "Item" + i.ToString(), Value = i.ToString() };
+                if (i == 3)
+                    subitem.Selected = true; //set the default selected value
+                itemlist.Add(subitem);
             }
-            string json = JsonConvert.SerializeObject(Transactions);
-            ViewBag.Transactions = json;
+            ViewBag.ItemList = itemlist;
+
+
+
+
+
+            ViewBag.uniqueYear = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
+            if (!String.IsNullOrEmpty(selectedYear)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Year.ToString() == selectedYear);
+            foreach (var item in Balances)
+            {
+                item.BalDateTime = item.BalDateTime.Date;
+            }
+            string json = JsonConvert.SerializeObject(Balances);
+
+            ViewBag.Balances = json;
+
+            ViewBag.uniqueYear = UniqueDate;
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
             viewModel.DebitSum = DebitSum;
