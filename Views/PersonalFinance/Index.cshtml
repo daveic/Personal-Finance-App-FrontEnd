@@ -61,54 +61,60 @@
 
 
 
+@using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
+{
+    <div class="row" style="margin: 0 auto;">
+        <div class="col-md-7">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">
+                    GRAFICO
+                    <div class="col-sm-4">
+
+                        @Html.DropDownList("Test", (List<SelectListItem>)ViewBag.ItemList)
 
 
-
-<div class="row" style="margin: 0 auto;">
-    <div class="col-md-7">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">GRAFICO</div>
-            <div class="card-body">
-                <canvas id="canvas"></canvas>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="canvas"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">GRAFICO</div>
+                <div class="card-body">
+                    <canvas id="myChart" height="300"></canvas>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">GRAFICO</div>
-            <div class="card-body">
-                <canvas id="myChart" height="300"></canvas>
-            </div>
-        </div>
+}
+
+
+
+
+
+    <!--
+
+        <script src="~/js/drawBasic.js"></script>
+       // <script>drawBasic('') </script>
+        <div id="chart_div"></div>
+    -->
+    <div class="wrapper">
+
+
     </div>
-</div>
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
 
-
-            <!--
-
-            <script src="~/js/drawBasic.js"></script>
-           // <script>drawBasic('') </script>
-            <div id="chart_div"></div>
-        -->
-            <div class="wrapper">
-
-
-            </div>
-
-
-
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
-            <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
-            <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+    <script>
 
 
     const colors = {
@@ -234,50 +240,49 @@
         //Chart.defaults.global.defaultFontFamily = "Fira Sans";
     };
 
-            </script>
+    </script>
 
-            <script>
-                var ctxb = document.getElementById("myChart");
-                var myChart = new Chart(ctxb, {
-                    type: 'bar',
-                    data: {
-                        labels: ["Entrate", "Uscite", "Guadagno"],
-                        datasets: [{
-                            label: '# of Tomatoes',
-                            data: [12, 19, 3, 5],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
+    <script>
+        var ctxb = document.getElementById("myChart");
+        var myChart = new Chart(ctxb, {
+            type: 'bar',
+            data: {
+                labels: ["Entrate", "Uscite", "Flusso"],
+                datasets: [{
+                    label: '# of Tomatoes',
+                    data: [12, 19, -3],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
 
-                                'rgba(75, 192, 192, 0.2)',
-                                
-                            ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(75, 192, 192, 1)',
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: false,
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    maxRotation: 90,
-                                    minRotation: 80
-                                },
-                                gridLines: {
-                                    offsetGridLines: true // à rajouter
-                                }
-                            }],
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: false,
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 80
+                        },
+                        gridLines: {
+                            offsetGridLines: true // à rajouter
                         }
-                    }
-                });
-            </script>
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
