@@ -18,7 +18,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
-        public ActionResult Index(string SelectedCity, string SelectedProvince, string SelectedRegion, string SelectedDate, int page=0)
+        public ActionResult Index(string SelectedYear, string SelectedProvince, string SelectedRegion, string SelectedDate, int page=0)
         {
             
             ViewModel viewModel = new ViewModel();
@@ -49,7 +49,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             // Totale saldo + crediti
             int TotNoDebits = TransactionSum + CreditSum;
 
-            
+            if (!String.IsNullOrEmpty(SelectedYear)) ViewBag.Transactions = Transactions.Where(x => x.TrsDateTime.Year.ToString() == SelectedYear);
+        
             /*          
                         DateTime dateTime = Convert.ToDateTime(SelectedDate);
                         UniqueData uniqueData = new UniqueData();
@@ -70,7 +71,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         uniqueData.UniqueRegion = tempStatistics.Region.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
 
                         if (!String.IsNullOrEmpty(SelectedDate)) detections = detections.AsQueryable().Where(x => x.DateTime == dateTime);
-                        if (!String.IsNullOrEmpty(SelectedCity)) detections = detections.Where(s => s.WorldLocation.City == SelectedCity);
+                        
                         if (!String.IsNullOrEmpty(SelectedProvince)) detections = detections.Where(x => x.WorldLocation.Province == SelectedProvince);
                         if (!String.IsNullOrEmpty(SelectedRegion)) detections = detections.Where(x => x.WorldLocation.Region == SelectedRegion);
 
@@ -559,7 +560,7 @@ public ActionResult Ticket_Edit(Ticket t)
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
             ViewModel viewModel = new ViewModel();
             //Pagination
-            const int PageSize = 3;
+            const int PageSize = 6;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
 
