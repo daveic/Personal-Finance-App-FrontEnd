@@ -27,5 +27,6 @@ namespace PersonalFinanceFrontEnd.Models
         public int TotWithDebits { get; set; }
         public int TotNoDebits { get; set; }
         public string Transactions2 { get; internal set; }
+
     }
 }

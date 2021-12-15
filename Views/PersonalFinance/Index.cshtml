@@ -99,71 +99,57 @@
         </div>
     </div>
 }
-<button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi credito</button>
 
+<a href="#" class="btn btn-danger" onclick="Edit(0)">Easy Update</a>
 
-
-<div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="fastupdate" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:1250px;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Easy Update</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"></span>
                 </button>
             </div>
-            <div class="modal-body" id="ModalBodyDiv">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#conti">Conti correnti e carte</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#crediti">Crediti</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#debiti">Debiti</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#ticket">Ticket</a>
-                    </li>
-                </ul>
-                <div id="myTabContent" class="tab-content">
-                    <div class="tab-pane fade active show" id="conti">
-                        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-                    </div>
-                    <div class="tab-pane fade" id="crediti">
-                        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-                    </div>
-                    <div class="tab-pane fade" id="debiti">
-                        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
-                    </div>
-                    <div class="tab-pane fade" id="ticket">
-                        <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit.</p>
-                    </div>
-                </div></div>
+            <div class="modal-body" id="ModalBodyDiv">               
             </div>
+        </div>
     </div>
 </div>
 
 
 
-    <!--
-
-        <script src="~/js/drawBasic.js"></script>
-       // <script>drawBasic('') </script>
-        <div id="chart_div"></div>
-    -->
-    <div class="wrapper">
-
-
-    </div>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
-    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+@section scripts {
     <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Fast_Update/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#fastupdate").modal("show");
+            })
+        }
+        
+    </script>
+}
+
+
+
+<!--
+
+    <script src="~/js/drawBasic.js"></script>
+   // <script>drawBasic('') </script>
+    <div id="chart_div"></div>
+-->
+<div class="wrapper">
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+<script>
 
 
     const colors = {
@@ -190,7 +176,7 @@
     }
    /* const weight = [60.0, 60.2, 59.1, 61.4, 59.9, 60.2, 59.8, 58.6, 59.6, 59.2];
 
- */   
+ */
 
     const ctx = document.getElementById("canvas").getContext("2d");
     ctx.canvas.height = 100;
@@ -276,51 +262,51 @@
         //Chart.defaults.global.defaultFontFamily = "Fira Sans";
     };
 
-    </script>
+</script>
 
-    <script>
-        var ctxb = document.getElementById("myChart");
-        var myChart = new Chart(ctxb, {
-            type: 'bar',
-            data: {
-                labels: ["Entrate", "Uscite", "Flusso"],
-                datasets: [{
-                    label: '# of Tomatoes',
-                    data: [12, 19, -3],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 99, 132, 0.2)',
+<script>
+    var ctxb = document.getElementById("myChart");
+    var myChart = new Chart(ctxb, {
+        type: 'bar',
+        data: {
+            labels: ["Entrate", "Uscite", "Flusso"],
+            datasets: [{
+                label: '# of Tomatoes',
+                data: [12, 19, -3],
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
 
-                        'rgba(75, 192, 192, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
 
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255,99,132,1)',
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255,99,132,1)',
 
-                        'rgba(75, 192, 192, 1)',
-                    ],
-                    borderWidth: 1
+                    'rgba(75, 192, 192, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        maxRotation: 90,
+                        minRotation: 80
+                    },
+                    gridLines: {
+                        offsetGridLines: true // à rajouter
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
                 }]
-            },
-            options: {
-                responsive: false,
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            maxRotation: 90,
-                            minRotation: 80
-                        },
-                        gridLines: {
-                            offsetGridLines: true // à rajouter
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
             }
-        });
-    </script>
+        }
+    });
+</script>

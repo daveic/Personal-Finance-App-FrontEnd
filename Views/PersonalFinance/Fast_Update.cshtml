@@ -1,0 +1,183 @@
+﻿@model PersonalFinanceFrontEnd.Models.Fast_Update_Item
+
+
+
+
+
+<form asp-action="Fast_Update" style="margin: 0 auto;">
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="FU_ID" />
+
+
+
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#conti">Conti correnti e carte</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#contanti">Contanti</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#ticket">Ticket</a>
+            </li>
+        </ul>
+        <br />
+        <br />
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active show" id="conti">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>Intesa San Paolo</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="https://upload.wikimedia.org/wikipedia/it/archive/5/51/20180720101646%21Intesa_Sanpaolo_logo.svg" alt="Intesa San Paolo" width="190" height="60">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Saldo attuale (€):</h4>
+                                        <input type="number" class="form-control" asp-for="FU_Value_B1" style="background-color: #444">
+                                        <span asp-validation-for="FU_Value_B1" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>Illimity</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="https://www.illimitybank.com/img/LOGOtot_Color@4x.png" alt="Illimity" width="190" height="60">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Saldo attuale (€):</h4>
+                                        <input type="number" class="form-control" asp-for="FU_Value_B2" style="background-color: #444">
+                                        <span asp-validation-for="FU_Value_B2" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>N26</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="https://www.tecnoandroid.it/wp-content/uploads/2018/10/181942236-2.jpg" alt="N26" width="100" height="60">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Saldo attuale (€):</h4>
+                                        <input type="number" class="form-control" asp-for="FU_Value_B3" style="background-color: #444">
+                                        <span asp-validation-for="FU_Value_B3" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>American Express</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="https://img2.pngdownload.id/20180803/wpj/kisspng-logo-american-express-credit-card-bank-brand-apply-for-american-express-my-voyageguard-essentia-5b6443209c0ba3.0485480415332974406392.jpg" alt="American Express" width="250" height="70">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">Saldo attuale (€):</h4>
+                                        <input type="number" class="form-control" asp-for="FU_Value_B4" style="background-color: #444">
+                                        <span asp-validation-for="FU_Value_B4" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="tab-pane fade" id="contanti">
+                <div class="col-md-6">
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                        <div class="card-header">Header</div>
+                        <div class="card-body">
+                            <h4 class="card-title">Primary card title</h4>
+                            <img src=https://banner2.cleanpng.com/20180722/os/kisspng-logo-american-express-brand-font-american-express-logo-5b54c1605d1f96.0479342815322811843814.jpg alt="Girl in a jacket" width="250" height="70">
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <label for="recipient-name" class="col-form-label" asp-for="FU_Value_C">Saldo attuale (in €)</label>
+                            <input type="number" class="form-control" asp-for="FU_Value_C" style="background-color: #444">
+                            <span asp-validation-for="FU_Value_C" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="ticket">
+                <div class="col-md-6">
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                        <div class="card-header">Header</div>
+                        <div class="card-body">
+                            <h4 class="card-title">Primary card title</h4>
+                            <img src=https://banner2.cleanpng.com/20180722/os/kisspng-logo-american-express-brand-font-american-express-logo-5b54c1605d1f96.0479342815322811843814.jpg alt="Girl in a jacket" width="250" height="70">
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <label for="recipient-name" class="col-form-label" asp-for="FU_Value_T">Saldo attuale (in €)</label>
+                            <input type="number" class="form-control" asp-for="FU_Value_T" style="background-color: #444">
+                            <span asp-validation-for="FU_Value_T" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+

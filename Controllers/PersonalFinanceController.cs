@@ -14,13 +14,13 @@ using PersonalFinanceFrontEnd.Models;
 
 
 namespace PersonalFinanceFrontEnd.Controllers
-{        
+{
 
     public class PersonalFinanceController : Controller
     {
-        public ActionResult Index(string selectedYear, string selectedMonth, string SelectedRegion, string SelectedDate, int page=0)
+        public ActionResult Index(string selectedYear, string selectedMonth, string SelectedRegion, string SelectedDate, int page = 0)
         {
-            
+
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits));
@@ -29,6 +29,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
             IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances));
+
+
+            Bank Bank = new Bank();
 
             int TransactionSum = 0;
             foreach (var item in Transactions)
@@ -49,6 +52,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             int TotWithDebits = TransactionSum + CreditSum - DebitSum;
             // Totale saldo + crediti
             int TotNoDebits = TransactionSum + CreditSum;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
                                     .OrderBy(x => x.Key)
@@ -91,7 +110,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             foreach (var year in UniqueYear)
             {
                 SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
-               
+
                 itemlist.Add(subitem);
             }
             ViewBag.ItemList = itemlist;
@@ -116,10 +135,10 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
             if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Month.ToString() == selectedMonth);
-            
-            
-            
-            
+
+
+
+
             foreach (var item in Balances)
             {
                 item.BalDateTime = item.BalDateTime.Date;
@@ -133,9 +152,23 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.DebitSum = DebitSum;
             viewModel.TotWithDebits = TotWithDebits;
             viewModel.TotNoDebits = TotNoDebits;
+            viewModel.Banks = Banks;
+
+            viewModel.Bank = Bank;
 
             return View(viewModel);
         }
+
+
+
+
+
+
+
+
+
+
+
 
         private IEnumerable<T> GetAllItems<T> (string type)
         {
@@ -169,6 +202,30 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (detection);
         }
+        private int EditItemID<T>(string type, T obj) where T : new()
+        {
+            string path = "Update" + type;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
+
+
+
+
+
+
+
+
         public ActionResult Credit_Details (int id)
         {
             Credit Credit = GetItemID<Credit>(nameof(Credit), id); 
@@ -205,310 +262,268 @@ namespace PersonalFinanceFrontEnd.Controllers
             return PartialView(Ticket);
         }
 
-//DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-public ActionResult Credit_Delete(int id)
-{
-    return Credit_Details(id);
-}
-[HttpPost]
-public ActionResult Credit_Delete(Credit c)
-{
-    int credId = c.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteCredit?id={credId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
+        public ActionResult Credit_Delete(int id)
         {
-            TempData["sendFlagCred"] = 1;
-            return RedirectToAction(nameof(Credits));
+            return Credit_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult Debit_Delete(int id)
-{
-    return Debit_Details(id);
-}
-[HttpPost]
-public ActionResult Debit_Delete(Debit d)
-{
-    int debitId = d.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteDebit?id={debitId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Credit_Delete(Credit c)
         {
-            TempData["sendFlagDeb"] = 1;
-            return RedirectToAction(nameof(Debits));
+            int credId = c.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteCredit?id={credId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagCred"] = 1;
+                    return RedirectToAction(nameof(Credits));
+                }
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Transaction_Delete(int id)
-{
-    return Transaction_Details(id);
-}
-[HttpPost]
-public ActionResult Transaction_Delete(Transaction d)
-{
-    int transactionId = d.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteTransaction?id={transactionId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult Debit_Delete(int id)
         {
-            TempData["sendFlagTr"] = 1;
-            return RedirectToAction(nameof(Transactions));
+            return Debit_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult KnownMovement_Delete(int id)
-{
-    return KnownMovement_Details(id);
-}
-[HttpPost]
-public ActionResult KnownMovement_Delete(KnownMovement k)
-{
-    int KnownMovementId = k.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteKnownMovement?id={KnownMovementId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Debit_Delete(Debit d)
         {
-            TempData["sendFlagKM"] = 1;
-            return RedirectToAction(nameof(KnownMovements));
+            int debitId = d.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteDebit?id={debitId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagDeb"] = 1;
+                    return RedirectToAction(nameof(Debits));
+                }
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Bank_Delete(int id)
-{
-    return Bank_Details(id);
-}
-[HttpPost]
-public ActionResult Bank_Delete(Bank b)
-{
-    int BankId = b.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteBank?id={BankId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult Transaction_Delete(int id)
         {
-            TempData["sendFlagB"] = 1;
-            return RedirectToAction(nameof(Wallet));
+            return Transaction_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult Deposit_Delete(int id)
-{
-    return Deposit_Details(id);
-}
-[HttpPost]
-public ActionResult Deposit_Delete(Deposit d)
-{
-    int DepositId = d.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteDeposit?id={DepositId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Transaction_Delete(Transaction d)
         {
-            TempData["sendFlagD"] = 1;
-            return RedirectToAction(nameof(Wallet));
+            int transactionId = d.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteTransaction?id={transactionId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagTr"] = 1;
+                    return RedirectToAction(nameof(Transactions));
+                }
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Ticket_Delete(int id)
-{
-    return Ticket_Details(id);
-}
-[HttpPost]
-public ActionResult Ticket_Delete(Ticket t)
-{
-    int TicketId = t.ID;
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.DeleteAsync($"DeleteTicket?id={TicketId}");
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult KnownMovement_Delete(int id)
         {
-            TempData["sendFlagT"] = 1;
-            return RedirectToAction(nameof(Wallet));
+            return KnownMovement_Details(id);
         }
-    }
-    return View();
-}
+        [HttpPost]
+        public ActionResult KnownMovement_Delete(KnownMovement k)
+        {
+            int KnownMovementId = k.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteKnownMovement?id={KnownMovementId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagKM"] = 1;
+                    return RedirectToAction(nameof(KnownMovements));
+                }
+            }
+            return View();
+        }
+        public ActionResult Bank_Delete(int id)
+        {
+            return Bank_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Bank_Delete(Bank b)
+        {
+            int BankId = b.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteBank?id={BankId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagB"] = 1;
+                    return RedirectToAction(nameof(Wallet));
+                }
+            }
+            return View();
+        }
+        public ActionResult Deposit_Delete(int id)
+        {
+            return Deposit_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Deposit_Delete(Deposit d)
+        {
+            int DepositId = d.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteDeposit?id={DepositId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagD"] = 1;
+                    return RedirectToAction(nameof(Wallet));
+                }
+            }
+            return View();
+        }
+        public ActionResult Ticket_Delete(int id)
+        {
+            return Ticket_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Ticket_Delete(Ticket t)
+        {
+            int TicketId = t.ID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync($"DeleteTicket?id={TicketId}");
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    TempData["sendFlagT"] = 1;
+                    return RedirectToAction(nameof(Wallet));
+                }
+            }
+            return View();
+        }
 
-//EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-public ActionResult Credit_Edit(int id)
-{
-    return Credit_Details(id);
-}
-[HttpPost]
-public ActionResult Credit_Edit(Credit c)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Credit>("UpdateCredit", c);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
+        public ActionResult Credit_Edit(int id)
         {
-            TempData["sendFlagCred"] = 2;
-            return RedirectToAction(nameof(Credits));
+            return Credit_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult Debit_Edit(int id)
-{
-    return Debit_Details(id);
-}
-[HttpPost]
-public ActionResult Debit_Edit(Debit d)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Debit>("UpdateDebit", d);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Credit_Edit(Credit c)
         {
-            TempData["sendFlagDeb"] = 2;
-            return RedirectToAction(nameof(Debits));
+            int result = EditItemID<Credit>(nameof(Credit), c);        
+            if (result == 0)
+            {
+                TempData["sendFlagCred"] = 2;
+                return RedirectToAction(nameof(Credits));
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Transaction_Edit(int id)
-{
-    return Transaction_Details(id);
-}
-[HttpPost]
-public ActionResult Transaction_Edit(Transaction t)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Transaction>("UpdateTransaction", t);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult Debit_Edit(int id)
         {
-            TempData["sendFlagTr"] = 2;
-            return RedirectToAction(nameof(Transactions));
+            return Debit_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult KnownMovement_Edit(int id)
-{
-    return KnownMovement_Details(id);
-}
-[HttpPost]
-public ActionResult KnownMovement_Edit(KnownMovement k)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<KnownMovement>("UpdateKnownMovement", k);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Debit_Edit(Debit d)
         {
-            TempData["sendFlagKM"] = 2;
-            return RedirectToAction(nameof(KnownMovements));
+            int result = EditItemID<Debit>(nameof(Debit), d);
+            if (result == 0)
+            {
+                TempData["sendFlagDeb"] = 2;
+                return RedirectToAction(nameof(Debits));
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Bank_Edit(int id)
-{
-    return Bank_Details(id);
-}
-[HttpPost]
-public ActionResult Bank_Edit(Bank b)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Bank>("UpdateBank", b);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult Transaction_Edit(int id)
         {
-            TempData["sendFlagB"] = 2;
-            return RedirectToAction(nameof(Wallet));
+            return Transaction_Details(id);
         }
-    }
-    return View();
-}
-public ActionResult Deposit_Edit(int id)
-{
-    return Deposit_Details(id);
-}
-[HttpPost]
-public ActionResult Deposit_Edit(Deposit d)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Deposit>("UpdateDeposit", d);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        [HttpPost]
+        public ActionResult Transaction_Edit(Transaction t)
         {
-            TempData["sendFlagD"] = 2;
-            return RedirectToAction(nameof(Wallet));
+            int result = EditItemID<Transaction>(nameof(Transaction), t);
+            if (result == 0)
+            {
+                TempData["sendFlagTr"] = 2;
+                return RedirectToAction(nameof(Transactions));     
+            }
+            return View();
         }
-    }
-    return View();
-}
-public ActionResult Ticket_Edit(int id)
-{
-    return Deposit_Details(id);
-}
-[HttpPost]
-public ActionResult Ticket_Edit(Ticket t)
-{
-    using (var client = new HttpClient())
-    {
-        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-        var postTask = client.PutAsJsonAsync<Ticket>("UpdateTicket", t);
-        postTask.Wait();
-        var result = postTask.Result;
-        if (result.IsSuccessStatusCode)
+        public ActionResult KnownMovement_Edit(int id)
         {
-            TempData["sendFlagT"] = 2;
-            return RedirectToAction(nameof(Wallet));
+            return KnownMovement_Details(id);
         }
-    }
-    return View();
-}
+        [HttpPost]
+        public ActionResult KnownMovement_Edit(KnownMovement k)
+        {
+            int result = EditItemID<KnownMovement>(nameof(KnownMovement), k);
+            if (result == 0)
+            {
+                TempData["sendFlagKM"] = 2;
+                return RedirectToAction(nameof(KnownMovements));                
+            }
+            return View();
+        }
+        public ActionResult Bank_Edit(int id)
+        {
+            return Bank_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Bank_Edit(Bank b)
+        {
+            int result = EditItemID<Bank>(nameof(Bank), b);
+            if (result == 0)
+            {
+                TempData["sendFlagB"] = 2;
+                return RedirectToAction(nameof(Wallet)); 
+            }
+            return View();
+        }
+        public ActionResult Deposit_Edit(int id)
+        {
+            return Deposit_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Deposit_Edit(Deposit d)
+        {
+            int result = EditItemID<Deposit>(nameof(Deposit), d);
+            if (result == 0)
+            {
+                TempData["sendFlagD"] = 2;
+                return RedirectToAction(nameof(Wallet));
+            }
+            return View();
+        }
+        public ActionResult Ticket_Edit(int id)
+        {
+            return Deposit_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Ticket_Edit(Ticket t)
+        {
+            int result = EditItemID<Ticket>(nameof(Ticket), t);
+            if (result == 0)
+            {
+                TempData["sendFlagT"] = 2;
+                return RedirectToAction(nameof(Wallet));
+            }
+            return View();
+        }
 
 
 
@@ -780,5 +795,76 @@ public ActionResult Ticket_Edit(Ticket t)
             }
             return View();
         }
+
+
+
+        //FAST UPDATE LOGIC
+        //In caso di aggiunta o rimozione di nuova banca/ticket, nel Controller occorre solo modificare il metodo FU_Details e Fast_Update come segue:
+
+        public ActionResult Fast_Update(int id)
+        {
+            return FU_Details(id);
+        }
+
+        //Aggiungere:
+        //FU_item.FU_ID_B1 = Banks.ElementAt(1).ID; <- Modificare "1" con il nuovo numero di banca
+        //FU_item.FU_Value_B1 = Banks.ElementAt(1).BankValue; <- Modificare "1" con il nuovo numero di banca
+        public ActionResult FU_Details(int id)
+        {
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            Fast_Update_Item FU_item = new Fast_Update_Item();
+
+            FU_item.FU_ID = id;
+
+            FU_item.FU_ID_C = 0;
+            FU_item.FU_Value_C = Banks.ElementAt(0).BankValue;
+                
+            FU_item.FU_ID_B1 = Banks.ElementAt(1).ID;
+            FU_item.FU_Value_B1 = Banks.ElementAt(1).BankValue;
+
+            FU_item.FU_ID_B2 = Banks.ElementAt(2).ID;
+            FU_item.FU_Value_B2 = Banks.ElementAt(2).BankValue;
+
+            FU_item.FU_ID_B3 = Banks.ElementAt(3).ID;
+            FU_item.FU_Value_B3 = Banks.ElementAt(3).BankValue;
+
+            FU_item.FU_ID_B4 = Banks.ElementAt(4).ID;
+            FU_item.FU_Value_B4 = Banks.ElementAt(4).BankValue;
+
+            FU_item.FU_ID_T = Tickets.ElementAt(0).ID;
+            FU_item.FU_Value_T = Tickets.ElementAt(0).TicketValue;
+
+            return PartialView(FU_item);
+        }
+
+        [HttpPost]
+        //Aggiungere:
+        //Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1; <- Modificare sempre "1" col nuovo numero
+        //result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(1)); <- Modificare sempre "1" col nuovo numero
+        public ActionResult Fast_Update (Fast_Update_Item FU_item)
+        {
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            Banks.ElementAt(0).BankValue = FU_item.FU_Value_C;
+            int result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(0));
+            Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(1));
+            Banks.ElementAt(2).BankValue = FU_item.FU_Value_B2;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(2));
+            Banks.ElementAt(3).BankValue = FU_item.FU_Value_B3;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(3));
+            Banks.ElementAt(4).BankValue = FU_item.FU_Value_B4;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(4));
+            Tickets.ElementAt(0).TicketValue = FU_item.FU_Value_T;
+            result = EditItemID<Ticket>(nameof(Ticket), Tickets.ElementAt(0));
+            return RedirectToAction(nameof(Index));
+        }
     }
+
 }
+
+
+
+
+
