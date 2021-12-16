@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 
 
@@ -15,7 +16,7 @@ namespace PersonalFinanceFrontEnd.Models
         public IEnumerable<KnownMovement> KnownMovements { get; set; }
         public KnownMovement KnownMovement { get; set; }
         public IEnumerable<Transaction> Transactions { get; set; }
-        public Transaction Transaction { get; set; }
+        public TransactionType TransactionType { get; set; }
         public IEnumerable<Credit> Credits { get; set; }
         public Credit Credit { get; set; }
         public IEnumerable<Debit> Debits { get; set; }

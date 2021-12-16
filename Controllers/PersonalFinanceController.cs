@@ -31,8 +31,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances));
 
 
-            Bank Bank = new Bank();
-
             int TransactionSum = 0;
             foreach (var item in Transactions)
             {
@@ -69,10 +67,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-            var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
-                                    .OrderBy(x => x.Key)
-                                    .Select(x => new { Year = x.Key })
-                                    .ToList();
+
 
 
             /*          
@@ -104,49 +99,55 @@ namespace PersonalFinanceFrontEnd.Controllers
                         this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
                         this.ViewBag.Page = page;
                    */
-            List<SelectListItem> itemlist = new List<SelectListItem>();
-
-            //loop through the SQL query result,
+            //############################################################################################################################
+            //FILTRI ANNO E MESE PER GRAFICO SALDO
+            //############################################################################################################################
+            //Trovo gli anni "unici"
+            var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
+                                    .OrderBy(x => x.Key)
+                                    .Select(x => new { Year = x.Key })
+                                    .ToList();
+            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
+            List<SelectListItem> itemlistYear = new List<SelectListItem>();
             foreach (var year in UniqueYear)
             {
                 SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
-
-                itemlist.Add(subitem);
+                itemlistYear.Add(subitem);
             }
-            ViewBag.ItemList = itemlist;
-
-
-
-
+            //Passo alla view la lista
+            ViewBag.ItemList = itemlistYear;
+            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
             if (!String.IsNullOrEmpty(selectedYear)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Year.ToString() == selectedYear);
+            //Trovo i mesi "unici"
             var UniqueMonth = Balances.GroupBy(x => x.BalDateTime.Month)
                         .OrderBy(x => x.Key)
                         .Select(x => new { Month = x.Key })
                         .ToList();
+            //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
             List<SelectListItem> itemlistMonth = new List<SelectListItem>();
-            //loop through the SQL query result,
             foreach (var month in UniqueMonth)
             {
                 SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
-
                 itemlistMonth.Add(subitem);
             }
+            //Passo alla view la lista
             ViewBag.ItemListMonth = itemlistMonth;
-
-
+            //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
             if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Month.ToString() == selectedMonth);
+            //############################################################################################################################
 
 
-
-
+            //############################################################################################################################
+            //Rimuovo l'orario dal DateTime e salvo come json
             foreach (var item in Balances)
             {
                 item.BalDateTime = item.BalDateTime.Date;
             }
             string json = JsonConvert.SerializeObject(Balances);
-
+            //Passo alla view la lista aggiornata e convertita
             ViewBag.Balances = json;
 
+            //Passaggio di dati alla vista con ViewModel
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
             viewModel.DebitSum = DebitSum;
@@ -154,18 +155,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.TotNoDebits = TotNoDebits;
             viewModel.Banks = Banks;
 
-            viewModel.Bank = Bank;
-
             return View(viewModel);
         }
-
-
-
-
-
-
-
-
 
 
 
@@ -218,9 +209,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
-
-
-
 
 
 
@@ -622,9 +610,26 @@ namespace PersonalFinanceFrontEnd.Controllers
             this.ViewBag.Page = page;
 
             viewModel.Transactions = data;
-            viewModel.Transaction = new Transaction();
+
             int sendFlag = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
             viewModel.state = sendFlag;
+
+
+            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+                                            .OrderBy(x => x.Key)
+                                            .Select(x => new { Code = x.Key })
+                                            .ToList();
+            List<SelectListItem> Codes = new List<SelectListItem>();
+            foreach (var item in UniqueCodes)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = item.Code;
+                code.Text = item.Code;
+                Codes.Add(code);
+     
+            }
+            viewModel.TransactionType = new TransactionType();
+            viewModel.TransactionType.Codes = Codes;
 
             return View(viewModel);      
         }
@@ -687,16 +692,19 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Transaction_Add()
         {
-            Transaction model = new Transaction();
+
+            TransactionType model = new TransactionType();
             return View(model);
         }
         [HttpPost]
-        public ActionResult Transaction_Add(Transaction t)
+        public ActionResult Transaction_Add(TransactionType t)
         {
+            if (t.Type == false) t.TrsValue = - t.TrsValue;
+            Transaction tr = new Transaction() { ID=t.ID, TrsCode=t.TrsCode, TrsTitle=t.TrsTitle, TrsDateTime =t.TrsDateTime, TrsValue=t.TrsValue, TrsNote=t.TrsNote};
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", t);
+                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", tr);
                 postTask.Wait();
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
