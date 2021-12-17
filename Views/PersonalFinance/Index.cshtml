@@ -7,7 +7,7 @@
 <br />
 <br />
 <br />
-<div class="row">
+<div class="row" style="margin: 0 auto;">
     <div class="col-md-3">
         <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 22rem;">
             <div class="card-header">EasyUpdate</div>
@@ -78,8 +78,8 @@
     <div class="col-md-5">
         <div class="card shadow p-3 border-dark mb-3">
             <div class="card-header">NUOVA TRANSAZIONE</div>
-            <div class="card-body" >
-                <partial name="Transaction_Add" model="Model.TransactionType"/>
+            <div class="card-body">
+                <partial name="Transaction_Add" model="Model.TransactionType" />
             </div>
         </div>
     </div>
@@ -115,42 +115,45 @@
 
         }
     </div>
-    
-    </div>
 
-<div class="row">
-    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-sm-8">
-                    FILTRI
-                </div>
-                <div class="col-sm-1" style="text-align:right;">
-                    MESE:
-                </div>
-                <div class="col-sm-1">
+</div>
+@using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
+{
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-12">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-sm-8">
+                        FILTRI
+                    </div>
+                    <div class="col-sm-1" style="text-align:right;">
+                        MESE:
+                    </div>
+                    <div class="col-sm-1">
 
-                    @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                        @Html.DropDownList("selectedMonthTr", (List<SelectListItem>)ViewBag.ItemListMonthTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
 
-                </div>
-                <div class="col-sm-1" style="text-align:right;">
-                    ANNO:
-                </div>
-                <div class="col-sm-1">
+                    </div>
+                    <div class="col-sm-1" style="text-align:right;">
+                        ANNO:
+                    </div>
+                    <div class="col-sm-1">
 
-                    @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                        @Html.DropDownList("selectedYearTr", (List<SelectListItem>)ViewBag.ItemListTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
 
+                    </div>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
 </div>
     <div class="row" style="margin: 0 auto;">
         <div class="col-md-2">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 35rem;">
                 <div class="card-header">GRAFICO</div>
                 <div class="card-body">
-                    <canvas id="myChart" height="300"></canvas>
+                    <canvas id="myChart" height="700"></canvas>
                 </div>
             </div>
         </div>
@@ -173,25 +176,37 @@
 
         </div>
     </div>
+    }
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <script>
+        var items = @Html.Raw(ViewBag.Codes);
         new Chart(document.getElementById("doughnut-chart"), {
             type: 'doughnut',
             data: {
-                labels: ["Africa", "Asia", "Europe", "Latin America", "North America"],
+                labels: items.TrsValue,
                 datasets: [
                     {
-                        label: "Population (millions)",
-                        backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
-                        data: [2478, 5267, 734, 784, 433]
+                        label: "Spesa €",
+                        backgroundColor: ["rgba(255, 87, 51, 0.6)", "rgba(158, 19, 236, 0.6)", "rgba(255, 230, 51, 0.6)", "rgba(236, 19, 105, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 87, 51, 0.6)", "rgba(78, 209, 224, 0.6)", "rgba(10, 141, 43, 0.6)"],
+                        data: @Html.Raw(ViewBag.CodeValues),
+                        borderColor: [
+                            'rgba(255, 87, 51, 1)',
+                            'rgba(158, 19, 236, 1)',
+                            'rgba(255, 230, 51, 1)',
+                            'rgba(236, 19, 105, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 87, 51, 1)',
+                            'rgba(78, 209, 224, 1)',
+                            'rgba(10, 141, 43, 1)'
+                        ],
                     }
                 ]
             },
             options: {
                 title: {
                     display: true,
-                    text: 'Predicted world population (millions) in 2050'
+                    text: 'Suddivisione spesa'
                 }
             }
         });
@@ -372,7 +387,6 @@
 
     <script>
         var i = 0;
-
         var items = @Html.Raw(ViewBag.Transactions);
         var out = 0;
         var enter = 0;
@@ -381,14 +395,13 @@
             else enter += items[i].TrsValue;
         }
         var flux = enter + out;
-
         var ctxb = document.getElementById("myChart");
         var myChart = new Chart(ctxb, {
             type: 'bar',
             data: {
                 labels: ["Entrate", "Uscite", "Flusso"],
                 datasets: [{
-                    label: "Entrate",
+                    label: "Totale €",
                     data: [enter, out, flux],
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.2)',
@@ -415,7 +428,7 @@
                             minRotation: 80
                         },
                         gridLines: {
-                            offsetGridLines: true // à rajouter
+                            offsetGridLines: true
                         }
                     }],
                     yAxes: [{
