@@ -7,111 +7,172 @@
 <br />
 <br />
 <br />
-
-<div class="row" style="margin: 0 auto;">
-    <div class="col-md-4">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">TOTALE TRANSAZIONI</div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 22rem;">
+            <div class="card-header">EasyUpdate</div>
             <div class="card-body">
                 <h4 class="card-title">Saldo attuale: @Model.TransactionSum €</h4>
+                <a href="#" class="btn btn-danger" onclick="Edit(0)">Easy Update</a>
                 <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">TOTALE CREDITI</div>
-            <div class="card-body">
-                <h4 class="card-title">Totale crediti: @Model.CreditSum €</h4>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">TOTALE DEBITI</div>
-            <div class="card-body">
-                <h4 class="card-title">Totale debiti: @Model.DebitSum €</h4>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row" style="margin: 0 auto;">
-    <div class="col-md-6">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">TOTALE + CREDITI - DEBITI</div>
-            <div class="card-body">
-                <h4 class="card-title">Saldo totale: @Model.TotWithDebits €</h4>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">TOTALE + CREDITI</div>
-            <div class="card-body">
-                <h4 class="card-title">Saldo totale: @Model.TotNoDebits €</h4>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-@using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
-{
-<div class="row" style="margin: 0 auto;">
-    <div class="col-md-7">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-sm-8">
-                        GRAFICO
-                    </div>
-                    <div class="col-sm-2">
-
-                        @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
-                    </div>
-
-                    <div class="col-sm-2">
-
-                        @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
+    <div class="col-md-9">
+        <div class="row" style="margin: 0 auto;">
+            <div class="col-md-4">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                    <div class="card-header">TOTALE TRANSAZIONI</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Saldo attuale: @Model.TransactionSum €</h4>
+                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <canvas id="canvas"></canvas>
+            <div class="col-md-4">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                    <div class="card-header">TOTALE CREDITI</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Totale crediti: @Model.CreditSum €</h4>
+                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                    <div class="card-header">TOTALE DEBITI</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Totale debiti: @Model.DebitSum €</h4>
+                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin: 0 auto;">
+            <div class="col-md-6">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                    <div class="card-header">TOTALE + CREDITI - DEBITI</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Saldo totale: @Model.TotWithDebits €</h4>
+                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                    <div class="card-header">TOTALE + CREDITI</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Saldo totale: @Model.TotNoDebits €</h4>
+                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">GRAFICO</div>
-            <div class="card-body">
-                <canvas id="myChart" height="300"></canvas>
+</div>
+
+
+
+
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-5">
+        <div class="card shadow p-3 border-dark mb-3">
+            <div class="card-header">NUOVA TRANSAZIONE</div>
+            <div class="card-body" >
+                <partial name="Transaction_Add" model="Model.TransactionType"/>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">GRAFICO</div>
-            <div class="card-body">
-                <canvas id="doughnut-chart" width="800" height="450"></canvas>
+    <div class="col-md-7">
+        @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
+        {
+
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 30rem;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            SALDO
+                        </div>
+                        <div class="col-sm-2">
+
+                            @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+
+                        </div>
+
+                        <div class="col-sm-2">
+
+                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="canvas"></canvas>
+                </div>
             </div>
-        </div>
-        
+
+
+
+        }
     </div>
-    </div>
-    }
-
-
-
     
+    </div>
+
+<div class="row">
+    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-sm-8">
+                    FILTRI
+                </div>
+                <div class="col-sm-1" style="text-align:right;">
+                    MESE:
+                </div>
+                <div class="col-sm-1">
+
+                    @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+
+                </div>
+                <div class="col-sm-1" style="text-align:right;">
+                    ANNO:
+                </div>
+                <div class="col-sm-1">
+
+                    @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+
+                </div>
+            </div>
+            </div>
+    </div>
+</div>
+    <div class="row" style="margin: 0 auto;">
+        <div class="col-md-2">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">GRAFICO</div>
+                <div class="card-body">
+                    <canvas id="myChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">GRAFICO</div>
+                <div class="card-body">
+                    <canvas id="doughnut-chart" width="800" height="450"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">GRAFICO</div>
+                <div class="card-body">
+                    <canvas id="doughnut-chart" width="800" height="450"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <script>
@@ -145,7 +206,7 @@
 
 
 
-    <a href="#" class="btn btn-danger" onclick="Edit(0)">Easy Update</a>
+
 
     <div class="modal fade" id="fastupdate" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
         <div class="modal-dialog" role="document" style="width:1250px;">
@@ -310,25 +371,33 @@
     </script>
 
     <script>
+        var i = 0;
+
+        var items = @Html.Raw(ViewBag.Transactions);
+        var out = 0;
+        var enter = 0;
+        for (i = 0; i < items.length; i++) {
+            if (items[i].TrsValue < 0) out += items[i].TrsValue;
+            else enter += items[i].TrsValue;
+        }
+        var flux = enter + out;
+
         var ctxb = document.getElementById("myChart");
         var myChart = new Chart(ctxb, {
             type: 'bar',
             data: {
                 labels: ["Entrate", "Uscite", "Flusso"],
                 datasets: [{
-                    label: '# of Tomatoes',
-                    data: [12, 19, -3],
+                    label: "Entrate",
+                    data: [enter, out, flux],
                     backgroundColor: [
                         'rgba(54, 162, 235, 0.2)',
                         'rgba(255, 99, 132, 0.2)',
-
                         'rgba(75, 192, 192, 0.2)',
-
                     ],
                     borderColor: [
                         'rgba(54, 162, 235, 1)',
                         'rgba(255,99,132,1)',
-
                         'rgba(75, 192, 192, 1)',
                     ],
                     borderWidth: 1
@@ -336,6 +405,9 @@
             },
             options: {
                 responsive: true,
+                legend: {
+                    display: false
+                },
                 scales: {
                     xAxes: [{
                         ticks: {

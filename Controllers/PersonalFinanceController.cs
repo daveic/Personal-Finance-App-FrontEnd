@@ -147,6 +147,25 @@ namespace PersonalFinanceFrontEnd.Controllers
             //Passo alla view la lista aggiornata e convertita
             ViewBag.Balances = json;
 
+            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+                                            .OrderBy(x => x.Key)
+                                            .Select(x => new { Code = x.Key })
+                                            .ToList();
+            List<SelectListItem> Codes = new List<SelectListItem>();
+            foreach (var item in UniqueCodes)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = item.Code;
+                code.Text = item.Code;
+                Codes.Add(code);
+
+            }
+            viewModel.TransactionType = new TransactionType();
+            viewModel.TransactionType.Codes = Codes;
+
+            string jsonTrans = JsonConvert.SerializeObject(Transactions);
+            ViewBag.Transactions = jsonTrans;
+
             //Passaggio di dati alla vista con ViewModel
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
@@ -597,10 +616,52 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
             return Debits;
         }
-        public ActionResult Transactions(int page = 0)
+        public ActionResult Transactions(string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
             ViewModel viewModel = new ViewModel();
+
+            //############################################################################################################################
+            //FILTRI ANNO E MESE PER GRAFICO SALDO
+            //############################################################################################################################
+            //Trovo gli anni "unici"
+            var UniqueYear = Transactions.GroupBy(x => x.TrsDateTime.Year)
+                                    .OrderBy(x => x.Key)
+                                    .Select(x => new { Year = x.Key })
+                                    .ToList();
+            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
+            List<SelectListItem> itemlistYear = new List<SelectListItem>();
+            foreach (var year in UniqueYear)
+            {
+                SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+                itemlistYear.Add(subitem);
+            }
+            //Passo alla view la lista
+            ViewBag.ItemList = itemlistYear;
+            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
+            if (!String.IsNullOrEmpty(selectedYear)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Year.ToString() == selectedYear);
+            //Trovo i mesi "unici"
+            var UniqueMonth = Transactions.GroupBy(x => x.TrsDateTime.Month)
+                        .OrderBy(x => x.Key)
+                        .Select(x => new { Month = x.Key })
+                        .ToList();
+            //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
+            List<SelectListItem> itemlistMonth = new List<SelectListItem>();
+            foreach (var month in UniqueMonth)
+            {
+                SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+                itemlistMonth.Add(subitem);
+            }
+            //Passo alla view la lista
+            ViewBag.ItemListMonth = itemlistMonth;
+            //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
+            if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Month.ToString() == selectedMonth);
+            //############################################################################################################################
+
+            if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
+
+
+
             //Pagination
             const int PageSize = 6;
             var count = Transactions.Count();
@@ -613,6 +674,12 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             int sendFlag = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
             viewModel.state = sendFlag;
+
+
+
+
+
+
 
 
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
