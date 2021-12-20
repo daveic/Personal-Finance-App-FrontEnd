@@ -161,7 +161,7 @@
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
                 <div class="card-header">GRAFICO</div>
                 <div class="card-body">
-                    <canvas id="doughnut-chart" width="800" height="450"></canvas>
+                    <canvas id="doughnut-chart-in" width="800" height="450"></canvas>
                 </div>
             </div>
 
@@ -170,7 +170,7 @@
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
                 <div class="card-header">GRAFICO</div>
                 <div class="card-body">
-                    <canvas id="doughnut-chart" width="800" height="450"></canvas>
+                    <canvas id="doughnut-chart-out" width="800" height="450"></canvas>
                 </div>
             </div>
 
@@ -180,16 +180,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <script>
-        var items = @Html.Raw(ViewBag.Codes);
-        new Chart(document.getElementById("doughnut-chart"), {
+        new Chart(document.getElementById("doughnut-chart-in"), {
             type: 'doughnut',
             data: {
-                labels: items.TrsValue,
+                labels: @Html.Raw(ViewBag.CodesIn),
                 datasets: [
                     {
                         label: "Spesa €",
                         backgroundColor: ["rgba(255, 87, 51, 0.6)", "rgba(158, 19, 236, 0.6)", "rgba(255, 230, 51, 0.6)", "rgba(236, 19, 105, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 87, 51, 0.6)", "rgba(78, 209, 224, 0.6)", "rgba(10, 141, 43, 0.6)"],
-                        data: @Html.Raw(ViewBag.CodeValues),
+                        data: @Html.Raw(ViewBag.CodeValuesIn),
                         borderColor: [
                             'rgba(255, 87, 51, 1)',
                             'rgba(158, 19, 236, 1)',
@@ -206,13 +205,43 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Suddivisione spesa'
+                    text: 'Suddivisione entrate'
                 }
             }
         });
     </script>
 
-
+    <script>
+        new Chart(document.getElementById("doughnut-chart-out"), {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(ViewBag.CodesOut),
+                datasets: [
+                    {
+                        label: "Spesa €",
+                        backgroundColor: ["rgba(255, 87, 51, 0.6)", "rgba(158, 19, 236, 0.6)", "rgba(255, 230, 51, 0.6)", "rgba(236, 19, 105, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 87, 51, 0.6)", "rgba(78, 209, 224, 0.6)", "rgba(10, 141, 43, 0.6)"],
+                        data: @Html.Raw(ViewBag.CodeValuesOut),
+                        borderColor: [
+                            'rgba(255, 87, 51, 1)',
+                            'rgba(158, 19, 236, 1)',
+                            'rgba(255, 230, 51, 1)',
+                            'rgba(236, 19, 105, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 87, 51, 1)',
+                            'rgba(78, 209, 224, 1)',
+                            'rgba(10, 141, 43, 1)'
+                        ],
+                    }
+                ]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: 'Suddivisione uscite'
+                }
+            }
+        });
+    </script>
 
 
 

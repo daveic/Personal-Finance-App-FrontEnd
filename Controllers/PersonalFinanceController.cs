@@ -178,8 +178,8 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-
+            var TransactionsIn = Transactions.Where(x => x.TrsValue >= 0);
+            var TransactionsOut = Transactions.Where(x => x.TrsValue < 0);
 
 
 
@@ -197,22 +197,33 @@ namespace PersonalFinanceFrontEnd.Controllers
             //Passo alla view la lista aggiornata e convertita
             ViewBag.Balances = json;
 
+
+
+
+
+
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                                             .OrderBy(x => x.Key)
                                             .Select(x => new { x.Key })
                                             .ToList();
             List<SelectListItem> Codes = new List<SelectListItem>();
+         //   List<string> strCodes = new List<string>();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new SelectListItem();
                 code.Value = item.Key;
                 code.Text = item.Key;
+          //      strCodes.Add(item.Key);
                 Codes.Add(code);
 
             }
+          //  string jsonCodes = JsonConvert.SerializeObject(strCodes);
+      //      ViewBag.Codes = jsonCodes;
+
             viewModel.TransactionType = new TransactionType();
             viewModel.TransactionType.Codes = Codes;
-            int i = 0;
+      /*      int i = 0;
+
             int[] count = new int[Codes.Count];
             foreach(var item in Codes)
             {
@@ -220,14 +231,16 @@ namespace PersonalFinanceFrontEnd.Controllers
                 foreach (var value in CodeValues) { count[i]+= value.TrsValue; }
                 i++;
             }
+      */
+            GetDonutData(TransactionsIn, 1);
+            GetDonutData(TransactionsOut, 0);
 
-            string jsonCodeValues = JsonConvert.SerializeObject(count);
-            ViewBag.CodeValues = jsonCodeValues;
+       //     string jsonCodeValues = JsonConvert.SerializeObject(count);
+     //       ViewBag.CodeValues = jsonCodeValues;
 
             string jsonTrans = JsonConvert.SerializeObject(Transactions);
             ViewBag.Transactions = jsonTrans;
-            string jsonCodes = JsonConvert.SerializeObject(UniqueCodes);
-            ViewBag.Codes = jsonCodes;
+
             //Passaggio di dati alla vista con ViewModel
             viewModel.TransactionSum = TransactionSum;
             viewModel.CreditSum = CreditSum;
@@ -239,7 +252,33 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
 
+        private void GetDonutData(IEnumerable<Transaction> Transactions, int type)
+        {
+            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+                                            .OrderBy(x => x.Key)
+                                            .Select(x => new { x.Key })
+                                            .ToList();
+            List<string> strCodes = new List<string>();
+            foreach (var item in UniqueCodes) strCodes.Add(item.Key);
+ 
+            string jsonCodes = JsonConvert.SerializeObject(strCodes);
+            if (type == 0) ViewBag.CodesOut = jsonCodes;
+            if (type == 1) ViewBag.CodesIn = jsonCodes;
+            int i = 0;
 
+            int[] count = new int[strCodes.Count];
+            foreach (var item in strCodes)
+            {
+                var CodeValues = Transactions.Where(x => x.TrsCode == item);
+                if (type == 0) foreach (var value in CodeValues) { count[i] -= value.TrsValue; }
+                else foreach (var value in CodeValues) { count[i] += value.TrsValue; }
+                i++;
+            }
+
+            string jsonCodeValues = JsonConvert.SerializeObject(count);
+            if (type == 0) ViewBag.CodeValuesOut = jsonCodeValues;
+            if (type == 1) ViewBag.CodeValuesIn = jsonCodeValues;
+        }
 
 
         private IEnumerable<T> GetAllItems<T> (string type)
