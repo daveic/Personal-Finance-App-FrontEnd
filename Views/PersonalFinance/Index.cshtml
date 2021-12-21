@@ -73,7 +73,6 @@
 
 
 
-
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-5">
         <div class="card shadow p-3 border-dark mb-3">
@@ -86,6 +85,7 @@
     <div class="col-md-7">
         @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
         {
+
 
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 30rem;">
                 <div class="card-header">
@@ -111,64 +111,84 @@
                 </div>
             </div>
 
-
-
         }
+
+
     </div>
 
 </div>
 @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
 {
-<div class="row" style="margin: 0 auto;">
-    <div class="col-md-12">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-sm-8">
-                        FILTRI
-                    </div>
-                    <div class="col-sm-1" style="text-align:right;">
-                        MESE:
-                    </div>
-                    <div class="col-sm-1">
+    <div class="row" style="margin: 0 auto;">
+        <div class="col-md-12">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            FILTRI > Selezione periodo di riferimento
+                        </div>
+                        <div class="col-sm-1" style="text-align:right;">
+                            MESE:
+                        </div>
+                        <div class="col-sm-1">
 
-                        @Html.DropDownList("selectedMonthTr", (List<SelectListItem>)ViewBag.ItemListMonthTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                            @Html.DropDownList("selectedMonthTr", (List<SelectListItem>)ViewBag.ItemListMonthTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
 
-                    </div>
-                    <div class="col-sm-1" style="text-align:right;">
-                        ANNO:
-                    </div>
-                    <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-1" style="text-align:right;">
+                            ANNO:
+                        </div>
+                        <div class="col-sm-1">
 
-                        @Html.DropDownList("selectedYearTr", (List<SelectListItem>)ViewBag.ItemListTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                            @Html.DropDownList("selectedYearTr", (List<SelectListItem>)ViewBag.ItemListTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     <div class="row" style="margin: 0 auto;">
         <div class="col-md-2">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 35rem;">
-                <div class="card-header">GRAFICO</div>
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
+                <div class="card-header">FLUSSO DI CASSA</div>
                 <div class="card-body">
-                    <canvas id="myChart" height="700"></canvas>
+                    <canvas id="myChart" height="550"></canvas>
                 </div>
             </div>
         </div>
         <div class="col-md-5">
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                <div class="card-header">GRAFICO</div>
+                <div class="card-header">GRAFICO ENTRATE > Suddivisione categorie</div>
                 <div class="card-body">
-                    <canvas id="doughnut-chart-in" width="800" height="450"></canvas>
-                </div>
+                    <div class="row">
+                        
+                        <div class="col-md-2">
+                            <br /><h5>Importi:</h5>
+                            @foreach (var item in ViewBag.CodesInV)
+                            {
+                                <small style="text-align:right;">@item:</small><br />
+                            }
+                        </div>
+                        <div class="col-md-2">
+                            <br /><br />
+                            @foreach (var item in ViewBag.CodeValuesInV)
+                            {
+                                <small style="text-align:left;">@item€</small><br />
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <canvas id="doughnut-chart-in" width="800" height="630"></canvas>
+                        </div>
+
+                        </div>
+                    </div>
             </div>
 
         </div>
         <div class="col-md-5">
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                <div class="card-header">GRAFICO</div>
+                <div class="card-header">GRAFICO USCITE > Suddivisione categorie</div>
                 <div class="card-body">
                     <canvas id="doughnut-chart-out" width="800" height="450"></canvas>
                 </div>
@@ -176,10 +196,10 @@
 
         </div>
     </div>
-    }
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
-    <script>
+<script>
         new Chart(document.getElementById("doughnut-chart-in"), {
             type: 'doughnut',
             data: {
@@ -187,7 +207,7 @@
                 datasets: [
                     {
                         label: "Spesa €",
-                        backgroundColor: ["rgba(255, 87, 51, 0.6)", "rgba(158, 19, 236, 0.6)", "rgba(255, 230, 51, 0.6)", "rgba(236, 19, 105, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 87, 51, 0.6)", "rgba(78, 209, 224, 0.6)", "rgba(10, 141, 43, 0.6)"],
+                        backgroundColor: ["rgba(255, 87, 51, 0.4)", "rgba(158, 19, 236, 0.4)", "rgba(255, 230, 51, 0.4)", "rgba(236, 19, 105, 0.4)", "rgba(54, 162, 235, 0.4)", "rgba(255, 87, 51, 0.4)", "rgba(78, 209, 224, 0.4)", "rgba(10, 141, 43, 0.4)"],
                         data: @Html.Raw(ViewBag.CodeValuesIn),
                         borderColor: [
                             'rgba(255, 87, 51, 1)',
@@ -204,14 +224,20 @@
             },
             options: {
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Suddivisione entrate'
+                },
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        fontColor: "#506678",
+                    }
                 }
             }
         });
-    </script>
+</script>
 
-    <script>
+<script>
         new Chart(document.getElementById("doughnut-chart-out"), {
             type: 'doughnut',
             data: {
@@ -230,18 +256,24 @@
                             'rgba(255, 87, 51, 1)',
                             'rgba(78, 209, 224, 1)',
                             'rgba(10, 141, 43, 1)'
-                        ],
+                        ]
                     }
                 ]
             },
             options: {
                 title: {
-                    display: true,
+                    display: false,
                     text: 'Suddivisione uscite'
+                },
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        fontColor: "#506678",
+                    }
                 }
             }
         });
-    </script>
+</script>
 
 
 
@@ -252,54 +284,54 @@
 
 
 
-    <div class="modal fade" id="fastupdate" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document" style="width:1250px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Easy Update</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"></span>
-                    </button>
-                </div>
-                <div class="modal-body" id="ModalBodyDiv">
-                </div>
+<div class="modal fade" id="fastupdate" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:1250px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Easy Update</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDiv">
             </div>
         </div>
     </div>
+</div>
 
 
 
-    @section scripts {
-        <script>
-            function Edit(ClientID) {
-                var url = "/PersonalFinance/Fast_Update/" + ClientID;
-                $("#ModalBodyDiv").load(url, function () {
-                    $("#fastupdate").modal("show");
-                })
-            }
-
-        </script>
-    }
-
-
-
-    <!--
-
-        <script src="~/js/drawBasic.js"></script>
-       // <script>drawBasic('') </script>
-        <div id="chart_div"></div>
-    -->
-    <div class="wrapper">
-
-
-    </div>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
-    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+@section scripts {
     <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Fast_Update/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#fastupdate").modal("show");
+            })
+        }
+
+    </script>
+}
+
+
+
+<!--
+
+    <script src="~/js/drawBasic.js"></script>
+   // <script>drawBasic('') </script>
+    <div id="chart_div"></div>
+-->
+<div class="wrapper">
+
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+<script>
 
 
     const colors = {
@@ -412,9 +444,9 @@
         //Chart.defaults.global.defaultFontFamily = "Fira Sans";
     };
 
-    </script>
+</script>
 
-    <script>
+<script>
         var i = 0;
         var items = @Html.Raw(ViewBag.Transactions);
         var out = 0;
@@ -468,4 +500,4 @@
                 }
             }
         });
-    </script>
+</script>

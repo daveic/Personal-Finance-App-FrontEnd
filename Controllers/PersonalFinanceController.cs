@@ -260,10 +260,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                                             .ToList();
             List<string> strCodes = new List<string>();
             foreach (var item in UniqueCodes) strCodes.Add(item.Key);
- 
+
             string jsonCodes = JsonConvert.SerializeObject(strCodes);
-            if (type == 0) ViewBag.CodesOut = jsonCodes;
-            if (type == 1) ViewBag.CodesIn = jsonCodes;
+            if (type == 0) { ViewBag.CodesOut = jsonCodes; ViewBag.CodesOutV = strCodes; }
+            if (type == 1) { ViewBag.CodesIn = jsonCodes; ViewBag.CodesInV = strCodes; }
+
             int i = 0;
 
             int[] count = new int[strCodes.Count];
@@ -277,7 +278,8 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             string jsonCodeValues = JsonConvert.SerializeObject(count);
             if (type == 0) ViewBag.CodeValuesOut = jsonCodeValues;
-            if (type == 1) ViewBag.CodeValuesIn = jsonCodeValues;
+            if (type == 1) {ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; }
+
         }
 
 
