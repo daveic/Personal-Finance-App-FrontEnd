@@ -75,19 +75,20 @@
 
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-5">
-        <div class="card shadow p-3 border-dark mb-3">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 550px;">
             <div class="card-header">NUOVA TRANSAZIONE</div>
             <div class="card-body">
-                <partial name="Transaction_Add" model="Model.TransactionType" />
+
+                    <partial name="Transaction_Add" model="Model.TransactionType"/>
             </div>
-        </div>
+            </div>
     </div>
     <div class="col-md-7">
         @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
         {
 
 
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 30rem;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 33rem;">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-sm-8">
@@ -107,7 +108,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <canvas id="canvas"></canvas>
+                    <p>Nel grafico è rappresentato l'andamento del saldo nel tempo.<br/>E' possibile selezionare il range temporale di interesse col filtro in alto.</p>
+                    <br />
+                    <canvas id="canvas" style="margin: 0 auto; height: 90px;"></canvas>             
                 </div>
             </div>
 
@@ -497,6 +500,12 @@
                             beginAtZero: true
                         }
                     }]
+                },
+                legend: {
+                    labels: {
+                        usePointStyle: true,
+                        fontColor: "#506678",
+                    }
                 }
             }
         });

@@ -13,17 +13,20 @@
             <div class="col-md-4">
                 <div class="form-check">
                     <label for="recipient-name" class="col-form-label">Categoria</label>
-                    @foreach (var lItem in Model.Codes)
-                    {
+                    <input type="text" class="form-control" asp-for="TrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
+                    <span asp-validation-for="TrsCode" class="text-danger"></span>
 
-                        <pre>@Html.RadioButtonFor(m => m.TrsCode, lItem.Value) @lItem.Text   </pre>
+                    <br />
+                    <div id="partialViewWrapper">
+                        @foreach (var lItem in Model.Codes)
+                        {
+                            <pre>@Html.RadioButtonFor(m => m.TrsCode, lItem.Value)   @lItem.Text</pre>
+                        }
 
-
-                    }
-
+                    </div>
                 </div>
-
             </div>
+           
 
             <div class="col-md-8">
                 <div class="row">
