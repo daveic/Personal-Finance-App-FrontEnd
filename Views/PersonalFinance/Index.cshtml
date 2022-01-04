@@ -12,65 +12,77 @@
         <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 22rem;">
             <div class="card-header">EasyUpdate</div>
             <div class="card-body">
-                <h4 class="card-title">Saldo attuale: @Model.TransactionSum €</h4>
+                <h4 class="card-title">Aggiornamento rapido</h4><br />
                 <a href="#" class="btn btn-danger" onclick="Edit(0)">Easy Update</a>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                <p class="card-text"><br />Questo strumento permette di aggiornare rapidamente il wallet con gli importi attuali.<br /></p>
             </div>
         </div>
     </div>
     <div class="col-md-9">
         <div class="row" style="margin: 0 auto;">
             <div class="col-md-4">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                    <div class="card-header">TOTALE TRANSAZIONI</div>
+                <div class="card shadow p-3 border-primary mb-3" style="margin: 0 auto;">
+                    <div class="card-header">SALDO ATTUALE</div>
                     <div class="card-body">
                         <h4 class="card-title">Saldo attuale: @Model.TransactionSum €</h4>
-                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                        <p class="card-text">L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).<br /></p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card shadow p-3 border-success mb-3" style="margin: 0 auto;">
                     <div class="card-header">TOTALE CREDITI</div>
                     <div class="card-body">
                         <h4 class="card-title">Totale crediti: @Model.CreditSum €</h4>
-                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                        <p class="card-text">L'importo rappresenta il totale dei crediti da ricevere.<br /></p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
                     <div class="card-header">TOTALE DEBITI</div>
                     <div class="card-body">
                         <h4 class="card-title">Totale debiti: @Model.DebitSum €</h4>
-                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                        <p class="card-text">L'importo rappresenta il totale dei debiti ancora da estinguere.<br /></p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row" style="margin: 0 auto;">
             <div class="col-md-6">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                    <div class="card-header">TOTALE + CREDITI - DEBITI</div>
+
+                <div class="card shadow p-3 border-warning mb-3" style="margin: 0 auto;">
+                    <div class="card-header" data-toggle="tooltip" title="Il totale calcolato è la somma del saldo e dei crediti, al netto dei debiti.">TOTALE + CREDITI - DEBITI</div>
                     <div class="card-body">
-                        <h4 class="card-title">Saldo totale: @Model.TotWithDebits €</h4>
-                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                        <div class="row">
+                            <div class="col-8">
+                                <h3 class="card-title" style="vertical-align: bottom">Totale calcolato: </h3>
+                            </div>
+                            <div class="col-4">
+                                <h2 style="text-align: right">@Model.TotWithDebits €</h2>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                <div class="card shadow p-3 border-info mb-3" style="margin: 0 auto;">
                     <div class="card-header">TOTALE + CREDITI</div>
                     <div class="card-body">
-                        <h4 class="card-title">Saldo totale: @Model.TotNoDebits €</h4>
-                        <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br /></p>
+                        <div class="row">
+                            <div class="col-8">
+                                <h3 class="card-title" style="vertical-align: bottom">Saldo totale: </h3>
+                            </div>
+                            <div class="col-4">
+                                <h2 style="text-align: right" data-toggle="tooltip" title="Il totale calcolato è la somma del saldo e dei crediti.">@Model.TotNoDebits €</h2>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 <div class="row" style="margin: 0 auto;">
@@ -167,11 +179,7 @@
                     <div class="row">
                         <div class="col-10">
 
-                            <canvas id="doughnut-chart-in" width="800" height="630" style="margin: 0 auto; display: block;"></canvas>
-                            <div class="donut-inner">
-                                <h5>47 / 60 st</h5>
-                                <span>(30 / 25 st)</span>
-                            </div>
+                            <canvas id="doughnut-chart-in" width="800" height="530" style="margin: 0 auto; display: block;"></canvas>
                         </div>
                         <div class="col-2" style="margin-top: 3px;">
                             @foreach (var item in ViewBag.CodeValuesInV)
@@ -190,40 +198,24 @@
                 <div class="card-header">GRAFICO USCITE > Suddivisione categorie</div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-4">
-                            <br />
-                            <div class="row">
-                                <h5>Importi:</h5>
-                                <div class="col-md-7">
-                                    @foreach (var item in ViewBag.CodesOutV)
-                                    {
-                                        <small style="text-align:right;">@item:</small><br />
-                                    }
-                                </div>
-                                <div class="col-md-5">
-                                    @foreach (var item in ViewBag.CodeValuesOutV)
-                                    {
-                                        <small style="text-align:left;">@item€</small><br />
-                                    }
-                                </div>
-                            </div>
+                        <div class="col-10">
+                            <canvas id="doughnut-chart-out" width="800" height="530" style="margin: 0 auto; display: block;"></canvas>
                         </div>
-                        <div class="col-8">
-                            <canvas id="doughnut-chart-out" width="800" height="630"></canvas>
+                        <div class="col-2" style="margin-top: 3px;">
+                            @foreach (var item in ViewBag.CodeValuesOutV)
+                            {
+                                <small style="text-align:left;">@item€</small><br />
+                            }
                         </div>
-                    </div>
+                                    
+                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<div id="donut-example"></div>
-
 <script>
-    Chart.Legend.prototype.afterFit = function () {
-        this.height = this.height + 50;
-    };
         new Chart(document.getElementById("doughnut-chart-in"), {
             type: 'doughnut',
             data: {
@@ -231,7 +223,7 @@
                 datasets: [
                     {
                         label: "Spesa €",
-                        backgroundColor: ["rgba(255, 87, 51, 0.4)", "rgba(158, 19, 236, 0.4)", "rgba(255, 230, 51, 0.4)", "rgba(236, 19, 105, 0.4)", "rgba(54, 162, 235, 0.4)", "rgba(255, 87, 51, 0.4)", "rgba(78, 209, 224, 0.4)", "rgba(10, 141, 43, 0.4)"],
+                        backgroundColor: ["rgba(255, 87, 51, 0.7)", "rgba(158, 19, 236, 0.7)", "rgba(255, 230, 51, 0.7)", "rgba(236, 19, 105, 0.7)", "rgba(54, 162, 235, 0.7)", "rgba(255, 87, 51, 0.7)", "rgba(78, 209, 224, 0.7)", "rgba(10, 141, 43, 0.7)"],
                         data: @Html.Raw(ViewBag.CodeValuesIn),
                         borderColor: [
                             'rgba(255, 87, 51, 1)',
@@ -260,11 +252,9 @@
                         padding: 10,
                     }
                 },
-                percentageInnerCutout: 70
             }
         });
 </script>
-
 <script>
         new Chart(document.getElementById("doughnut-chart-out"), {
             type: 'doughnut',
@@ -273,7 +263,7 @@
                 datasets: [
                     {
                         label: "Spesa €",
-                        backgroundColor: ["rgba(255, 87, 51, 0.6)", "rgba(158, 19, 236, 0.6)", "rgba(255, 230, 51, 0.6)", "rgba(236, 19, 105, 0.6)", "rgba(54, 162, 235, 0.6)", "rgba(255, 87, 51, 0.6)", "rgba(78, 209, 224, 0.6)", "rgba(10, 141, 43, 0.6)"],
+                        backgroundColor: ["rgba(255, 87, 51, 0.7)", "rgba(158, 19, 236, 0.7)", "rgba(255, 230, 51, 0.7)", "rgba(236, 19, 105, 0.7)", "rgba(54, 162, 235, 0.7)", "rgba(255, 87, 51, 0.7)", "rgba(78, 209, 224, 0.7)", "rgba(10, 141, 43, 0.7)"],
                         data: @Html.Raw(ViewBag.CodeValuesOut),
                         borderColor: [
                             'rgba(255, 87, 51, 1)',
@@ -294,9 +284,12 @@
                     text: 'Suddivisione uscite'
                 },
                 legend: {
+                    position: 'right',
                     labels: {
                         usePointStyle: true,
                         fontColor: "#506678",
+                        fontSize: 14,
+                        padding: 10,
                     }
                 }
             }
@@ -525,51 +518,12 @@
                             beginAtZero: true
                         }
                     }]
-                },
-                legend: {
-                    labels: {
-                        usePointStyle: true,
-                        fontColor: "#506678",
-                    }
-                }
+                }                
             }
         });
 </script>
-
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-
-<div id="donut-example"></div>
-
 <script>
-
-    Morris.Donut({
-        labelColor: '#FFF',
-
-
-        element: 'donut-example',
-        data: [
-            { label: "  Download Sales  ", value: 12 },
-            { label: "In-Store Sales", value: 30 },
-            { label: "Mail-Order Sales", value: 20 }
-        ],
-
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'bottom' });
     });
-    Donut.prototype.drawEmptyDonutLabel(0, 0, "#636972", 15, "futura-pt")
-
-    Donut.prototype.drawEmptyDonutLabel = function (xPos, yPos, color, fontSize, fontWeight) {
-        var text;
-        text = this.raphael.text(xPos, yPos, '').attr('font-size', fontSize).attr('fill', "#636972").attr('font-family', "futura-pt");
-        if (fontWeight != null) {
-            text.attr('font-weight', fontWeight);
-        }
-        return text;
-    };
 </script>
-
-svg text{
-      font-size:10px!important;
-}
-
