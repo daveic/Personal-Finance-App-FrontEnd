@@ -11482,3 +11482,17 @@ fieldset:disabled .btn {
 .alert-dark {
   background-color: #303030;
 }
+
+.donut-inner {
+    margin-top: -100px;
+    margin-bottom: 100px;
+}
+
+    .donut-inner h5 {
+        margin-bottom: 5px;
+        margin-top: 0;
+    }
+
+    .donut-inner span {
+        font-size: 12px;
+    }

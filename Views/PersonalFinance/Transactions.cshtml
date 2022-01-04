@@ -72,6 +72,13 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-2">
+        <button type="button" class="btn btn-sm" style="background-color: #2574A9;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button>
+    </div>
+    <div class="col-10">      
+    </div>
+</div>
 
 @if (Model.state == 1)
 {
@@ -93,14 +100,14 @@ else if (Model.state == 3)
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione creata correttamente.</p>
     </div>
-}
+}<br />
 @using (Html.BeginForm("Transactions", "PersonalFinance", FormMethod.Get))
 {
     <div class="card shadow p-3 border-info mb-3" style="margin: 0 auto;">
         <div class="card-header">
             <div class="row">
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button>
+
                 </div>
                 <div class="col-md-2">
                     Filtri
@@ -148,36 +155,38 @@ else if (Model.state == 3)
                         @foreach (var item in Model.Transactions)
                         {
                             <tr>
-                                <td>@item.ID
+                                <td>
+                                    @item.ID
                                 @if (item.TrsValue >= 0)
                                 {
                                     <span class="badge rounded-pill bg-success">Entrata</span>
                                 }
-                                else { 
+                                else
+                                {
                                     <span class="badge rounded-pill bg-danger">Uscita</span>
                                 }
-                                </td>
-                                <td>@item.TrsCode</td>
-                                <td>@item.TrsTitle</td>
-                                <td>
-                                    @item.TrsDateTime.ToString("dd/MM/yyyy")                        
-                                </td>
-                                <td>@item.TrsValue</td>
-                                <td>@item.TrsNote</td>
-                                <td style='white-space: nowrap'>
-                                    <div class="btn-group">
-                                        <a href="#" type="button" class="btn btn-secondary" onclick="Details(@item.ID)">Details</a>
-                                        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                                            <li><a href="#" class="btn btn-danger dropdown-item" onclick="Edit(@item.ID)">Edit</a></li>
-                                            <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
+                            </td>
+                            <td>@item.TrsCode</td>
+                            <td>@item.TrsTitle</td>
+                            <td>
+                                @item.TrsDateTime.ToString("dd/MM/yyyy")
+                            </td>
+                            <td>@item.TrsValue</td>
+                            <td>@item.TrsNote</td>
+                            <td style='white-space: nowrap'>
+                                <div class="btn-group">
+                                    <a href="#" type="button" class="btn btn-secondary" onclick="Details(@item.ID)">Details</a>
+                                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                                        <span class="visually-hidden">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                                        <li><a href="#" class="btn btn-danger dropdown-item" onclick="Edit(@item.ID)">Edit</a></li>
+                                        <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -206,25 +215,25 @@ else if (Model.state == 3)
         </div>
     </div>
 }
-    @section scripts {
-        <script>
-            function Edit(ClientID) {
-                var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
-                $("#ModalBodyDiv").load(url, function () {
-                    $("#edititem").modal("show");
-                })
-            }
-            function Delete(ClientID) {
-                var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
-                $("#ModalBodyDivDel").load(url, function () {
-                    $("#deleteitem").modal("show");
-                })
-            }
-            function Details(ClientID) {
-                var url = "/PersonalFinance/Transaction_Details/" + ClientID;
-                $("#ModalBodyDivDet").load(url, function () {
-                    $("#detailsitem").modal("show");
-                })
-            }
-        </script>
-    }
+@section scripts {
+    <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#edititem").modal("show");
+            })
+        }
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+        function Details(ClientID) {
+            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+    </script>
+}

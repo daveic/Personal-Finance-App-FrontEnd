@@ -79,9 +79,9 @@
             <div class="card-header">NUOVA TRANSAZIONE</div>
             <div class="card-body">
 
-                    <partial name="Transaction_Add" model="Model.TransactionType"/>
+                <partial name="Transaction_Add" model="Model.TransactionType" />
             </div>
-            </div>
+        </div>
     </div>
     <div class="col-md-7">
         @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
@@ -108,9 +108,9 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p>Nel grafico è rappresentato l'andamento del saldo nel tempo.<br/>E' possibile selezionare il range temporale di interesse col filtro in alto.</p>
+                    <p>Nel grafico è rappresentato l'andamento del saldo nel tempo.<br />E' possibile selezionare il range temporale di interesse col filtro in alto.</p>
                     <br />
-                    <canvas id="canvas" style="margin: 0 auto; height: 90px;"></canvas>             
+                    <canvas id="canvas" style="margin: 0 auto; height: 90px;"></canvas>
                 </div>
             </div>
 
@@ -161,48 +161,69 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
                 <div class="card-header">GRAFICO ENTRATE > Suddivisione categorie</div>
                 <div class="card-body">
                     <div class="row">
-                        
-                        <div class="col-md-2">
-                            <br /><h5>Importi:</h5>
-                            @foreach (var item in ViewBag.CodesInV)
-                            {
-                                <small style="text-align:right;">@item:</small><br />
-                            }
+                        <div class="col-10">
+
+                            <canvas id="doughnut-chart-in" width="800" height="630" style="margin: 0 auto; display: block;"></canvas>
+                            <div class="donut-inner">
+                                <h5>47 / 60 st</h5>
+                                <span>(30 / 25 st)</span>
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                            <br /><br />
+                        <div class="col-2" style="margin-top: 3px;">
                             @foreach (var item in ViewBag.CodeValuesInV)
                             {
                                 <small style="text-align:left;">@item€</small><br />
                             }
                         </div>
-                        <div class="col-md-8">
-                            <canvas id="doughnut-chart-in" width="800" height="630"></canvas>
-                        </div>
 
-                        </div>
+
                     </div>
-            </div>
-
-        </div>
-        <div class="col-md-5">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                <div class="card-header">GRAFICO USCITE > Suddivisione categorie</div>
-                <div class="card-body">
-                    <canvas id="doughnut-chart-out" width="800" height="450"></canvas>
                 </div>
             </div>
-
+        </div>
+        <div class="col-md-5">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
+                <div class="card-header">GRAFICO USCITE > Suddivisione categorie</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <br />
+                            <div class="row">
+                                <h5>Importi:</h5>
+                                <div class="col-md-7">
+                                    @foreach (var item in ViewBag.CodesOutV)
+                                    {
+                                        <small style="text-align:right;">@item:</small><br />
+                                    }
+                                </div>
+                                <div class="col-md-5">
+                                    @foreach (var item in ViewBag.CodeValuesOutV)
+                                    {
+                                        <small style="text-align:left;">@item€</small><br />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <canvas id="doughnut-chart-out" width="800" height="630"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<div id="donut-example"></div>
 
 <script>
+    Chart.Legend.prototype.afterFit = function () {
+        this.height = this.height + 50;
+    };
         new Chart(document.getElementById("doughnut-chart-in"), {
             type: 'doughnut',
             data: {
@@ -231,11 +252,15 @@
                     text: 'Suddivisione entrate'
                 },
                 legend: {
+                    position: 'right',
                     labels: {
                         usePointStyle: true,
                         fontColor: "#506678",
+                        fontSize: 14,
+                        padding: 10,
                     }
-                }
+                },
+                percentageInnerCutout: 70
             }
         });
 </script>
@@ -510,3 +535,41 @@
             }
         });
 </script>
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+<div id="donut-example"></div>
+
+<script>
+
+    Morris.Donut({
+        labelColor: '#FFF',
+
+
+        element: 'donut-example',
+        data: [
+            { label: "  Download Sales  ", value: 12 },
+            { label: "In-Store Sales", value: 30 },
+            { label: "Mail-Order Sales", value: 20 }
+        ],
+
+    });
+    Donut.prototype.drawEmptyDonutLabel(0, 0, "#636972", 15, "futura-pt")
+
+    Donut.prototype.drawEmptyDonutLabel = function (xPos, yPos, color, fontSize, fontWeight) {
+        var text;
+        text = this.raphael.text(xPos, yPos, '').attr('font-size', fontSize).attr('fill', "#636972").attr('font-family', "futura-pt");
+        if (fontWeight != null) {
+            text.attr('font-weight', fontWeight);
+        }
+        return text;
+    };
+</script>
+
+svg text{
+      font-size:10px!important;
+}
+

@@ -127,13 +127,13 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistMonth = new List<SelectListItem>();
             foreach (var month in UniqueMonth)
             {
-                SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonth.Add(subitem);
             }
             //Passo alla view la lista
             ViewBag.ItemListMonth = itemlistMonth;
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Month.ToString() == selectedMonth);
+            if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => MonthConverter(x.BalDateTime.Month) == selectedMonth);
             //############################################################################################################################
 
 
@@ -165,13 +165,13 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistMonthTr = new List<SelectListItem>();
             foreach (var month in UniqueMonthTr)
             {
-                SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonthTr.Add(subitem);
             }
             //Passo alla view la lista
             ViewBag.ItemListMonthTr = itemlistMonthTr;
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonthTr)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Month.ToString() == selectedMonthTr);
+            if (!String.IsNullOrEmpty(selectedMonthTr)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonthTr);
             //############################################################################################################################
 
 
@@ -266,22 +266,68 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodesIn = jsonCodes; ViewBag.CodesInV = strCodes; }
 
             int i = 0;
+            int totalCountIn = 0;
+            int totalCountOut = 0;
 
             int[] count = new int[strCodes.Count];
             foreach (var item in strCodes)
             {
                 var CodeValues = Transactions.Where(x => x.TrsCode == item);
-                if (type == 0) foreach (var value in CodeValues) { count[i] -= value.TrsValue; }
-                else foreach (var value in CodeValues) { count[i] += value.TrsValue; }
+                if (type == 0) foreach (var value in CodeValues) { count[i] -= value.TrsValue; totalCountOut += value.TrsValue; }
+                else foreach (var value in CodeValues) { count[i] += value.TrsValue; totalCountIn += value.TrsValue; }
                 i++;
             }
 
             string jsonCodeValues = JsonConvert.SerializeObject(count);
-            if (type == 0) ViewBag.CodeValuesOut = jsonCodeValues;
-            if (type == 1) {ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; }
+            if (type == 0) { ViewBag.CodeValuesOut = jsonCodeValues; ViewBag.CodeValuesOutV = count; ViewBag.TotCountOut = totalCountOut; }
+            if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
 
         }
 
+        private string MonthConverter (int monthNum)
+        {
+            string ConvertedMonth = "";
+            switch (monthNum)
+            {
+                case 1:
+                    ConvertedMonth = "Gennaio";
+                    break;
+                case 2:
+                    ConvertedMonth = "Febbraio";
+                    break;
+                case 3:
+                    ConvertedMonth = "Marzo";
+                    break;
+                case 4:
+                    ConvertedMonth = "Aprile";
+                    break;
+                case 5:
+                    ConvertedMonth = "Maggio";
+                    break;
+                case 6:
+                    ConvertedMonth = "Giugno";
+                    break;
+                case 7:
+                    ConvertedMonth = "Luglio";
+                    break;
+                case 8:
+                    ConvertedMonth = "Agosto";
+                    break;
+                case 9:
+                    ConvertedMonth = "Settembre";
+                    break;
+                case 10:
+                    ConvertedMonth = "Ottobre";
+                    break;
+                case 11:
+                    ConvertedMonth = "Novembre";
+                    break;
+                case 12:
+                    ConvertedMonth = "Dicembre";
+                    break;
+            }
+            return ConvertedMonth;
+        }
 
         private IEnumerable<T> GetAllItems<T> (string type)
         {
