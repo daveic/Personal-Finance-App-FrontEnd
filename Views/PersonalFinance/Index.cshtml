@@ -13,7 +13,7 @@
             <div class="card-header">EasyUpdate</div>
             <div class="card-body">
                 <h4 class="card-title">Aggiornamento rapido</h4><br />
-                <a href="#" class="btn btn-danger" onclick="Edit(0)">Easy Update</a>
+                <a href="#" class="btn btn-info" onclick="Edit(0)">Easy Update</a>
                 <p class="card-text"><br />Questo strumento permette di aggiornare rapidamente il wallet con gli importi attuali.<br /></p>
             </div>
         </div>
@@ -24,17 +24,29 @@
                 <div class="card shadow p-3 border-primary mb-3" style="margin: 0 auto;">
                     <div class="card-header">SALDO ATTUALE</div>
                     <div class="card-body">
-                        <h4 class="card-title">Saldo attuale: @Model.TransactionSum €</h4>
-                        <p class="card-text">L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).<br /></p>
+                        <div class="row">
+                            <div class="col-6">
+                                <h4 class="card-title" style="vertical-align: bottom">Saldo attuale: </h4>
+                            </div>
+                            <div class="col-6">
+                                <h2 style="text-align: right" data-toggle="tooltip" title="L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).">@Model.TransactionSum €</h2>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                        </div>
+                    </div>
             <div class="col-md-4">
                 <div class="card shadow p-3 border-success mb-3" style="margin: 0 auto;">
                     <div class="card-header">TOTALE CREDITI</div>
                     <div class="card-body">
-                        <h4 class="card-title">Totale crediti: @Model.CreditSum €</h4>
-                        <p class="card-text">L'importo rappresenta il totale dei crediti da ricevere.<br /></p>
+                        <div class="row">
+                            <div class="col-7">
+                                <h4 class="card-title" style="vertical-align: bottom">Totale crediti: </h4>
+                            </div>
+                            <div class="col-5">
+                                <h3 style="text-align: right" data-toggle="tooltip" title="L'importo rappresenta il totale dei crediti da ricevere.">@Model.CreditSum €</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -42,24 +54,29 @@
                 <div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
                     <div class="card-header">TOTALE DEBITI</div>
                     <div class="card-body">
-                        <h4 class="card-title">Totale debiti: @Model.DebitSum €</h4>
-                        <p class="card-text">L'importo rappresenta il totale dei debiti ancora da estinguere.<br /></p>
+                        <div class="row">
+                            <div class="col-7">
+                                <h4 class="card-title" style="vertical-align: bottom">Totale debiti: </h4>
+                            </div>
+                            <div class="col-5">
+                                <h3 style="text-align: right" data-toggle="tooltip" title="L'importo rappresenta il totale dei debiti ancora da estinguere.">@Model.DebitSum €</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row" style="margin: 0 auto;">
             <div class="col-md-6">
-
                 <div class="card shadow p-3 border-warning mb-3" style="margin: 0 auto;">
-                    <div class="card-header" data-toggle="tooltip" title="Il totale calcolato è la somma del saldo e dei crediti, al netto dei debiti.">TOTALE + CREDITI - DEBITI</div>
+                    <div class="card-header">TOTALE + CREDITI - DEBITI</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-8">
                                 <h3 class="card-title" style="vertical-align: bottom">Totale calcolato: </h3>
                             </div>
                             <div class="col-4">
-                                <h2 style="text-align: right">@Model.TotWithDebits €</h2>
+                                <h2 style="text-align: right" data-toggle="tooltip" title="Il totale calcolato è la somma del saldo e dei crediti, al netto dei debiti.">@Model.TotWithDebits €</h2>
                             </div>
                         </div>
                     </div>
