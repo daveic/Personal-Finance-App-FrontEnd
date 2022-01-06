@@ -1056,8 +1056,26 @@ namespace PersonalFinanceFrontEnd.Controllers
             FU_item.FU_ID_B4 = Banks.ElementAt(4).ID;
             FU_item.FU_Value_B4 = Banks.ElementAt(4).BankValue;
 
+            FU_item.FU_ID_B5 = Banks.ElementAt(5).ID;
+            FU_item.FU_Value_B5 = Banks.ElementAt(5).BankValue;
+
+            FU_item.FU_ID_B6 = Banks.ElementAt(6).ID;
+            FU_item.FU_Value_B6 = Banks.ElementAt(6).BankValue;
+
+            FU_item.FU_ID_B7 = Banks.ElementAt(7).ID;
+            FU_item.FU_Value_B7 = Banks.ElementAt(7).BankValue;
+
+            FU_item.FU_ID_B8 = Banks.ElementAt(8).ID;
+            FU_item.FU_Value_B8 = Banks.ElementAt(8).BankValue;
+
+            FU_item.FU_ID_B9 = Banks.ElementAt(9).ID;
+            FU_item.FU_Value_B9 = Banks.ElementAt(9).BankValue;
+
+            FU_item.FU_ID_B10 = Banks.ElementAt(10).ID;
+            FU_item.FU_Value_B10 = Banks.ElementAt(10).BankValue;
+
             FU_item.FU_ID_T = Tickets.ElementAt(0).ID;
-            FU_item.FU_Value_T = Tickets.ElementAt(0).TicketValue;
+            FU_item.FU_Count_T = Convert.ToInt32(Tickets.ElementAt(0).NumTicket);
 
             return PartialView(FU_item);
         }
@@ -1080,7 +1098,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(3));
             Banks.ElementAt(4).BankValue = FU_item.FU_Value_B4;
             result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(4));
-            Tickets.ElementAt(0).TicketValue = FU_item.FU_Value_T;
+            Banks.ElementAt(5).BankValue = FU_item.FU_Value_B5;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(5));
+            Banks.ElementAt(6).BankValue = FU_item.FU_Value_B6;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(6));
+            Banks.ElementAt(7).BankValue = FU_item.FU_Value_B7;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(7));
+            Banks.ElementAt(8).BankValue = FU_item.FU_Value_B8;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(8));
+            Banks.ElementAt(9).BankValue = FU_item.FU_Value_B9;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(9));
+            Banks.ElementAt(10).BankValue = FU_item.FU_Value_B10;
+            result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(10));
+            Tickets.ElementAt(0).NumTicket = FU_item.FU_Count_T.ToString();
             result = EditItemID<Ticket>(nameof(Ticket), Tickets.ElementAt(0));
             return RedirectToAction(nameof(Index));
         }
