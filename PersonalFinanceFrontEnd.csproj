@@ -7,6 +7,8 @@
 
 
     <ItemGroup>
+        <Folder Include="Resources\" />
+        <Folder Include="wwwroot\images\" />
         <Folder Include="wwwroot\css\" />
     </ItemGroup>
 
@@ -16,6 +18,18 @@
 	
   <ItemGroup>
     <Folder Include="wwwroot\scripts\" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Include="wwwroot\images\amazon-pay.jpg" />
+    <None Include="wwwroot\images\amex.png" />
+    <None Include="wwwroot\images\findomestic.jpg" />
+    <None Include="wwwroot\images\illimity.jpg" />
+    <None Include="wwwroot\images\ING.jpg" />
+    <None Include="wwwroot\images\N26.gif" />
+    <None Include="wwwroot\images\paypal.png" />
+    <None Include="wwwroot\images\satispay.png" />
+    <None Include="wwwroot\images\yap.png" />
   </ItemGroup>
 	
   <ItemGroup>
