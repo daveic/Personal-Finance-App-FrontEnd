@@ -99,24 +99,17 @@ else if (Model.state == 3)
                         <tbody>
                             @foreach (var item in Model.KnownMovements)
                             {
-                                <tr>
-                                    <td>@item.ID</td>
-                                    <td>@item.KMType</td>
-                                    <td>@item.KMTitle</td>
-                                    <td>@item.KMValue</td>
-                                    <td>@item.KMNote</td>
-                                    <td style='white-space: nowrap'>
-                                        <div class="btn-group">
-                                            <a href="#" type="button" class="btn btn-secondary" onclick="Edit(@item.ID)">Edit</a>
-                                            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                                <span class="visually-hidden">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                                                <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.KMType</td>
+                                <td>@item.KMTitle</td>
+                                <td>@item.KMValue</td>
+                                <td>@item.KMNote</td>
+                                <td style='white-space: nowrap'>
+                                    <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                    <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>

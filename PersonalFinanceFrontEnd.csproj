@@ -21,7 +21,6 @@
   </ItemGroup>
 	
   <ItemGroup>
-    <None Include="wwwroot\images\amex.png" />
     <None Include="wwwroot\images\paypal.png" />
   </ItemGroup>
 	

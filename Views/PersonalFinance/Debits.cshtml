@@ -120,29 +120,22 @@ else if (Model.state == 3)
                     <tbody>
                         @foreach (var item in Model.Debits)
                         {
-                            <tr>
-                                <td>@item.ID</td>
-                                <td>@item.DebCode</td>
-                                <td>@item.DebTitle</td>
-                                <td>@item.CredName</td>
-                                <td>@item.DebValue</td>
-                                <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
-                                <td>@item.DebNote</td>
-                                <td>@(item.RtNum- item.RtPaid)</td>
-                                <td>@item.RemainToPay</td>
-                                <td style='white-space: nowrap'>
-                                    <div class="btn-group">
-                                        <a href="#" type="button" class="btn btn-secondary" onclick="Details(@item.ID)">Details</a>
-                                        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                                            <span class="visually-hidden">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                                            <li><a href="#" class="btn btn-danger dropdown-item" onclick="Edit(@item.ID)">Edit</a></li>
-                                            <li><a href="#" class="btn btn-danger dropdown-item" onclick="Delete(@item.ID)">Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.DebCode</td>
+                            <td>@item.DebTitle</td>
+                            <td>@item.CredName</td>
+                            <td>@item.DebValue</td>
+                            <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
+                            <td>@item.DebNote</td>
+                            <td>@(item.RtNum- item.RtPaid)</td>
+                            <td>@item.RemainToPay</td>
+                            <td style='white-space: nowrap'>
+                                <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
+                                <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
