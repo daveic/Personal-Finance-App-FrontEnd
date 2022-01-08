@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -794,6 +795,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
             return Debits;
         }
+        [Authorize]
         public ActionResult Transactions(string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
