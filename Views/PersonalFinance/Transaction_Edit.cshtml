@@ -1,46 +1,83 @@
-﻿@model PersonalFinanceFrontEnd.Models.Transaction
+﻿@model ViewModel
 
 
 <form asp-action="Transaction_Edit" style="margin: 0 auto;">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="TransactionType.ID" />
     <div class="modal-body">
-        <input type="hidden" asp-for="ID" />
-        <div class="form-row">
-            <h4>Modifica credito con ID: @Model.ID</h4>
+
+        <div class="row">
+
+
+
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="TrsCode">Codice Transazione</label>
-                <input type="text" class="form-control" asp-for="TrsCode" style="background-color: #444">
-                <span asp-validation-for="TrsCode" class="text-danger"></span>
+            <div class="col-md-4">
+                <div class="form-check">
+                    <label for="recipient-name" class="col-form-label">Categoria</label>
+                    <input type="text" class="form-control" asp-for="TransactionType.TrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
+                    <span asp-validation-for="TransactionType.TrsCode" class="text-danger"></span>
+
+                    <br />
+                    <div id="partialViewWrapper">
+                        @foreach (var lItem in Model.TransactionType.Codes)
+                        {
+                            <pre>@Html.RadioButtonFor(m => m.TransactionType.TrsCode, lItem.Value)   @lItem.Text</pre>
+                        }
+
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
-                <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
-                <span asp-validation-for="TrsTitle" class="text-danger"></span>
+
+
+            <div class="col-md-8">
+                <div class="row">
+                    <label for="recipient-name" class="col-form-label">Tipologia Transazione</label>
+
+                    <div class="form-check form-switch">
+
+                        <div class="row">
+                            <div class="col-md-3" style="text-align:left;">
+                                Uscita
+                            </div>
+                            <div class="col-md-5" style="text-align:left;">
+                                <input class="form-check-input" type="checkbox" id="switchValue" checked="" data-com.bitwarden.browser.user-edited="yes" asp-for="TransactionType.Type">Entrata
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <label for="recipient-name" class="col-form-label" asp-for="TransactionType.TrsTitle">Titolo</label>
+                        <input type="text" class="form-control" asp-for="TransactionType.TrsTitle" style="background-color: #444">
+                        <span asp-validation-for="TransactionType.TrsTitle" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="recipient-name" class="col-form-label" asp-for="TransactionType.TrsValue">Importo</label>
+                        <input type="text" class="form-control" asp-for="TransactionType.TrsValue" style="background-color: #444" placeholder="€">
+                        <span asp-validation-for="TransactionType.TrsValue" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="recipient-name" class="col-form-label" asp-for="TransactionType.TrsDateTime">Data inserimento</label>
+                        <input type="date" class="form-control" id="theDate" asp-for="TransactionType.TrsDateTime" style="background-color: #444">
+                        <span asp-validation-for="TransactionType.TrsDateTime" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="message-text" class="col-form-label" asp-for="TransactionType.TrsNote">Note:</label>
+                        <textarea class="form-control" id="message-text" asp-for="TransactionType.TrsNote" style="background-color: #444"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="TrsValue">Importo</label>
-                <input type="text" class="form-control" asp-for="TrsValue" placeholder="€" style="background-color: #444">
-                <span asp-validation-for="TrsValue" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
-                <input type="date" class="form-control" asp-for="TrsDateTime" style="background-color: #444">
-                <span asp-validation-for="TrsDateTime" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <label for="message-text" class="col-form-label" asp-for="TrsNote">Note:</label>
-                <textarea class="form-control" id="message-text" asp-for="TrsNote" style="background-color: #444"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
-        </div>
+
+
+
     </div>
 </form>

@@ -394,10 +394,33 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Transaction_Details(int id)
         {
-            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);   
+            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);
             return PartialView(Transaction);
         }
-        public ActionResult KnownMovement_Details(int id)
+        public ActionResult Transaction_Details_Edit(int id)
+        {
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
+            ViewModel viewModel = new ViewModel();
+            Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
+            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+                                            .OrderBy(x => x.Key)
+                                            .Select(x => new { Code = x.Key })
+                                            .ToList();
+            List<SelectListItem> Codes = new List<SelectListItem>();
+            foreach (var item in UniqueCodes)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = item.Code;
+                code.Text = item.Code;
+                Codes.Add(code);
+            }
+            TransactionType tr = new TransactionType() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+
+            viewModel.TransactionType = tr;
+            viewModel.TransactionType.Codes = Codes;
+            return PartialView(viewModel);
+        }
+            public ActionResult KnownMovement_Details(int id)
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
             return PartialView(KnownMovement);
@@ -607,12 +630,18 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Transaction_Edit(int id)
         {
-            return Transaction_Details(id);
+            return Transaction_Details_Edit(id);
         }
         [HttpPost]
-        public ActionResult Transaction_Edit(Transaction t)
+        public ActionResult Transaction_Edit(TransactionType t)
         {
-            int result = EditItemID<Transaction>(nameof(Transaction), t);
+            if (t.Type == false) t.TrsValue = -t.TrsValue;
+            Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+
+
+
+
+            int result = EditItemID<Transaction>(nameof(Transaction), tr);
             if (result == 0)
             {
                 TempData["sendFlagTr"] = 2;
@@ -842,7 +871,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Value = item.Code;
                 code.Text = item.Code;
                 Codes.Add(code);
-     
             }
             viewModel.TransactionType = new TransactionType();
             viewModel.TransactionType.Codes = Codes;
@@ -908,7 +936,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Transaction_Add()
         {
-
             TransactionType model = new TransactionType();
             return View(model);
         }

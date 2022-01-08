@@ -28,7 +28,12 @@
         </div>
 
         <ul class="sidebar-navigation">
-
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    Hello @User.Identity.Name
+                </li>
+            }
             <li class="header">Navigation</li>
             <li>
                 <a href="/PersonalFinance/Index">
