@@ -19,6 +19,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
+        [Authorize]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr, int page = 0)
         {
 
@@ -741,7 +742,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
         //WALLET Intermediate view
-        [Authorize]
+        
         public ActionResult Wallet()
         {
             ViewModel viewModel = new ViewModel();
@@ -796,7 +797,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
             return Debits;
         }
-        [Authorize]
+        
         public ActionResult Transactions(string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
