@@ -741,6 +741,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
         //WALLET Intermediate view
+        [Authorize]
         public ActionResult Wallet()
         {
             ViewModel viewModel = new ViewModel();
