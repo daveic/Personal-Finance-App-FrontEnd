@@ -176,7 +176,7 @@
                         <td>@item.ID</td>
                         <td>@item.BankName</td>
                         <td>@item.Iban</td>
-                        <td type="number">@item.BankValue</td>
+                        <td type="number">@item.BankValue €</td>
                         <td>@item.BankNote</td>
                         <td style='white-space: nowrap'>
                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
@@ -208,7 +208,7 @@
                                 <th scope="col">Banca</th>
                                 <th scope="col">Data inizio</th>
                                 <th scope="col">Data fine</th>
-                                <th scope="col">Valore (in €)</th>
+                                <th scope="col">Valore</th>
                                 <th scope="col">% rendita</th>
                                 <th scope="col">Note</th>
                                 <th scope="col">Azioni</th>
@@ -222,7 +222,7 @@
                                 <td>@item.BankName</td>
                                 <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
                                 <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
-                                <td type="number">@item.DepValue</td>
+                                <td type="number">@item.DepValue €</td>
                                 <td>@item.PercGrow</td>
                                 <td>@item.BankNote</td>
                                 <td style='white-space: nowrap'>
@@ -252,8 +252,9 @@
                             <tr>
                                 <th scope="col">ID</th>
                                 <th scope="col">Gestore</th>
-                                <th scope="col">Valore (in €)</th>
+                                <th scope="col">Valore singolo</th>
                                 <th scope="col">Numero</th>
+                                <th scope="col">Valore tot</th>
                                 <th scope="col">Note</th>
                                 <th scope="col">Azioni</th>
                             </tr>
@@ -261,17 +262,18 @@
                         <tbody>
                             @foreach (var item in Model.Tickets)
                             {
-                                <tr>
-                                    <td>@item.ID</td>
-                                    <td>@item.TicketName</td>
-                                    <td>@item.TicketValue</td>
-                                    <td type="number">@item.NumTicket</td>
-                                    <td>@item.TicketNote</td>
-                                    <td style='white-space: nowrap'>
-                                        <a href="#" class="btn btn-secondary btn-sm" onclick="EditTicket(@item.ID)">Edit</a>
-                                        <a href="#" class="btn btn-danger btn-sm" onclick="DeleteTicket(@item.ID)">Delete</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.TicketName</td>
+                                <td>@item.TicketValue €</td>
+                                <td type="number">@item.NumTicket</td>
+                                <td type="number">@(item.TicketValue*Convert.ToInt32(item.NumTicket)) €</td>
+                                <td>@item.TicketNote</td>
+                                <td style='white-space: nowrap'>
+                                    <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                    <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>

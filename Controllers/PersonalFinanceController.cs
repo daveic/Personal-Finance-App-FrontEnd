@@ -686,7 +686,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Ticket_Edit(int id)
         {
-            return Deposit_Details(id);
+            return Ticket_Details(id);
         }
         [HttpPost]
         public ActionResult Ticket_Edit(Ticket t)
