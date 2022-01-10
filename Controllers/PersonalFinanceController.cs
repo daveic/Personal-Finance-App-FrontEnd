@@ -20,7 +20,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
-       // [Authorize]
+        [Authorize]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr, int page = 0)
         {
 
