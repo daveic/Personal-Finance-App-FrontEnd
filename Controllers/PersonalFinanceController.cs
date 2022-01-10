@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -19,7 +20,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public class PersonalFinanceController : Controller
     {
-        [Authorize]
+       // [Authorize]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr, int page = 0)
         {
 
@@ -205,40 +206,25 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                                            .OrderBy(x => x.Key)
-                                            .Select(x => new { x.Key })
-                                            .ToList();
+                               .Select(x => x.First())
+                               .ToList();
             List<SelectListItem> Codes = new List<SelectListItem>();
-         //   List<string> strCodes = new List<string>();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new SelectListItem();
-                code.Value = item.Key;
-                code.Text = item.Key;
-          //      strCodes.Add(item.Key);
+                code.Value = item.TrsCode;
+                code.Text = item.TrsCode;
                 Codes.Add(code);
-
             }
-          //  string jsonCodes = JsonConvert.SerializeObject(strCodes);
-      //      ViewBag.Codes = jsonCodes;
+            TempData["Codes"] = Codes;
 
-            viewModel.TransactionType = new TransactionType();
-            viewModel.TransactionType.Codes = Codes;
-      /*      int i = 0;
+            viewModel.TransactionExt = new TransactionExt();
+            
 
-            int[] count = new int[Codes.Count];
-            foreach(var item in Codes)
-            {
-                var CodeValues = Transactions.Where(x => x.TrsCode == item.Value);
-                foreach (var value in CodeValues) { count[i]+= value.TrsValue; }
-                i++;
-            }
-      */
             GetDonutData(TransactionsIn, 1);
             GetDonutData(TransactionsOut, 0);
 
-       //     string jsonCodeValues = JsonConvert.SerializeObject(count);
-     //       ViewBag.CodeValues = jsonCodeValues;
+ 
 
             string jsonTrans = JsonConvert.SerializeObject(Transactions);
             ViewBag.Transactions = jsonTrans;
@@ -402,25 +388,28 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transaction_Details_Edit(int id)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
-            ViewModel viewModel = new ViewModel();
+
             Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                                            .OrderBy(x => x.Key)
-                                            .Select(x => new { Code = x.Key })
-                                            .ToList();
+                                          .Select(x => x.First())
+                                          .ToList();           
             List<SelectListItem> Codes = new List<SelectListItem>();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new SelectListItem();
-                code.Value = item.Code;
-                code.Text = item.Code;
+                code.Value = item.TrsCode;
+                code.Text = item.TrsCode;
                 Codes.Add(code);
             }
-            TransactionType tr = new TransactionType() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+            TempData["Codes"] = Codes;
 
-            viewModel.TransactionType = tr;
-            viewModel.TransactionType.Codes = Codes;
-            return PartialView(viewModel);
+            TransactionExt tr = new TransactionExt() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+            if (t.TrsValue < 0) ViewBag.Type = false; else ViewBag.Type = true;
+
+          
+         //   viewModel.TransactionType = tr;
+          //  viewModel.TransactionType.Codes = Codes;
+            return PartialView(tr);
         }
             public ActionResult KnownMovement_Details(int id)
         {
@@ -635,13 +624,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Transaction_Details_Edit(id);
         }
         [HttpPost]
-        public ActionResult Transaction_Edit(TransactionType t)
+        public ActionResult Transaction_Edit(TransactionExt t)
         {
-            if (t.Type == false) t.TrsValue = -t.TrsValue;
+            if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
+            if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
+            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
-
-
-
 
             int result = EditItemID<Transaction>(nameof(Transaction), tr);
             if (result == 0)
@@ -865,19 +853,18 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                                            .OrderBy(x => x.Key)
-                                            .Select(x => new { Code = x.Key })
-                                            .ToList();
+                              .Select(x => x.First())
+                              .ToList();
             List<SelectListItem> Codes = new List<SelectListItem>();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new SelectListItem();
-                code.Value = item.Code;
-                code.Text = item.Code;
+                code.Value = item.TrsCode;
+                code.Text = item.TrsCode;
                 Codes.Add(code);
             }
-            viewModel.TransactionType = new TransactionType();
-            viewModel.TransactionType.Codes = Codes;
+            TempData["Codes"] = Codes;
+            viewModel.TransactionExt = new TransactionExt();
 
             return View(viewModel);      
         }
@@ -944,9 +931,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Transaction_Add(TransactionType t)
+        public ActionResult Transaction_Add(TransactionExt t)
         {
             if (t.Type == false) t.TrsValue = - t.TrsValue;
+            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             Transaction tr = new Transaction() { ID=t.ID, TrsCode=t.TrsCode, TrsTitle=t.TrsTitle, TrsDateTime =t.TrsDateTime, TrsValue=t.TrsValue, TrsNote=t.TrsNote};
             using (var client = new HttpClient())
             {

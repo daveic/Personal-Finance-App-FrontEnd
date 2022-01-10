@@ -16,7 +16,7 @@ namespace PersonalFinanceFrontEnd.Models
         public IEnumerable<KnownMovement> KnownMovements { get; set; }
         public KnownMovement KnownMovement { get; set; }
         public IEnumerable<Transaction> Transactions { get; set; }
-        public TransactionType TransactionType { get; set; }
+        public TransactionExt TransactionExt { get; set; }
         public IEnumerable<Credit> Credits { get; set; }
         public Credit Credit { get; set; }
         public IEnumerable<Debit> Debits { get; set; }
@@ -27,7 +27,6 @@ namespace PersonalFinanceFrontEnd.Models
         public int DebitSum { get; set; }
         public int TotWithDebits { get; set; }
         public int TotNoDebits { get; set; }
-        public string Transactions2 { get; internal set; }
 
     }
 }

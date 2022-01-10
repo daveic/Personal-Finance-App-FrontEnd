@@ -179,8 +179,8 @@
                         <td type="number">@item.BankValue</td>
                         <td>@item.BankNote</td>
                         <td style='white-space: nowrap'>
-                            <a href="#" class="btn btn-secondary btn-sm" onclick="EditBank(@item.ID)">Edit</a>
-                            <a href="#" class="btn btn-danger btn-sm" onclick="DeleteBank(@item.ID)">Delete</a>
+                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                            <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
                         </td>
                     </tr>
                     }
@@ -226,8 +226,8 @@
                                 <td>@item.PercGrow</td>
                                 <td>@item.BankNote</td>
                                 <td style='white-space: nowrap'>
-                                    <a href="#" class="btn btn-secondary btn-sm" onclick="EditDeposit(@item.ID)">Edit</a>
-                                    <a href="#" class="btn btn-danger btn-sm" onclick="DeleteDeposit(@item.ID)">Delete</a>
+                                    <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                    <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
                                 </td>
                             </tr>
                             }

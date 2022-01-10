@@ -1,4 +1,4 @@
-﻿@model PersonalFinanceFrontEnd.Models.TransactionType
+﻿@model PersonalFinanceFrontEnd.Models.TransactionExt
 
 
 <form asp-action="Transaction_Add" style="margin: 0 auto;">
@@ -13,16 +13,18 @@
             <div class="col-md-4">
                 <div class="form-check">
                     <label for="recipient-name" class="col-form-label">Categoria</label>
-                    <input type="text" class="form-control" asp-for="TrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
-                    <span asp-validation-for="TrsCode" class="text-danger"></span>
+                    <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
+                    <span asp-validation-for="NewTrsCode" class="text-danger"></span>
 
                     <br />
                     <div id="partialViewWrapper">
-                        @foreach (var lItem in Model.Codes)
+                        @{
+                            var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
+                        }
+                        @foreach (var lItem in codes)
                         {
                             <pre>@Html.RadioButtonFor(m => m.TrsCode, lItem.Value)   @lItem.Text</pre>
                         }
-
                     </div>
                 </div>
             </div>
