@@ -5358,7 +5358,7 @@ textarea.form-control-lg {
     position: relative;
     padding: 1rem 1rem;
     margin-bottom: 1rem;
-    border: 1px solid transparent;
+    border: 1px solid #2574A9;
     border-radius: .25rem
 }
 
@@ -12279,7 +12279,6 @@ textarea.form-control-lg {
 }
 
 .alert {
-    border: none;
     color: #fff
 }
 

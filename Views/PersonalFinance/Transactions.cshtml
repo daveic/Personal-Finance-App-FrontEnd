@@ -72,73 +72,66 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-2">
-        <button type="button" class="btn btn-sm" style="background-color: #2574A9;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button>
-    </div>
-    <div class="col-10">      
-    </div>
-</div>
 
 @if (Model.state == 1)
 {
-    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+    <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
     </div>
 }
 else if (Model.state == 2)
 {
-    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+    <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione modificata correttamente.</p>
     </div>
 }
 else if (Model.state == 3)
 {
-    <div class="alert alert-dismissible fade show" role="alert" style="background-color: #2574A9">
+    <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione creata correttamente.</p>
     </div>
 }<br />
 @using (Html.BeginForm("Transactions", "PersonalFinance", FormMethod.Get))
 {
-    <div class="card shadow p-3 border-info mb-3" style="margin: 0 auto;">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md-3">
-
-                </div>
-                <div class="col-md-2">
-                    Filtri
-                </div>
-                <div class="col-md-7">
-                    <div class="row">
-                        <div class="col-md-2" style="text-align: right; vertical-align: text-bottom">
-                            Categoria:
-                        </div>
-                        <div class="col-md-2">
-                            @{
-                                var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
-                            }
-                            @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "dropdown-item", @style = "text-align: left; vertical-align: text-top" })
-                        </div>
-                        <div class="col-md-2" style="text-align: right; vertical-align: middle">
-                            Mese:
-                        </div>
-                        <div class="col-md-2">
-                            @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-                        </div>
-                        <div class="col-md-2" style="text-align: right; vertical-align: middle">
-                            Anno:
-                        </div>
-                        <div class="col-md-2">
-                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-                        </div>
+<div class="card shadow p-3 border-info mb-3" style="margin: 0 auto;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-2">
+                <button type="button" class="btn btn-sm" style="background-color: #2574A9;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button>
+            </div>
+            <div class="col-md-2">
+                Filtri
+            </div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-2" style="text-align: right; vertical-align: text-bottom">
+                        Categoria:
+                    </div>
+                    <div class="col-md-2">
+                        @{
+                            var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
+                        }
+                        @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "dropdown-item", @style = "text-align: left; vertical-align: text-top" })
+                    </div>
+                    <div class="col-md-2" style="text-align: right; vertical-align: middle">
+                        Mese:
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                    </div>
+                    <div class="col-md-2" style="text-align: right; vertical-align: middle">
+                        Anno:
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
                     </div>
                 </div>
             </div>
         </div>
+</div>
         <div class="card-body">
             <div class="table-responsive-xl">
                 <table class="table table-striped table-hover">

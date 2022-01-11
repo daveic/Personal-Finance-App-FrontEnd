@@ -18,7 +18,6 @@ using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-
     public class PersonalFinanceController : Controller
     {
         [Authorize]
@@ -305,6 +304,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
+        private int AddItem<T>(string type, T obj) where T : new()
+        {
+            string path = "Add" + type;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.PostAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
         private int DeleteItem(string type, int id)
         {
             string path = "Delete" + type + "?id=" + id;
@@ -522,6 +537,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Edit(Credit c)
         {
+            ClaimsPrincipal currentUser = this.User;
+            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Credit>(nameof(Credit), c);        
             if (result == 0)
             {
@@ -537,6 +554,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Edit(Debit d)
         {
+            ClaimsPrincipal currentUser = this.User;
+            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
@@ -556,6 +575,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+            ClaimsPrincipal currentUser = this.User;
+            tr.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Transaction>(nameof(Transaction), tr);
             if (result == 0)
             {
@@ -571,6 +592,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Edit(KnownMovement k)
         {
+            ClaimsPrincipal currentUser = this.User;
+            k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {
@@ -586,6 +609,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Edit(Bank b)
         {
+            ClaimsPrincipal currentUser = this.User;
+            b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Bank>(nameof(Bank), b);
             if (result == 0)
             {
@@ -601,6 +626,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Edit(Deposit d)
         {
+            ClaimsPrincipal currentUser = this.User;
+            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Deposit>(nameof(Deposit), d);
             if (result == 0)
             {
@@ -616,6 +643,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Edit(Ticket t)
         {
+            ClaimsPrincipal currentUser = this.User;
+            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Ticket>(nameof(Ticket), t);
             if (result == 0)
             {
@@ -763,26 +792,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
-
-        private int AddItem<T>(string type, T obj) where T : new()
-        {
-            string path = "Add" + type;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
-
-    
-
         //ADD NEW Methods
         public IActionResult Credit_Add()
         {
@@ -831,6 +840,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (t.Type == false) t.TrsValue = - t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             Transaction tr = new Transaction() { ID=t.ID, TrsCode=t.TrsCode, TrsTitle=t.TrsTitle, TrsDateTime =t.TrsDateTime, TrsValue=t.TrsValue, TrsNote=t.TrsNote};
+            ClaimsPrincipal currentUser = this.User;
+            tr.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
