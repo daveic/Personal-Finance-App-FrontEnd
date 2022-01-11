@@ -12,6 +12,7 @@ namespace PersonalFinanceFrontEnd.Models
 
     public class TransactionExt
     {
+        public string Usr_OID { get; set; }
         public int ID { get; set; }
         public string TrsCode { get; set; }
         public string TrsTitle { get; set; }

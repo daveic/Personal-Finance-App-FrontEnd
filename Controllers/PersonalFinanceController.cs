@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,18 +22,18 @@ namespace PersonalFinanceFrontEnd.Controllers
     public class PersonalFinanceController : Controller
     {
         [Authorize]
-        public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr, int page = 0)
+        public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
-
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits));
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
-            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
-            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances));
-
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), User_OID);
 
             int TransactionSum = 0;
             foreach (var item in Transactions)
@@ -55,53 +56,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int TotNoDebits = TransactionSum + CreditSum;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            /*          
-                        DateTime dateTime = Convert.ToDateTime(SelectedDate);
-                        UniqueData uniqueData = new UniqueData();
-                        TempStatistics tempStatistics = new TempStatistics();
-
-                        tempStatistics.Region = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Region));
-                        tempStatistics.Province = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.Province));
-                        tempStatistics.City = GetAreaListItem(detections.AsEnumerable().GroupBy(x => x.WorldLocation.City));
-
-
-
-                        uniqueData.UniqueDate = UniqueDate.Select(m => new SelectListItem { Value = m.DateTime.ToString(), Text = m.DateTime.ToString() }).ToList();
-                        uniqueData.UniqueCity = tempStatistics.City.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
-                        uniqueData.UniqueProvince = tempStatistics.Province.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
-                        uniqueData.UniqueRegion = tempStatistics.Region.Select(x => new SelectListItem { Value = x.AreaName, Text = x.AreaName }).ToList();
-
-                        
-                        if (!String.IsNullOrEmpty(SelectedCity)) detections = detections.Where(s => s.WorldLocation.City == SelectedCity);
-                        if (!String.IsNullOrEmpty(SelectedProvince)) detections = detections.Where(x => x.WorldLocation.Province == SelectedProvince);
-                        if (!String.IsNullOrEmpty(SelectedRegion)) detections = detections.Where(x => x.WorldLocation.Region == SelectedRegion);
-
-                        //Pagination
-                        const int PageSize = 3;
-                        var count = detections.Count();
-                        var data = detections.Skip(page * PageSize).Take(PageSize).ToList();
-
-                        this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
-                        this.ViewBag.Page = page;
-                   */
             //############################################################################################################################
             //FILTRI ANNO E MESE PER GRAFICO SALDO
             //############################################################################################################################
@@ -178,16 +132,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             //############################################################################################################################
 
 
-
-
-
             var TransactionsIn = Transactions.Where(x => x.TrsValue >= 0);
             var TransactionsOut = Transactions.Where(x => x.TrsValue < 0);
-
-
-
-
-
 
 
             //############################################################################################################################
@@ -217,14 +163,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                 Codes.Add(code);
             }
             TempData["Codes"] = Codes;
-
             viewModel.TransactionExt = new TransactionExt();
             
-
             GetDonutData(TransactionsIn, 1);
             GetDonutData(TransactionsOut, 0);
-
- 
 
             string jsonTrans = JsonConvert.SerializeObject(Transactions);
             ViewBag.Transactions = jsonTrans;
@@ -248,7 +190,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                                             .ToList();
             List<string> strCodes = new List<string>();
             foreach (var item in UniqueCodes) strCodes.Add(item.Key);
-
             string jsonCodes = JsonConvert.SerializeObject(strCodes);
             if (type == 0) { ViewBag.CodesOut = jsonCodes; ViewBag.CodesOutV = strCodes; }
             if (type == 1) { ViewBag.CodesIn = jsonCodes; ViewBag.CodesInV = strCodes; }
@@ -269,7 +210,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             string jsonCodeValues = JsonConvert.SerializeObject(count);
             if (type == 0) { ViewBag.CodeValuesOut = jsonCodeValues; ViewBag.CodeValuesOutV = count; ViewBag.TotCountOut = totalCountOut; }
             if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
-
         }
 
         private string MonthConverter (int monthNum)
@@ -317,10 +257,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             return ConvertedMonth;
         }
 
-        private IEnumerable<T> GetAllItems<T> (string type)
+        private IEnumerable<T> GetAllItems<T> (string type, string User_OID)
         {
             IEnumerable<T> detections = null;
-            string path = "GetAll" + type;
+            string path = "GetAll" + type + "?User_OID=" + User_OID;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
@@ -365,11 +305,52 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
+        private int DeleteItem(string type, int id)
+        {
+            string path = "Delete" + type + "?id=" + id;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.DeleteAsync(path);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
 
 
+        //GET ALL Methods
+        public IEnumerable<Bank> GetBanks(string User_OID)
+        {
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            return Banks;
+        }
+        public IEnumerable<Deposit> GetDeposits(string User_OID)
+        {
+            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
+            return Deposits;
+        }
+        public IEnumerable<Ticket> GetTickets(string User_OID)
+        {
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            return Tickets;
+        }
+        public IEnumerable<Credit> GetCredits(string User_OID)
+        {
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
+            return Credits;
+        }
+        public IEnumerable<Debit> GetDebits(string User_OID)
+        {
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
+            return Debits;
+        }
 
-
-
+        //DETAILS: Controller methods for detail action - GET-BY-ID
         public ActionResult Credit_Details (int id)
         {
             Credit Credit = GetItemID<Credit>(nameof(Credit), id); 
@@ -379,39 +360,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             Debit Debit = GetItemID<Debit>(nameof(Debit), id);
             return PartialView(Debit);
-        }
-        public ActionResult Transaction_Details(int id)
-        {
-            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);
-            return PartialView(Transaction);
-        }
-        public ActionResult Transaction_Details_Edit(int id)
-        {
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
-
-            Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
-            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                                          .Select(x => x.First())
-                                          .ToList();           
-            List<SelectListItem> Codes = new List<SelectListItem>();
-            foreach (var item in UniqueCodes)
-            {
-                SelectListItem code = new SelectListItem();
-                code.Value = item.TrsCode;
-                code.Text = item.TrsCode;
-                Codes.Add(code);
-            }
-            TempData["Codes"] = Codes;
-
-            TransactionExt tr = new TransactionExt() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
-            if (t.TrsValue < 0) ViewBag.Type = false; else ViewBag.Type = true;
-
-          
-         //   viewModel.TransactionType = tr;
-          //  viewModel.TransactionType.Codes = Codes;
-            return PartialView(tr);
-        }
-            public ActionResult KnownMovement_Details(int id)
+        }        
+        public ActionResult KnownMovement_Details(int id)
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
             return PartialView(KnownMovement);
@@ -431,6 +381,31 @@ namespace PersonalFinanceFrontEnd.Controllers
             Ticket Ticket = GetItemID<Ticket>(nameof(Ticket), id);
             return PartialView(Ticket);
         }
+        public ActionResult Transaction_Details(int id)
+        {
+            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);
+            return PartialView(Transaction);
+        }
+        public ActionResult Transaction_Details_Edit(int id, string User_OID)
+        {
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
+            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+                                          .Select(x => x.First())
+                                          .ToList();           
+            List<SelectListItem> Codes = new List<SelectListItem>();
+            foreach (var item in UniqueCodes)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = item.TrsCode;
+                code.Text = item.TrsCode;
+                Codes.Add(code);
+            }
+            TempData["Codes"] = Codes;
+            TransactionExt tr = new TransactionExt() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+            if (t.TrsValue < 0) ViewBag.Type = false; else ViewBag.Type = true;
+            return PartialView(tr);
+        }
 
         //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
         public ActionResult Credit_Delete(int id)
@@ -440,18 +415,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Delete(Credit c)
         {
-            int credId = c.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Credit), c.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteCredit?id={credId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagCred"] = 1;
-                    return RedirectToAction(nameof(Credits));
-                }
+                TempData["sendFlagCred"] = 1;
+                return RedirectToAction(nameof(Credits));
             }
             return View();
         }
@@ -462,18 +430,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Delete(Debit d)
         {
-            int debitId = d.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Debit), d.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteDebit?id={debitId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagDeb"] = 1;
-                    return RedirectToAction(nameof(Debits));
-                }
+                TempData["sendFlagDeb"] = 1;
+                return RedirectToAction(nameof(Debits));                
             }
             return View();
         }
@@ -482,20 +443,13 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Transaction_Details(id);
         }
         [HttpPost]
-        public ActionResult Transaction_Delete(Transaction d)
+        public ActionResult Transaction_Delete(Transaction t)
         {
-            int transactionId = d.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Transaction), t.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteTransaction?id={transactionId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagTr"] = 1;
-                    return RedirectToAction(nameof(Transactions));
-                }
+                TempData["sendFlagTr"] = 1;
+                return RedirectToAction(nameof(Transactions));                
             }
             return View();
         }
@@ -506,18 +460,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Delete(KnownMovement k)
         {
-            int KnownMovementId = k.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(KnownMovement), k.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteKnownMovement?id={KnownMovementId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagKM"] = 1;
-                    return RedirectToAction(nameof(KnownMovements));
-                }
+                TempData["sendFlagKM"] = 1;
+                return RedirectToAction(nameof(KnownMovements));                
             }
             return View();
         }
@@ -528,18 +475,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Delete(Bank b)
         {
-            int BankId = b.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Bank), b.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteBank?id={BankId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagB"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagB"] = 1;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -550,18 +490,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Delete(Deposit d)
         {
-            int DepositId = d.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Deposit), d.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteDeposit?id={DepositId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagD"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagD"] = 1;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -572,18 +505,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Delete(Ticket t)
         {
-            int TicketId = t.ID;
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(Ticket), t.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync($"DeleteTicket?id={TicketId}");
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagT"] = 1;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagT"] = 1;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -619,9 +545,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult Transaction_Edit(int id)
+        public ActionResult Transaction_Edit(int id, string User_OID)
         {
-            return Transaction_Details_Edit(id);
+            return Transaction_Details_Edit(id, User_OID);
         }
         [HttpPost]
         public ActionResult Transaction_Edit(TransactionExt t)
@@ -630,7 +556,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
-
             int result = EditItemID<Transaction>(nameof(Transaction), tr);
             if (result == 0)
             {
@@ -700,95 +625,74 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
 
-
-
-
-
-
-/*    private List<AreaListItem> GetAreaListItem (IEnumerable<IGrouping<string, TempDetection>> areaGroup)
-    {
-        List<AreaListItem> AreaList = new List<AreaListItem>();
-        foreach (var item in areaGroup) {
-            AreaListItem areaListItem = new AreaListItem();
-            areaListItem.AreaName = item.Key;
-            areaListItem.TempData.MaxTemp = item.OrderByDescending(g => g.TempMax).FirstOrDefault().TempMax;
-            areaListItem.TempData.MinTemp = item.OrderByDescending(g => g.TempMin).Last().TempMin;
-            AreaList.Add(areaListItem);
-            }
-         return (AreaList);
-    }
-    */
+        //VIEWS
         //CREDITS DEBITS Intermediate view
         public ActionResult Credits_Debits()
         {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetCredits();
+            viewModel.Credits = GetCredits(User_OID);
             viewModel.Credit = new Credit();
-            viewModel.Debits = GetDebits();
+            viewModel.Debits = GetDebits(User_OID);
             viewModel.Debit = new Debit();
             return View(viewModel);
         }
-
-        //WALLET Intermediate view
-        
-        public ActionResult Wallet()
-        {
-            ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetBanks();
-            viewModel.Bank = new Bank();
-            viewModel.Deposits = GetDeposits();
-            viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetTickets();
-            viewModel.Ticket = new Ticket();
-            return View(viewModel);
-        }
-
-        //GET ALL Methods
-        public IEnumerable<Bank> GetBanks()
-        {
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
-            return Banks;
-        }
-        public IEnumerable<Deposit> GetDeposits()
-        {
-            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits));
-            return Deposits;
-        }
-        public IEnumerable<Ticket> GetTickets()
-        {
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
-            return Tickets;
-        }
+        //CREDITS Intermediate view
         public ActionResult Credits()
         {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetCredits();
+            viewModel.Credits = GetCredits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);            
             viewModel.state = sendFlag;
             return View(viewModel);
         }
-        public IEnumerable<Credit> GetCredits()
-        {
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits));
-            return Credits;
-        }
+        //DEBITS Intermediate view
         public ActionResult Debits()
         {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel viewModel = new ViewModel();
-            viewModel.Debits = GetDebits();
+            viewModel.Debits = GetDebits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
             viewModel.state = sendFlag;
             return View(viewModel);
         }
-        public IEnumerable<Debit> GetDebits()
+        //WALLET Intermediate view        
+        public ActionResult Wallet()
         {
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits));
-            return Debits;
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            ViewModel viewModel = new ViewModel();
+            viewModel.Banks = GetBanks(User_OID);
+            viewModel.Bank = new Bank();
+            viewModel.Deposits = GetDeposits(User_OID);
+            viewModel.Deposit = new Deposit();
+            viewModel.Tickets = GetTickets(User_OID);
+            viewModel.Ticket = new Ticket();
+            return View(viewModel);
         }
-        
+        //KNOWN MOVEMENTS Intermediate view  
+        public ActionResult KnownMovements()
+        {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
+            ViewModel viewModel = new ViewModel();
+            viewModel.KnownMovements = KnownMovements;
+            viewModel.KnownMovement = new KnownMovement();
+            int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
+            viewModel.state = sendFlag;
+            return View(viewModel);
+        }
+        //TRANSACTIOONS Intermediate view
         public ActionResult Transactions(string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions));
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             ViewModel viewModel = new ViewModel();
 
             //############################################################################################################################
@@ -830,27 +734,17 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
 
-
-
             //Pagination
             const int PageSize = 6;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
-
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
             this.ViewBag.Page = page;
 
-            viewModel.Transactions = data;
 
+            viewModel.Transactions = data;
             int sendFlag = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
             viewModel.state = sendFlag;
-
-
-
-
-
-
-
 
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                               .Select(x => x.First())
@@ -865,20 +759,31 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             TempData["Codes"] = Codes;
             viewModel.TransactionExt = new TransactionExt();
-
             return View(viewModel);      
         }
-        public ActionResult KnownMovements()
-        {
-            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements));
-            ViewModel viewModel = new ViewModel();
 
-            viewModel.KnownMovements = KnownMovements;
-            viewModel.KnownMovement = new KnownMovement();
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-            viewModel.state = sendFlag;
-            return View(viewModel);
+
+
+        private int AddItem<T>(string type, T obj) where T : new()
+        {
+            string path = "Add" + type;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
         }
+
+        
+
+
 
         //ADD NEW Methods
         public IActionResult Credit_Add()
@@ -889,17 +794,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Add(Credit c)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;       
+            int result = AddItem<Credit>(nameof(Credit), c);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Credit>("AddCredit", c);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
                     TempData["sendFlagCred"] = 3;
-                    return RedirectToAction(nameof(Credits));
-                }
+                    return RedirectToAction(nameof(Credits));               
             }
             return View();
         }
@@ -911,23 +812,19 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Add(Debit d)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<Debit>(nameof(Debit), d);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Debit>("AddDebit", d);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagDeb"] = 3;
-                    return RedirectToAction(nameof(Debits));
-                }
+                TempData["sendFlagDeb"] = 3;
+                return RedirectToAction(nameof(Debits));                
             }
             return View();
         }
         public IActionResult Transaction_Add()
         {
-            TransactionType model = new TransactionType();
+            TransactionExt model = new TransactionExt();
             return View(model);
         }
         [HttpPost]
@@ -958,17 +855,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<KnownMovement>("AddKnownMovement", k);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagKM"] = 3;
-                    return RedirectToAction(nameof(KnownMovements));
-                }
+                TempData["sendFlagKM"] = 3;
+                return RedirectToAction(nameof(KnownMovements));
             }
             return View();
         }
@@ -1044,18 +937,18 @@ namespace PersonalFinanceFrontEnd.Controllers
         //FAST UPDATE LOGIC
         //In caso di aggiunta o rimozione di nuova banca/ticket, nel Controller occorre solo modificare il metodo FU_Details e Fast_Update come segue:
 
-        public ActionResult Fast_Update(int id)
+        public ActionResult Fast_Update(int id, string User_OID)
         {
-            return FU_Details(id);
+            return FU_Details(id, User_OID);
         }
 
         //Aggiungere:
         //FU_item.FU_ID_B1 = Banks.ElementAt(1).ID; <- Modificare "1" con il nuovo numero di banca
         //FU_item.FU_Value_B1 = Banks.ElementAt(1).BankValue; <- Modificare "1" con il nuovo numero di banca
-        public ActionResult FU_Details(int id)
+        public ActionResult FU_Details(int id, string User_OID)
         {
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
             Fast_Update_Item FU_item = new Fast_Update_Item();
 
             FU_item.FU_ID = id;
@@ -1103,10 +996,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         //Aggiungere:
         //Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1; <- Modificare sempre "1" col nuovo numero
         //result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(1)); <- Modificare sempre "1" col nuovo numero
-        public ActionResult Fast_Update (Fast_Update_Item FU_item)
+        public ActionResult Fast_Update (Fast_Update_Item FU_item, string User_OID)
         {
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks));
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets));
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
             Banks.ElementAt(0).BankValue = FU_item.FU_Value_C;
             int result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(0));
             Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1;

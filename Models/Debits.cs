@@ -4,6 +4,7 @@ namespace PersonalFinanceFrontEnd.Models
 {
     public class Debit
     {
+        public string Usr_OID { get; set; }
         public int ID { get; set; }
         public string DebCode { get; set; }
         public string DebTitle { get; set; }

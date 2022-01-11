@@ -5,6 +5,7 @@ namespace PersonalFinanceFrontEnd.Models
 {
     public class Credit
     {
+        public string Usr_OID { get; set; }
         public int ID { get; set; }
         public string CredCode { get; set; }
     public string CredTitle { get; set; }

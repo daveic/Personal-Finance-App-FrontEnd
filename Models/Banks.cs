@@ -5,6 +5,7 @@ namespace PersonalFinanceFrontEnd.Models
 {
     public class Bank
     {
+        public string Usr_OID { get; set; }
         public int ID { get; set; }
         public string BankName { get; set; }
         public string Iban { get; set; }
