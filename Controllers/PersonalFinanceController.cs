@@ -770,7 +770,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                var postTask = client.PostAsJsonAsync<T>(path, obj);
                 postTask.Wait();
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
@@ -781,9 +781,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
 
-        
-
-
+    
 
         //ADD NEW Methods
         public IActionResult Credit_Add()
@@ -873,17 +871,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Add(Bank b)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<Bank>(nameof(Bank), b);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Bank>("AddBank", b);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagB"] = 3;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagB"] = 3;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -895,17 +889,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Add(Deposit d)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<Deposit>(nameof(Deposit), d);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Deposit>("AddDeposit", d);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagD"] = 3;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagD"] = 3;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -917,17 +907,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Add(Ticket t)
         {
-            using (var client = new HttpClient())
+            ClaimsPrincipal currentUser = this.User;
+            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<Ticket>(nameof(Ticket), t);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Ticket>("AddTicket", t);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagT"] = 3;
-                    return RedirectToAction(nameof(Wallet));
-                }
+                TempData["sendFlagT"] = 3;
+                return RedirectToAction(nameof(Wallet));                
             }
             return View();
         }
@@ -1027,10 +1013,4 @@ namespace PersonalFinanceFrontEnd.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
-
 }
-
-
-
-
-
