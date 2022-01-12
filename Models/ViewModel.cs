@@ -27,6 +27,9 @@ namespace PersonalFinanceFrontEnd.Models
         public int DebitSum { get; set; }
         public int TotWithDebits { get; set; }
         public int TotNoDebits { get; set; }
+        public List<Bank> BankList { get; set; }
+        public List<Ticket> TicketList { get; set; }
+        public Bank Contanti { get; set; }
 
     }
 }

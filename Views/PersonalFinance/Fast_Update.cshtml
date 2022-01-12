@@ -1,4 +1,4 @@
-﻿@model PersonalFinanceFrontEnd.Models.Fast_Update_Item
+﻿@model ViewModel
 
 
 
@@ -8,9 +8,6 @@
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
-        <input type="hidden" asp-for="FU_ID" />
-
-
 
 
         <ul class="nav nav-tabs">
@@ -28,10 +25,12 @@
         <br />
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active show" id="conti">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>Intesa San Paolo</h5></div>
+                <div class="container">
+                    @for (var i = 1; i < Model.BankList.Count(); i++)
+                    {
+
+                        <div class="card shadow p-3 border-dark mb-3" style="max-width: 20rem;">
+                            <div class="card-header"><h5>@Model.BankList[i].BankName</h5></div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -39,8 +38,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B1" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B1" class="text-danger"></span>
+                                        <input type="hidden" class="form-control" asp-for="BankList[i].ID">
+                                        <input type="number" class="form-control" asp-for="BankList[i].BankValue" style="background-color: #444">
+
                                     </div>
                                 </div>
 
@@ -48,171 +48,12 @@
 
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>N26</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/n26.jpeg" alt="N26" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B2" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B2" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                    }
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>Illimity</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/illimity.png" alt="Illimity" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B3" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B3" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>PayPal</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/paypal.png" alt="PayPal" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B4" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B4" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>Amazon Pay</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/amazon-pay.jpeg" alt="Amazon Pay" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B5" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B5" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>YAP</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/yap.jpeg" alt="YAP" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B6" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B6" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>American Express</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/american-express.jpeg" alt="American Express" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B7" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B7" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>Satispay</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/satispay.jpeg" alt="Satispay" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B8" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B8" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>Findomestic</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/findomestic.jpeg" alt="Findomestic" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B9" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B9" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>ING</h5></div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img src="~/images/ing.jpeg" alt="ING" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h4 class="card-title">Saldo attuale (€):</h4>
-                                        <input type="number" class="form-control" asp-for="FU_Value_B10" style="background-color: #444">
-                                        <span asp-validation-for="FU_Value_B10" class="text-danger"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                
+
             </div>
-
             <div class="tab-pane fade" id="contanti">
                 <div class="col-md-6">
                     <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
@@ -224,8 +65,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h4 class="card-title">Saldo attuale (€):</h4>
-                                    <input type="number" class="form-control" asp-for="FU_Value_C" style="background-color: #444">
-                                    <span asp-validation-for="FU_Value_C" class="text-danger"></span>
+                                    <input type="hidden" class="form-control" asp-for="BankList[0].ID">
+                                    <input type="number" class="form-control" asp-for="BankList[0].BankValue" style="background-color: #444">
+
                                 </div>
                             </div>
                         </div>
@@ -233,65 +75,32 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="ticket">
-                <div class="col-md-6">
-                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                        <div class="card-header"><h5>Ticket Restaurant</h5></div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <img src="~/images/ticket-restaurant.jpeg" alt="Ticket Restaurant" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
-                                </div>
-                                <div class="col-md-6">
-                                    <h4 class="card-title">N° tickets disponibili:</h4>
-                                    <input type="number" class="form-control" asp-for="FU_Count_T" style="background-color: #444">
-                                    <span asp-validation-for="FU_Count_T" class="text-danger"></span>
+                @for (var i = 0; i < Model.TicketList.Count(); i++)
+                {
+                    <div class="col-md-6">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>@Model.TicketList[i].TicketName</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img src="~/images/ticket-restaurant.jpeg" alt="Ticket Restaurant" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="card-title">N° tickets disponibili:</h4>
+                                        <input type="hidden" class="form-control" asp-for="TicketList[i].ID">
+                                        <input type="number" class="form-control" asp-for="TicketList[i].NumTicket" style="background-color: #444">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    }
                 </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
             </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-            <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
         </div>
     </div>
 </form>
-
-
-
-
-
-
-
-
-

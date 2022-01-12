@@ -170,19 +170,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Banks)
-                    {
                     <tr>
-                        <td>@item.ID</td>
-                        <td>@item.BankName</td>
-                        <td>@item.Iban</td>
-                        <td type="number">@item.BankValue €</td>
-                        <td>@item.BankNote</td>
+                        <td>@Model.Contanti.ID</td>
+                        <td>@Model.Contanti.BankName</td>
+                        <td>@Model.Contanti.Iban</td>
+                        <td type="number">@Model.Contanti.BankValue €</td>
+                        <td>@Model.Contanti.BankNote</td>
                         <td style='white-space: nowrap'>
-                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                            <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@Model.Contanti.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                         </td>
                     </tr>
+                    @foreach (var item in Model.Banks.Skip(1))
+                    {
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.BankName</td>
+                            <td>@item.Iban</td>
+                            <td type="number">@item.BankValue €</td>
+                            <td>@item.BankNote</td>
+                            <td style='white-space: nowrap'>
+                                <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
