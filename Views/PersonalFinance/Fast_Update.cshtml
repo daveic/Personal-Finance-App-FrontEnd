@@ -1,15 +1,8 @@
 ﻿@model ViewModel
 
-
-
-
-
 <form asp-action="Fast_Update" style="margin: 0 auto;">
-
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
-
-
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#conti">Conti correnti e carte</a>
@@ -25,34 +18,29 @@
         <br />
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade active show" id="conti">
-                <div class="container">
+                <div class="cards">
                     @for (var i = 1; i < Model.BankList.Count(); i++)
                     {
-
-                        <div class="card shadow p-3 border-dark mb-3" style="max-width: 20rem;">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
                             <div class="card-header"><h5>@Model.BankList[i].BankName</h5></div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <img src="~/images/intesa-san-paolo.png" alt="Intesa San Paolo" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
+                                        @{ 
+                                            var path = "/images/" + @Model.BankList[i].BankName.ToLower().Replace(" ", "-") + ".jpeg";
+                                            <img src=@path style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
+                                        }                                         
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="card-title">Saldo attuale (€):</h4>
                                         <input type="hidden" class="form-control" asp-for="BankList[i].ID">
                                         <input type="number" class="form-control" asp-for="BankList[i].BankValue" style="background-color: #444">
-
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
-
                     }
                 </div>
-                
-
             </div>
             <div class="tab-pane fade" id="contanti">
                 <div class="col-md-6">
@@ -67,7 +55,6 @@
                                     <h4 class="card-title">Saldo attuale (€):</h4>
                                     <input type="hidden" class="form-control" asp-for="BankList[0].ID">
                                     <input type="number" class="form-control" asp-for="BankList[0].BankValue" style="background-color: #444">
-
                                 </div>
                             </div>
                         </div>
@@ -75,15 +62,18 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="ticket">
-                @for (var i = 0; i < Model.TicketList.Count(); i++)
-                {
-                    <div class="col-md-6">
+                <div class="cards">
+                    @for (var i = 0; i < Model.TicketList.Count(); i++)
+                    {
                         <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
                             <div class="card-header"><h5>@Model.TicketList[i].TicketName</h5></div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <img src="~/images/ticket-restaurant.jpeg" alt="Ticket Restaurant" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
+                                        @{
+                                            var path = "/images/" + @Model.TicketList[i].TicketName.ToLower().Replace(" ", "-") + ".jpeg";
+                                            <img src=@path alt="Ticket Restaurant" style="margin-top:10px; width:180px; height:60px; border:none;" class="shadow rounded">
+                                            }
                                     </div>
                                     <div class="col-md-6">
                                         <h4 class="card-title">N° tickets disponibili:</h4>
@@ -93,14 +83,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
                     }
                 </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
             </div>
-        </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
+                </div>
+            </div>
     </div>
 </form>

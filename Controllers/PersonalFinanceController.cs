@@ -938,84 +938,29 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
         //FAST UPDATE LOGIC
-        //In caso di aggiunta o rimozione di nuova banca/ticket, nel Controller occorre solo modificare il metodo FU_Details e Fast_Update come segue:
-
-        public ActionResult Fast_Update(int id, string User_OID)
-        {
-            return FU_Details(id);
-        }
-
-        //Aggiungere:
-        //FU_item.FU_ID_B1 = Banks.ElementAt(1).ID; <- Modificare "1" con il nuovo numero di banca
-        //FU_item.FU_Value_B1 = Banks.ElementAt(1).BankValue; <- Modificare "1" con il nuovo numero di banca
-        public ActionResult FU_Details(int id)
+        //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
+        public ActionResult Fast_Update()
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-            
-
             ViewModel model = new ViewModel();
-            model.Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            model.Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            model.Banks = GetAllItems<Bank>("Banks", User_OID);
+            model.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
             List<Bank> BankList = new List<Bank>();
             List<Ticket> TicketList = new List<Ticket>();
-            foreach (var item in Banks)
+            foreach (var item in model.Banks)
             {
                 BankList.Add(item);
             }
             model.BankList = BankList;
-            foreach (var item in Tickets)
+            foreach (var item in model.Tickets)
             {
                 TicketList.Add(item);
             }
             model.TicketList = TicketList;
-            /*     FU_item.FU_ID = id;
-
-                 FU_item.FU_ID_C = 0;
-                 FU_item.FU_Value_C = Banks.ElementAt(0).BankValue;
-
-                 FU_item.FU_ID_B1 = Banks.ElementAt(1).ID;
-                 FU_item.FU_Value_B1 = Banks.ElementAt(1).BankValue;
-
-                 FU_item.FU_ID_B2 = Banks.ElementAt(2).ID;
-                 FU_item.FU_Value_B2 = Banks.ElementAt(2).BankValue;
-
-                 FU_item.FU_ID_B3 = Banks.ElementAt(3).ID;
-                 FU_item.FU_Value_B3 = Banks.ElementAt(3).BankValue;
-
-                 FU_item.FU_ID_B4 = Banks.ElementAt(4).ID;
-                 FU_item.FU_Value_B4 = Banks.ElementAt(4).BankValue;
-
-                 FU_item.FU_ID_B5 = Banks.ElementAt(5).ID;
-                 FU_item.FU_Value_B5 = Banks.ElementAt(5).BankValue;
-
-                 FU_item.FU_ID_B6 = Banks.ElementAt(6).ID;
-                 FU_item.FU_Value_B6 = Banks.ElementAt(6).BankValue;
-
-                 FU_item.FU_ID_B7 = Banks.ElementAt(7).ID;
-                 FU_item.FU_Value_B7 = Banks.ElementAt(7).BankValue;
-
-                 FU_item.FU_ID_B8 = Banks.ElementAt(8).ID;
-                 FU_item.FU_Value_B8 = Banks.ElementAt(8).BankValue;
-
-                 FU_item.FU_ID_B9 = Banks.ElementAt(9).ID;
-                 FU_item.FU_Value_B9 = Banks.ElementAt(9).BankValue;
-
-                 FU_item.FU_ID_B10 = Banks.ElementAt(10).ID;
-                 FU_item.FU_Value_B10 = Banks.ElementAt(10).BankValue;
-
-                 FU_item.FU_ID_T = Tickets.ElementAt(0).ID;
-                 FU_item.FU_Count_T = Convert.ToInt32(Tickets.ElementAt(0).NumTicket);
-            */
             return PartialView(model);
         }
-
         [HttpPost]
-        //Aggiungere:
-        //Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1; <- Modificare sempre "1" col nuovo numero
-        //result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(1)); <- Modificare sempre "1" col nuovo numero
         public ActionResult Fast_Update (ViewModel model)
         {
             ClaimsPrincipal currentUser = this.User;
@@ -1024,7 +969,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
             List<Ticket> TicketList = model.TicketList;
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-
             foreach (var item in BankList)
             {
                 foreach (var bank in Banks)
@@ -1036,36 +980,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
-            /*  ViewModel model = new ViewModel();
-              
-              IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-              model.Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            
-
-              Banks.ElementAt(0).BankValue = FU_item.FU_Value_C;
-              int result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(0));
-              Banks.ElementAt(1).BankValue = FU_item.FU_Value_B1;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(1));
-              Banks.ElementAt(2).BankValue = FU_item.FU_Value_B2;
-              
-              Banks.ElementAt(3).BankValue = FU_item.FU_Value_B3;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(3));
-              Banks.ElementAt(4).BankValue = FU_item.FU_Value_B4;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(4));
-              Banks.ElementAt(5).BankValue = FU_item.FU_Value_B5;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(5));
-              Banks.ElementAt(6).BankValue = FU_item.FU_Value_B6;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(6));
-              Banks.ElementAt(7).BankValue = FU_item.FU_Value_B7;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(7));
-              Banks.ElementAt(8).BankValue = FU_item.FU_Value_B8;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(8));
-              Banks.ElementAt(9).BankValue = FU_item.FU_Value_B9;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(9));
-              Banks.ElementAt(10).BankValue = FU_item.FU_Value_B10;
-              result = EditItemID<Bank>(nameof(Bank), Banks.ElementAt(10));
-              Tickets.ElementAt(0).NumTicket = FU_item.FU_Count_T.ToString();
-              result = EditItemID<Ticket>(nameof(Ticket), Tickets.ElementAt(0));*/
             return RedirectToAction(nameof(Index));
         }
     }
