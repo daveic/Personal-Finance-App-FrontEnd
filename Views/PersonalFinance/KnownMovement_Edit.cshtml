@@ -8,18 +8,11 @@
         <div class="form-row">
             <h4>Modifica movimento con ID: @Model.ID</h4>
         </div>
-        <div class="form-row">
-            <div class="form-group col-md-12">
+        <div class="row">
+            <div class="form-group col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="KMTitle">Titolo</label>
                 <input type="text" class="form-control" asp-for="KMTitle" style="background-color: #444">
                 <span asp-validation-for="KMTitle" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="KMType">Tipo</label>
-                <input type="text" class="form-control" asp-for="KMType" style="background-color: #444">
-                <span asp-validation-for="KMType" class="text-danger"></span>
             </div>
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="KMValue">Importo</label>

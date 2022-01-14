@@ -192,7 +192,7 @@
     </div>
     <div class="row" style="margin: 0 auto;">
         <div class="col-md-2">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 480px;">
                 <div class="card-header">FLUSSO DI CASSA</div>
                 <div class="card-body">
                     <canvas id="myChart" height="550"></canvas>
@@ -200,12 +200,16 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 480px;">
                 <div class="card-header">GRAFICO ENTRATE > Suddivisione categorie</div>
                 <div class="card-body">
                     <div class="row">
+                        <h4 style="text-align:right;">
+                            Totale entrate: @ViewBag.TotCountIn €
+                        </h4>                        
+                    </div>
+                    <div class="row">
                         <div class="col-10">
-
                             <canvas id="doughnut-chart-in" width="800" height="530" style="margin: 0 auto; display: block;"></canvas>
                         </div>
                         <div class="col-2" style="margin-top: 3px;">
@@ -221,9 +225,14 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 450px;">
+            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 480px;">
                 <div class="card-header">GRAFICO USCITE > Suddivisione categorie</div>
                 <div class="card-body">
+                    <div class="row">
+                        <h4 style="text-align:right;">
+                            Totale uscite: @ViewBag.TotCountOut €
+                        </h4>
+                    </div>
                     <div class="row">
                         <div class="col-10">
                             <canvas id="doughnut-chart-out" width="800" height="530" style="margin: 0 auto; display: block;"></canvas>
@@ -234,8 +243,8 @@
                                 <small style="text-align:left;">@item€</small><br />
                             }
                         </div>
-                                    
-                     </div>
+
+                    </div>
                 </div>
             </div>
             </div>
@@ -369,10 +378,7 @@
    // <script>drawBasic('') </script>
     <div id="chart_div"></div>
 -->
-<div class="wrapper">
 
-
-</div>
 
 
 
@@ -402,11 +408,8 @@
     for (i = 0; i < items.length; i++) {
         strDate[i] = items[i].BalDateTime;
         values[i] = items[i].ActBalance;
-     //   strDate[i] = strDate[i].substring(0, strDate[i].indexOf('T'))
     }
-   /* const weight = [60.0, 60.2, 59.1, 61.4, 59.9, 60.2, 59.8, 58.6, 59.6, 59.2];
 
- */
 
     const ctx = document.getElementById("canvas").getContext("2d");
     ctx.canvas.height = 100;
@@ -529,6 +532,11 @@
                 responsive: true,
                 legend: {
                     display: false
+                },
+                plugins: {
+                    labels: {
+                        fontColor: "#506678"
+                    }
                 },
                 scales: {
                     xAxes: [{

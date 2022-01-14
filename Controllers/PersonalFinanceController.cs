@@ -599,6 +599,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
             int result = EditItemID<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {
@@ -872,6 +873,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
             int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {

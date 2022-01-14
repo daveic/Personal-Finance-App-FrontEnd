@@ -142,3 +142,7 @@
     font-family: sans-serif;
     padding-top: 30px;
 }
+
+.chartjs-hidden-iframe {
+    height: 100% !important;
+}
