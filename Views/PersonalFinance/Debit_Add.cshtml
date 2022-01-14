@@ -6,7 +6,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito</label>
+                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un codice identificativo personalizzato per riconoscere la tipologia di debito anche in futuro">info</span></label>
                 <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
                 <span asp-validation-for="DebCode" class="text-danger"></span>
             </div>
@@ -29,14 +29,12 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
                 <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444">
                 <span asp-validation-for="DebDateTime" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebInsDate">Data inserimento</label>
                 <input type="date" class="form-control" asp-for="DebInsDate" style="background-color: #444">
                 <span asp-validation-for="DebInsDate" class="text-danger"></span>
@@ -44,7 +42,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° rate</label>
+                <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° rate totali</label>
                 <input type="text" class="form-control" asp-for="RtNum" style="background-color: #444">
                 <span asp-validation-for="RtNum" class="text-danger"></span>
             </div>
