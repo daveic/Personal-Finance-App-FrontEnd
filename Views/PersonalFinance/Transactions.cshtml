@@ -229,5 +229,11 @@ else if (Model.state == 3)
                     $("#detailsitem").modal("show");
                 })
             }
+            function OrderBy(type) {
+                var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+                $("#ModalBodyDivDet").load(url, function () {
+                    $("#detailsitem").modal("show");
+                })
+            }
         </script>
     }
