@@ -161,7 +161,6 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Banca</th>
                         <th scope="col">IBAN</th>
                         <th scope="col">Saldo attuale (in €)</th>
@@ -171,8 +170,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>@Model.Contanti.ID</td>
-                        <td>@Model.Contanti.BankName</td>
+                        <td>@Model.Contanti.BankName&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="La voce Contanti è presente di default e non è eliminabile. Aggiorna periodicamente questo importo col totale dei contanti in tuo possesso.">info</span></td>
                         <td>@Model.Contanti.Iban</td>
                         <td type="number">@Model.Contanti.BankValue €</td>
                         <td>@Model.Contanti.BankNote</td>
@@ -183,7 +181,6 @@
                     @foreach (var item in Model.Banks.Skip(1))
                     {
                         <tr>
-                            <td>@item.ID</td>
                             <td>@item.BankName</td>
                             <td>@item.Iban</td>
                             <td type="number">@item.BankValue €</td>

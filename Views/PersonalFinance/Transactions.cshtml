@@ -141,7 +141,7 @@ else if (Model.state == 3)
 
                         <thead>
                             <tr>
-                                <th scope="col">ID</th>
+                                <th scope="col">Tipo</th>
                                 <th scope="col">Categoria</th>
                                 <th scope="col">Descrizione</th>
                                 <th scope="col">Data</th>
@@ -154,8 +154,7 @@ else if (Model.state == 3)
                             @foreach (var item in Model.Transactions)
                             {
                                 <tr>
-                                    <td>
-                                        @item.ID
+                                    <td>                                        
                                         @if (item.TrsValue >= 0)
                                         {
                                             <span class="badge rounded-pill bg-success">Entrata</span>
