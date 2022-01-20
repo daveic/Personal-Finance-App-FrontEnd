@@ -1,4 +1,15 @@
-﻿.sidebar-container {
+﻿@media (min-width: 2080px) {
+    body {
+        padding: 0px;
+    }
+
+    .note {
+        padding: 25px 0;
+    }
+}
+
+
+.sidebar-container {
     position: fixed;
     width: 280px;
     height: 100%;

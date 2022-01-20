@@ -1,13 +1,4 @@
-﻿@media (min-width: 2080px) {
-    body {
-        padding: 0px;
-    }
-
-    .note {
-        padding: 25px 0;
-    }
-}
-
+﻿
 /* Slide in animation */
 @-moz-keyframes slidein {
     0% {
