@@ -142,10 +142,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             //############################################################################################################################
             //Rimuovo l'orario dal DateTime e salvo come json
-            foreach (var item in Balances)
-            {
-                item.BalDateTime = item.BalDateTime.Date;
-            }
+
             string json = JsonConvert.SerializeObject(Balances);
             //Passo alla view la lista aggiornata e convertita
             ViewBag.Balances = json;
