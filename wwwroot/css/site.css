@@ -1,6 +1,6 @@
-﻿@media (min-width: 960px) {
+﻿@media (min-width: 2080px) {
     body {
-        padding: 25px;
+        padding: 0px;
     }
 
     .note {
@@ -145,4 +145,28 @@
 
 .chartjs-hidden-iframe {
     height: 100% !important;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC');
+
+h3 {
+    font-size: 1.5vw;
+}
+h4 {
+    font-size: 1.2vw;
+}
+h2 {
+    font-size: 1.8vw;
+}
+p {
+    font-size: 0.8vw;
+}
+pre {
+    font-size: 0.7vw;
+}
+label {
+    font-size: 0.9vw;
+}
+input {
+    font-size: 0.9vw;
 }

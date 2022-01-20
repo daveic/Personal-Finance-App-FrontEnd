@@ -9,8 +9,8 @@
 
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-3">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 22rem;">
-            <div class="card-header">EasyUpdate</div>
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header"><h5>EasyUpdate</h5></div>
             <div class="card-body">
                 <h4 class="card-title">Aggiornamento rapido</h4><br />
                 <a href="#" class="btn btn-info" onclick="Edit()">Easy Update</a>
@@ -23,14 +23,15 @@
             <div class="col-md-4">
                 <div class="card shadow p-3 border-primary mb-3" style="margin: 0 auto;">
                     <div class="card-header">
-                        SALDO ATTUALE&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).">info</span>
-                    </div>
+    SALDO ATTUALE
+&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).">info</span>
+</div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
                                 <h4 class="card-title" style="vertical-align: bottom">Saldo attuale: </h4>
                             </div>
-                            <div class="col-6">
+                            <div class="col-6 card-numbers">
                                 <h2 style="text-align: right" >@Model.TransactionSum €</h2>
                             </div>
                         </div>
@@ -40,14 +41,14 @@
             <div class="col-md-4">
                 <div class="card shadow p-3 border-success mb-3" style="margin: 0 auto;">
                     <div class="card-header">
-                        TOTALE CREDITI&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo rappresenta il totale dei crediti da ricevere.">info</span>
-                    </div>
+    TOTALE CREDITI&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo rappresenta il totale dei crediti da ricevere.">info</span>
+</div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-6">
                                 <h4 class="card-title" style="vertical-align: bottom">Totale crediti: </h4>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
                                 <h3 style="text-align: right">@Model.CreditSum €</h3>
                             </div>
                         </div>
@@ -114,7 +115,7 @@
 
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-5">
-        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 550px;">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
             <div class="card-header">NUOVA TRANSAZIONE</div>
             <div class="card-body">
 
