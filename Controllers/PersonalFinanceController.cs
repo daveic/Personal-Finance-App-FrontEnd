@@ -34,9 +34,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), User_OID);
 
-            if(Banks.Count() == 0)
+            if (Banks.Count() == 0)
             {
-                Bank b = new Bank { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti"};
+                Bank b = new Bank { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
                 int result = AddItem<Bank>(nameof(Bank), b);
             }
             int TransactionSum = 0;
@@ -168,7 +168,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             TempData["Codes"] = Codes;
             viewModel.TransactionExt = new TransactionExt();
-            
+
             GetDonutData(TransactionsIn, 1);
             GetDonutData(TransactionsOut, 0);
 
@@ -216,7 +216,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
         }
 
-        private string MonthConverter (int monthNum)
+        private string MonthConverter(int monthNum)
         {
             string ConvertedMonth = "";
             switch (monthNum)
@@ -261,7 +261,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return ConvertedMonth;
         }
 
-        private IEnumerable<T> GetAllItems<T> (string type, string User_OID)
+        private IEnumerable<T> GetAllItems<T>(string type, string User_OID)
         {
             IEnumerable<T> detections = null;
             string path = "GetAll" + type + "?User_OID=" + User_OID;
@@ -279,7 +279,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         private T GetItemID<T>(string type, int id) where T : new()
         {
-            T detection = new T();     
+            T detection = new T();
             string path = "Get" + type + "Id?id=" + id;
             using (var client = new HttpClient())
             {
@@ -371,16 +371,16 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
         //DETAILS: Controller methods for detail action - GET-BY-ID
-        public ActionResult Credit_Details (int id)
+        public ActionResult Credit_Details(int id)
         {
-            Credit Credit = GetItemID<Credit>(nameof(Credit), id); 
+            Credit Credit = GetItemID<Credit>(nameof(Credit), id);
             return PartialView(Credit);
         }
         public ActionResult Debit_Details(int id)
         {
             Debit Debit = GetItemID<Debit>(nameof(Debit), id);
             return PartialView(Debit);
-        }        
+        }
         public ActionResult KnownMovement_Details(int id)
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
@@ -412,7 +412,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                                           .Select(x => x.First())
-                                          .ToList();           
+                                          .ToList();
             List<SelectListItem> Codes = new List<SelectListItem>();
             foreach (var item in UniqueCodes)
             {
@@ -454,7 +454,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 1;
-                return RedirectToAction(nameof(Debits));                
+                return RedirectToAction(nameof(Debits));
             }
             return View();
         }
@@ -469,7 +469,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagTr"] = 1;
-                return RedirectToAction(nameof(Transactions));                
+                ClaimsPrincipal currentUser = this.User;
+                Transaction_Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
+                return RedirectToAction(nameof(Transactions));
             }
             return View();
         }
@@ -484,7 +486,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagKM"] = 1;
-                return RedirectToAction(nameof(KnownMovements));                
+                return RedirectToAction(nameof(KnownMovements));
             }
             return View();
         }
@@ -499,7 +501,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagB"] = 1;
-                return RedirectToAction(nameof(Wallet));                
+                ClaimsPrincipal currentUser = this.User;
+                Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -514,7 +518,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagD"] = 1;
-                return RedirectToAction(nameof(Wallet));                
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -529,7 +533,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagT"] = 1;
-                return RedirectToAction(nameof(Wallet));                
+                ClaimsPrincipal currentUser = this.User;                
+                Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -544,7 +550,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Credit>(nameof(Credit), c);        
+            int result = EditItemID<Credit>(nameof(Credit), c);
             if (result == 0)
             {
                 TempData["sendFlagCred"] = 2;
@@ -586,7 +592,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagTr"] = 2;
-                return RedirectToAction(nameof(Transactions));     
+                Transaction_Balance_Update(tr.Usr_OID);
+                return RedirectToAction(nameof(Transactions));
             }
             return View();
         }
@@ -604,7 +611,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagKM"] = 2;
-                return RedirectToAction(nameof(KnownMovements));                
+                return RedirectToAction(nameof(KnownMovements));
             }
             return View();
         }
@@ -621,7 +628,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagB"] = 2;
-                return RedirectToAction(nameof(Wallet)); 
+                Balance_Update(b.Usr_OID);
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -655,6 +663,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagT"] = 2;
+                Balance_Update(t.Usr_OID);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -680,7 +689,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetCredits(User_OID);
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);            
+            int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             viewModel.state = sendFlag;
             return View(viewModel);
         }
@@ -769,8 +778,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             //############################################################################################################################
 
             if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
+            
 
             //Pagination
+            Transactions = Transactions.Reverse();
             const int PageSize = 15;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
@@ -795,7 +806,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             TempData["Codes"] = Codes;
             viewModel.TransactionExt = new TransactionExt();
-            return View(viewModel);      
+            return View(viewModel);
         }
 
 
@@ -809,12 +820,12 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credit_Add(Credit c)
         {
             ClaimsPrincipal currentUser = this.User;
-            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;       
+            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
             {
-                    TempData["sendFlagCred"] = 3;
-                    return RedirectToAction(nameof(Credits));               
+                TempData["sendFlagCred"] = 3;
+                return RedirectToAction(nameof(Credits));
             }
             return View();
         }
@@ -832,7 +843,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 3;
-                return RedirectToAction(nameof(Debits));                
+                return RedirectToAction(nameof(Debits));
             }
             return View();
         }
@@ -844,9 +855,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Transaction_Add(TransactionExt t)
         {
-            if (t.Type == false) t.TrsValue = - t.TrsValue;
+            if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            Transaction tr = new Transaction() { ID=t.ID, TrsCode=t.TrsCode, TrsTitle=t.TrsTitle, TrsDateTime =t.TrsDateTime, TrsValue=t.TrsValue, TrsNote=t.TrsNote};
+            Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
             ClaimsPrincipal currentUser = this.User;
             tr.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             using (var client = new HttpClient())
@@ -858,6 +869,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     TempData["sendFlagTr"] = 3;
+                    Transaction_Balance_Update(tr.Usr_OID);
                     return RedirectToAction(nameof(Transactions));
                 }
             }
@@ -896,7 +908,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagB"] = 3;
-                return RedirectToAction(nameof(Wallet));                
+                Balance_Update(b.Usr_OID);
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -914,7 +927,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagD"] = 3;
-                return RedirectToAction(nameof(Wallet));                
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -931,8 +944,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItem<Ticket>(nameof(Ticket), t);
             if (result == 0)
             {
+                Balance_Update(t.Usr_OID);
                 TempData["sendFlagT"] = 3;
-                return RedirectToAction(nameof(Wallet));                
+                Balance_Update(t.Usr_OID);
+                return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
@@ -963,7 +978,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return PartialView(model);
         }
         [HttpPost]
-        public ActionResult Fast_Update (ViewModel model)
+        public ActionResult Fast_Update(ViewModel model)
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -982,7 +997,64 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
+            Balance_Update(User_OID);
+
             return RedirectToAction(nameof(Index));
+        }
+        public int Balance_Update(string User_OID)
+        {
+            Balance b = new Balance();
+            b.Usr_OID = User_OID;
+            b.BalDateTime = DateTime.UtcNow;
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            int tot = 0;
+            int totTransaction = 0;
+
+            foreach (var item in Banks)
+            {
+                tot += item.BankValue;
+            }
+            foreach (var item in Tickets)
+            {
+                tot += Convert.ToInt32(item.NumTicket) * item.TicketValue;
+            }
+            foreach (var item in Transactions)
+            {
+                totTransaction += item.TrsValue;
+            }
+
+            Transaction tr = new Transaction() { Usr_OID = User_OID, TrsCode = "Fast_Update", TrsTitle = "Allineamento Fast Update", TrsDateTime = DateTime.UtcNow, TrsValue = tot - totTransaction, TrsNote = "Allineamento Fast Update eseguito il" + DateTime.UtcNow };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", tr);
+                postTask.Wait();
+                var result = postTask.Result;
+            }
+            b.ActBalance = tot;
+
+
+
+            AddItem<Balance>(nameof(Balance), b);
+            return 1;
+        }
+        public int Transaction_Balance_Update(string User_OID)
+        {
+            Balance b = new Balance();
+            b.Usr_OID = User_OID;
+            b.BalDateTime = DateTime.UtcNow;
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+
+            int totTransaction = 0;
+            foreach (var item in Transactions)
+            {
+                totTransaction += item.TrsValue;
+            }
+            b.ActBalance = totTransaction;
+            AddItem<Balance>(nameof(Balance), b);
+            return 1;
         }
     }
 }
