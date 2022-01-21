@@ -730,7 +730,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //TRANSACTIOONS Intermediate view
-        public ActionResult Transactions(string selectedCode, string selectedYear, string selectedMonth, int page = 0)
+        public ActionResult Transactions(string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -773,9 +773,18 @@ namespace PersonalFinanceFrontEnd.Controllers
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
             if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Month.ToString() == selectedMonth);
             //############################################################################################################################
-
-            if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
+            List<SelectListItem> types = new List<SelectListItem>();
+            SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate"};
+            types.Add(entrate);
+            SelectListItem uscite = new SelectListItem() { Text = "Uscite", Value = "Uscite" };
+            types.Add(uscite);
+            ViewBag.Type = types;
             
+            if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
+            if (!String.IsNullOrEmpty(selectedType)) { 
+                if(selectedType=="Entrate") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue >= 0);
+                else if (selectedType == "Uscite") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue < 0);
+            } 
 
             //Pagination
             Transactions = Transactions.Reverse();

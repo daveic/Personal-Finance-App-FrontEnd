@@ -4,80 +4,72 @@
 <form asp-action="Transaction_Add" style="margin: 0 auto;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
-        <div class="row">
 
 
 
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-check">
-                    <label for="recipient-name" class="col-form-label">Categoria</label>
-                    <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
-                    <span asp-validation-for="NewTrsCode" class="text-danger"></span>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-sm-4">
+                    <label for="recipient-name" class="col-form-label" style="padding-top: 0px; vertical-align: middle">Tipologia Transazione</label>
+                </div>  
+                <div class="col-sm-8">
+                        <label class="switch">
+                            <input type="checkbox" id="togBtn" asp-for="Type">
+                            <div class="slider round">
 
-                    <br />
-                    <div id="partialViewWrapper">
+                                <span class="on">Entrata</span>
+                                <span class="off">Uscita</span>
+
+                            </div>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
+                        <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
+                        <span asp-validation-for="TrsTitle" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="recipient-name" class="col-form-label">Categoria</label>
+                        <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
+                        <span asp-validation-for="NewTrsCode" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsValue">Importo</label>
+                        <input type="text" class="form-control" asp-for="TrsValue" style="background-color: #444" value="" placeholder="€">
+                        <span asp-validation-for="TrsValue" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
+                        <input type="date" class="form-control" id="theDate" asp-for="TrsDateTime" style="background-color: #444" value="gg/mm/YYY">
+                        <span asp-validation-for="TrsDateTime" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
+
                         @{
                             var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                         }
-                        @foreach (var lItem in codes)
-                        {
-                            <pre>@Html.RadioButtonFor(m => m.TrsCode, lItem.Value)   @lItem.Text</pre>
-                        }
+                        @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "Tutte", new { @class = "dropdown-item" })
+
+
                     </div>
                 </div>
-            </div>
-           
-
-            <div class="col-md-8">
                 <div class="row">
-                    <label for="recipient-name" class="col-form-label">Tipologia Transazione</label>
-
-                    <div class="form-check form-switch">
-
-                        <div class="row">
-                            <div class="col-md-3" style="text-align:left;">
-                                Uscita
-                            </div>
-                            <div class="col-md-5" style="text-align:left;">
-                                <input class="form-check-input" type="checkbox" id="switchValue" checked="" data-com.bitwarden.browser.user-edited="yes" asp-for="Type">Entrata
-                            </div>
-                        </div>
+                    <div class="col-md-12">
+                        <label for="message-text" class="col-form-label" asp-for="TrsNote">Note:</label>
+                        <textarea class="form-control" id="message-text" asp-for="TrsNote" style="background-color: #444"></textarea>
                     </div>
                 </div>
-                    <div class="row">
-
-                        <div class="col-md-12">
-                            <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
-                            <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
-                            <span asp-validation-for="TrsTitle" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="recipient-name" class="col-form-label" asp-for="TrsValue">Importo</label>
-                            <input type="text" class="form-control" asp-for="TrsValue" style="background-color: #444" value="" placeholder="€">
-                            <span asp-validation-for="TrsValue" class="text-danger"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
-                            <input type="date" class="form-control" id="theDate" asp-for="TrsDateTime" style="background-color: #444" value="gg/mm/YYY">
-                            <span asp-validation-for="TrsDateTime" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label for="message-text" class="col-form-label" asp-for="TrsNote">Note:</label>
-                            <textarea class="form-control" id="message-text" asp-for="TrsNote" style="background-color: #444"></textarea>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
-                    </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
                 </div>
             </div>
-        </div>
+    </div>
+
 </form>
 
 
@@ -100,4 +92,5 @@
 
 
     </script>
+   
 }

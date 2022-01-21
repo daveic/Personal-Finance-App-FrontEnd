@@ -161,3 +161,121 @@ label {
 input {
     font-size: 0.9vw;
 }
+
+
+
+.dropdown-item-inline {
+    display: block;
+    width: 100%;
+    padding: 0rem 0.1rem;
+    clear: both;
+    font-weight: 400;
+    color: #fff;
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: #2d3139;
+    border: 0
+}
+
+    .dropdown-item-inline:focus, .dropdown-item-inline:hover {
+        color: #fff;
+        background-color: #375a7f
+    }
+
+    .dropdown-item-inline.active, .dropdown-item-inline:active {
+        color: #fff;
+        text-decoration: none;
+        background-color: #375a7f
+    }
+
+    .dropdown-item-inline.disabled, .dropdown-item-inline:disabled {
+        color: #adb5bd;
+        pointer-events: none;
+        background-color: transparent
+    }
+
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 85px;
+    height: 24px;
+}
+
+    .switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(var(--bs-danger-rgb));
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 1px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: rgba(var(--bs-success-rgb));
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(62px);
+    -ms-transform: translateX(62px);
+    transform: translateX(62px);
+}
+
+/*------ ADDED CSS ---------*/
+.on {
+    display: none;
+}
+
+.on, .off {
+    color: white;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    font-size: 10px;
+    font-family: Verdana, sans-serif;
+}
+
+input:checked + .slider .on {
+    display: block;
+}
+
+input:checked + .slider .off {
+    display: none;
+}
+
+/*--------- END --------*/
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }

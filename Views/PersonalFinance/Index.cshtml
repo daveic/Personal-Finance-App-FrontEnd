@@ -2,7 +2,7 @@
 
 
 <div>
-    <h1 class="helloWorld">Personal Finance App - Dashboard - WIP</h1>
+    <h1 class="helloWorld">Personal Finance App - Dashboard</h1>
 </div>
 <br />
 <br />
@@ -23,26 +23,26 @@
             <div class="col-md-4">
                 <div class="card shadow p-3 border-primary mb-3" style="margin: 0 auto;">
                     <div class="card-header">
-    SALDO ATTUALE
-&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).">info</span>
-</div>
+                        SALDO ATTUALE
+                        &nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo è la somma dei saldi di conti e fonti di guadagno (es. Conti, tickets, contanti, ...).">info</span>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
                                 <h4 class="card-title" style="vertical-align: bottom">Saldo attuale: </h4>
                             </div>
                             <div class="col-6 card-numbers">
-                                <h2 style="text-align: right" >@Model.TransactionSum €</h2>
+                                <h2 style="text-align: right">@Model.TransactionSum €</h2>
                             </div>
                         </div>
                     </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="card shadow p-3 border-success mb-3" style="margin: 0 auto;">
                     <div class="card-header">
-    TOTALE CREDITI&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo rappresenta il totale dei crediti da ricevere.">info</span>
-</div>
+                        TOTALE CREDITI&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="L'importo rappresenta il totale dei crediti da ricevere.">info</span>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-6">
@@ -160,6 +160,8 @@
     </div>
 
 </div>
+
+
 @using (Html.BeginForm("Index", "PersonalFinance", FormMethod.Get))
 {
     <div class="row" style="margin: 0 auto;">
@@ -168,23 +170,19 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-sm-8">
-                            FILTRI > Selezione periodo di riferimento
+                            <label>FILTRI > Selezione periodo di riferimento</label>
                         </div>
                         <div class="col-sm-1" style="text-align:right;">
-                            MESE:
+                            <label>MESE:</label>
                         </div>
                         <div class="col-sm-1">
-
-                            @Html.DropDownList("selectedMonthTr", (List<SelectListItem>)ViewBag.ItemListMonthTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
+                            @Html.DropDownList("selectedMonthTr", (List<SelectListItem>)ViewBag.ItemListMonthTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item-inline" })
                         </div>
                         <div class="col-sm-1" style="text-align:right;">
-                            ANNO:
+                            <label>ANNO:</label>
                         </div>
                         <div class="col-sm-1">
-
-                            @Html.DropDownList("selectedYearTr", (List<SelectListItem>)ViewBag.ItemListTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
+                            @Html.DropDownList("selectedYearTr", (List<SelectListItem>)ViewBag.ItemListTr, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item-inline" })
                         </div>
                     </div>
                 </div>
@@ -207,7 +205,7 @@
                     <div class="row">
                         <h4 style="text-align:right;">
                             Totale entrate: @ViewBag.TotCountIn €
-                        </h4>                        
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="col-10">
@@ -248,8 +246,8 @@
                     </div>
                 </div>
             </div>
-            </div>
         </div>
+    </div>
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
@@ -383,9 +381,10 @@
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
-<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+
+
+
+
 <script>
 
 
@@ -554,7 +553,7 @@
                             beginAtZero: true
                         }
                     }]
-                }                
+                }
             }
         });
 </script>

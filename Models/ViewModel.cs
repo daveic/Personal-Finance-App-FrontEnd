@@ -30,6 +30,5 @@ namespace PersonalFinanceFrontEnd.Models
         public List<Bank> BankList { get; set; }
         public List<Ticket> TicketList { get; set; }
         public Bank Contanti { get; set; }
-
     }
 }

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link href="@Url.Content("~/content/main.css")" rel="stylesheet" type="text/css" />
+
     @RenderSection("Styles", false)
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -15,6 +16,7 @@
     <title>@ViewData["Title"] - PersonalFinance</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+
 </head>
 <body>
     <style>
@@ -24,92 +26,99 @@
     </style>
     <div class="sidebar-container">
 
-            <div class="sidebar-logo">
-                Personal Finance App
-            </div>
+        <div class="sidebar-logo">
+            Personal Finance App
+        </div>
 
-            <ul class="sidebar-navigation">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <li>
-                        Hello @User.Identity.Name
-                    </li>
-                }
-                <li class="header">Navigation</li>
+        <ul class="sidebar-navigation">
+            @if (User.Identity.IsAuthenticated)
+            {
                 <li>
-                    <a href="/PersonalFinance/Index">
-                        <i class="fa fa-home" aria-hidden="true"></i> Dashboard
-                    </a>
+                    Hello @User.Identity.Name
                 </li>
-                <li>
-                    <a href="/PersonalFinance/Transactions">
-                        <i class="fa fa-tachometer" aria-hidden="true"></i> Archivio Transazioni
-                    </a>
-                </li>
-                <!-- Dropdown-->
-                <li class="panel panel-default" id="dropdown">
-                    <a data-toggle="collapse" href="#dropdown-lvl1">
-                        <i class="fa fa-home"></i> Crediti e Debiti
-                        <span class="caret"></span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-lvl1" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li><a href="/PersonalFinance/Credits_Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Panoramica</a></li>
-                                <li><a href="/PersonalFinance/Credits"><i class="fa fa-home" aria-hidden="true"></i>•  Crediti</a></li>
-                                <li><a href="/PersonalFinance/Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Debiti</a></li>
-                            </ul>
-                        </div>
+            }
+            <li class="header">Navigation</li>
+            <li>
+                <a href="/PersonalFinance/Index">
+                    <i class="fa fa-home" aria-hidden="true"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/PersonalFinance/Transactions">
+                    <i class="fa fa-tachometer" aria-hidden="true"></i> Archivio Transazioni
+                </a>
+            </li>
+            <!-- Dropdown-->
+            <li class="panel panel-default" id="dropdown">
+                <a data-toggle="collapse" href="#dropdown-lvl1">
+                    <i class="fa fa-home"></i> Crediti e Debiti
+                    <span class="caret"></span>
+                </a>
+                <!-- Dropdown level 1 -->
+                <div id="dropdown-lvl1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/PersonalFinance/Credits_Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Panoramica</a></li>
+                            <li><a href="/PersonalFinance/Credits"><i class="fa fa-home" aria-hidden="true"></i>•  Crediti</a></li>
+                            <li><a href="/PersonalFinance/Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Debiti</a></li>
+                        </ul>
                     </div>
-                </li>
-                <li>
-                    <a href="/PersonalFinance/KnownMovements">
-                        <i class="fa fa-users" aria-hidden="true"></i> Movimenti fissi
-                    </a>
-                </li>
-                <li>
-                    <a href="/PersonalFinance/Wallet">
-                        <i class="fa fa-cog" aria-hidden="true"></i> Wallet
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i> Previsioni - Budget
-                    </a>
-                </li>
-            </ul>
-
-        </div>
-
-        <div class="content-container">
-
-            <div class="container-fluid">
-
-                <!-- Main component for a primary marketing message or call to action -->
-                <div class="jumbotron">
-                    @RenderBody()
                 </div>
+            </li>
+            <li>
+                <a href="/PersonalFinance/KnownMovements">
+                    <i class="fa fa-users" aria-hidden="true"></i> Movimenti fissi
+                </a>
+            </li>
+            <li>
+                <a href="/PersonalFinance/Wallet">
+                    <i class="fa fa-cog" aria-hidden="true"></i> Wallet
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i> Previsioni - Budget
+                </a>
+            </li>
+        </ul>
 
+    </div>
+
+    <div class="content-container">
+
+        <div class="container-fluid">
+
+            <!-- Main component for a primary marketing message or call to action -->
+            <div class="jumbotron">
+                @RenderBody()
             </div>
+
         </div>
+    </div>
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+    <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js'></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/jsindex.js" asp-append-version="true"></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
-        <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/jsindex.js" asp-append-version="true"></script>
-
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2022 - Personal Finance App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            </div>
-        </footer>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Personal Finance App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
 </body>
 
 </html>
