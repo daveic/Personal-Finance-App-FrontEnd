@@ -101,7 +101,7 @@ else if (Model.state == 3)
                             <tr>
                                 <td>@if (item.KMType == "Entrata") { <span class="badge rounded-pill bg-success">Entrata</span> } @if (item.KMType == "Uscita") { <span class="badge rounded-pill bg-danger">Uscita</span> }</td>
                                 <td>@item.KMTitle</td>
-                                <td>@item.KMValue</td>
+                                <td>@item.KMValue €</td>
                                 <td>@item.KMNote</td>
                                 <td style='white-space: nowrap'>
                                     <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>

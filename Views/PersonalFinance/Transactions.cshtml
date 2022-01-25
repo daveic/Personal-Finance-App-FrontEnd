@@ -148,11 +148,11 @@ else if (Model.state == 3)
                                 <tr>
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Categoria</th>
-                                    <th scope="col">Descrizione</th>
-                                    <th scope="col">Data</th>
-                                    <th scope="col">Importo</th>
-                                    <th scope="col">Note</th>
-                                    <th scope="col">Azioni</th>
+                                    <th scope="col" style="text-align:right;">Descrizione</th>
+                                    <th scope="col" style="text-align:right;">Data</th>
+                                    <th scope="col" style="text-align:right;">Importo</th>
+                                    <th scope="col" style="text-align:right;">Note</th>
+                                    <th scope="col" style="text-align:right;">Azioni</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -170,13 +170,13 @@ else if (Model.state == 3)
                                             }
                                         </td>
                                         <td>@item.TrsCode</td>
-                                        <td>@item.TrsTitle</td>
-                                        <td>
+                                        <td style="text-align:right;">@item.TrsTitle</td>
+                                        <td style="text-align:right;">
                                             @item.TrsDateTime.ToString("dd/MM/yyyy")
                                         </td>
-                                        <td>@item.TrsValue</td>
-                                        <td>@item.TrsNote</td>
-                                        <td style='white-space: nowrap'>
+                                        <td style="text-align:right;">@item.TrsValue €</td>
+                                        <td style="text-align:right;">@item.TrsNote</td>
+                                        <td style="white-space: nowrap; text-align:right">
                                             <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
                                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                                             <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>

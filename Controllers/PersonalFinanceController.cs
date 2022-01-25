@@ -769,13 +769,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistMonth = new List<SelectListItem>();
             foreach (var month in UniqueMonth)
             {
-                SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+               // SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
+                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonth.Add(subitem);
             }
             //Passo alla view la lista
             ViewBag.ItemListMonth = itemlistMonth;
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Month.ToString() == selectedMonth);
+            if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonth);
+            //if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => MonthConverter(x.BalDateTime.Month) == selectedMonth);
             //############################################################################################################################
             List<SelectListItem> types = new List<SelectListItem>();
             SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate"};
