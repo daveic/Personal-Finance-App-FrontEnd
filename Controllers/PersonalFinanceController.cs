@@ -420,7 +420,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             TempData["Codes"] = Codes;
             TransactionExt tr = new TransactionExt() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
-            if (t.TrsValue < 0) ViewBag.Type = false; else ViewBag.Type = true;
+            if (tr.TrsValue < 0) tr.Type = false; else tr.Type = true;
+       //     if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
+         //   if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
             return PartialView(tr);
         }
 
@@ -572,8 +574,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult Transaction_Edit(int id, string User_OID)
+        public ActionResult Transaction_Edit(int id)
         {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             return Transaction_Details_Edit(id, User_OID);
         }
         [HttpPost]
