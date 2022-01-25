@@ -16,10 +16,8 @@
                         <label class="switch">
                             <input type="checkbox" id="togBtn" asp-for="Type">
                             <div class="slider round">
-
                                 <span class="on">Entrata</span>
                                 <span class="off">Uscita</span>
-
                             </div>
                         </label>
                     </div>
@@ -31,9 +29,11 @@
                         <span asp-validation-for="TrsTitle" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
-                        <label for="recipient-name" class="col-form-label">Categoria</label>
-                        <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
-                        <span asp-validation-for="NewTrsCode" class="text-danger"></span>
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Seleziona categoria</label>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Seleziona una categoria esistente oppure creane una nuova nel campo sotto.">info</span>
+                        @{
+                            var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
+                        }
+                        @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "-- Nessuna --", new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Nuova categoria" })
                     </div>
                 </div>
                 <div class="row">
@@ -48,14 +48,9 @@
                         <span asp-validation-for="TrsDateTime" class="text-danger"></span>
                     </div>
                     <div class="col-md-4">
-                        <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
-
-                        @{
-                            var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
-                        }
-                        @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "Tutte", new { @class = "dropdown-item" })
-
-
+                        <label for="recipient-name" class="col-form-label">Categoria</label>
+                        <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
+                        <span asp-validation-for="NewTrsCode" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row">
