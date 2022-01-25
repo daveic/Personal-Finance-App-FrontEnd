@@ -25,6 +25,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var httpClient = new HttpClient();
+          //  httpClient.SetBearerToken(info.AuthenticationTokens.Where(t => t.Name.Equals("access_token")).First().Value);
+            var pictureResult = httpClient.GetAsync("https://graph.microsoft.com/v1.0/me/photo/$value").Result;
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
@@ -769,7 +772,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistMonth = new List<SelectListItem>();
             foreach (var month in UniqueMonth)
             {
-               // SelectListItem subitem = new SelectListItem() { Text = month.Month.ToString(), Value = month.Month.ToString() };
                 SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonth.Add(subitem);
             }
@@ -777,7 +779,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.ItemListMonth = itemlistMonth;
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
             if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonth);
-            //if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => MonthConverter(x.BalDateTime.Month) == selectedMonth);
             //############################################################################################################################
             List<SelectListItem> types = new List<SelectListItem>();
             SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate"};
