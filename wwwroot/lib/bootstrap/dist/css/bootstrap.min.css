@@ -5277,14 +5277,14 @@ textarea.form-control-lg {
 .page-item.active .page-link {
     z-index: 3;
     color: #fff;
-    background-color: #00efb2;
+    background-color: #375a7f;
     border-color: transparent
 }
 
 .page-item.disabled .page-link {
-    color: #fff;
+    color: #888;
     pointer-events: none;
-    background-color: #007053;
+    background-color: #444;
     border-color: transparent
 }
 

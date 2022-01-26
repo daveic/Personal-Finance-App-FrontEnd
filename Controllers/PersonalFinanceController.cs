@@ -737,7 +737,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //TRANSACTIOONS Intermediate view
-        public ActionResult Transactions(string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
+        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -791,10 +791,39 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (!String.IsNullOrEmpty(selectedType)) { 
                 if(selectedType=="Entrate") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue >= 0);
                 else if (selectedType == "Uscite") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue < 0);
-            } 
+            }
+            //############################################################################################################################
+            //############################################################################################################################
 
+            //Transactions = Transactions.Reverse();
+            //## ORDINAMENTO #############################################################################################################
+            List<SelectListItem> orderByList = new List<SelectListItem>();
+            SelectListItem datetimeAsc = new SelectListItem() { Text = "Data crescente", Value = "Data crescente" };
+            SelectListItem datetimeDesc = new SelectListItem() { Text = "Data decrescente", Value = "Data decrescente" };
+            SelectListItem categ = new SelectListItem() { Text = "Categoria", Value = "Categoria" };
+            SelectListItem type = new SelectListItem() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
+            orderByList.Add(datetimeAsc);
+            orderByList.Add(datetimeDesc);
+            orderByList.Add(categ);
+            orderByList.Add(type);
+
+            ViewBag.OrderBy = orderByList;
+            //Transactions = Transactions.OrderByDescending(x => x.TrsDateTime);
+            if (!String.IsNullOrEmpty(orderBy))
+            {
+                if (orderBy == "Data crescente") Transactions = Transactions.OrderBy(x => x.TrsDateTime);
+                else if (orderBy == "Data decrescente") Transactions = Transactions.OrderByDescending(x => x.TrsDateTime);
+                else if (orderBy == "Categoria") Transactions = Transactions.OrderBy(x => x.TrsCode);
+                else if (orderBy == "Entrate/Uscite") Transactions = Transactions.OrderByDescending(x => x.TrsValue);
+            }
             //Pagination
-            Transactions = Transactions.Reverse();
+            List<string> LastChoices = new List<string>();
+            LastChoices.Add(orderBy);
+            LastChoices.Add(selectedType);
+            LastChoices.Add(selectedCode);
+            LastChoices.Add(selectedMonth);
+            LastChoices.Add(selectedYear);
+            ViewBag.LastChoices = LastChoices;
             const int PageSize = 15;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();

@@ -107,29 +107,29 @@ else if (Model.state == 3)
 {
     <div class="row" style="margin: 0 auto;">
         <div class="col-md-2">
+            <div class="card shadow p-3 border-light mb-3">
+                <div class="card-header">ORDINA</div>
+                <div class="card-body">
+                    <label>Ordina per:</label>
+                    @Html.DropDownList("orderBy", (List<SelectListItem>)ViewBag.OrderBy, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
+                </div>
+            </div>
             <div class="card shadow p-3 border-warning mb-3">
                 <div class="card-header">FILTRI</div>
                 <div class="card-body">
                     <label>Entrata/Uscita:</label>
-                    @Html.DropDownList("selectedType", (List<SelectListItem>)ViewBag.Type, "Tutte", new { onchange = "form.submit();", @class = "dropdown-item" })
+                    @Html.DropDownList("selectedType", (List<SelectListItem>)ViewBag.Type, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label>Categoria:</label>
                     @{
                         var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                     }
-                    @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "dropdown-item" })
+                    @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label>Mese:</label>
-                    @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
+                    @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label>Anno:</label>
-                    @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
-
-
-                    
-                    
-
+                    @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                 </div>
             </div>
-            
         </div>
         <div class="col-md-10">
             <div class="card shadow p-3 border-info mb-3">
@@ -143,7 +143,6 @@ else if (Model.state == 3)
                 <div class="card-body">
                     <div class="table-responsive-xl">
                         <table class="table table-striped table-hover">
-
                             <thead>
                                 <tr>
                                     <th scope="col">Tipo</th>
@@ -186,58 +185,109 @@ else if (Model.state == 3)
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-10"></div>
-                    <div class="col-1" style='white-space: nowrap'>
-                        <div>
-                            <ul class="pagination pagination-sm">
-                                @if (ViewBag.Page > 0)
+                    <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                            <ul class="pagination">
+                                @if (ViewBag.Page == 0)
                                 {
-                                    <li class="page-item">
-                                        <a class="page-link" style="margin-left: 40px; background-color: #2574A9" href="@Url.Action("Transactions", new { page = ViewBag.Page - 1 })">&laquo; Precedente</a>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Precedente</a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                        new
+                                        {
+                                            page = ViewBag.Page + 1,
+                                            orderBy = ViewBag.LastChoices[0],
+                                            selectedType = ViewBag.LastChoices[1],
+                                            selectedCode = ViewBag.LastChoices[2],
+                                            selectedMonth = ViewBag.LastChoices[3],
+                                            selectedYear = ViewBag.LastChoices[4]
+                                        })">Successivo </a>
                                     </li>
                                 }
-                                @if (ViewBag.Page < ViewBag.MaxPage)
+                                @if (ViewBag.Page > 0 && ViewBag.Page != ViewBag.MaxPage)
                                 {
-                                    <li class="page-item">
-                                        <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions", new { page = ViewBag.Page + 1 })">Successivo &raquo;</a>
+                                    <li class="page-item active">
+                                        <a class="page-link" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = ViewBag.Page - 1,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">Precedente </a>
+                                    </li>
+                                    <li class="page-item active">
+                                        <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                        new
+                                        {
+                                            page = ViewBag.Page + 1,
+                                            orderBy = ViewBag.LastChoices[0],
+                                            selectedType = ViewBag.LastChoices[1],
+                                            selectedCode = ViewBag.LastChoices[2],
+                                            selectedMonth = ViewBag.LastChoices[3],
+                                            selectedYear = ViewBag.LastChoices[4]
+                                        })">Successivo </a>
                                     </li>
                                 }
-
+                                @if (ViewBag.Page == ViewBag.MaxPage)
+                                {
+                                    <li class="page-item active">
+                                        <a class="page-link" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = ViewBag.Page - 1,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">Precedente </a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">Successivo</a>
+                                    </li>
+                                }
                             </ul>
+                            <div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </div>                        
             </div>
         </div>
-    </div>}
+    </div>
+ }
 
-@section scripts {
-    <script>
-        function Edit(ClientID) {
-            var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
-            $("#ModalBodyDiv").load(url, function () {
-                $("#edititem").modal("show");
-            })
-        }
-        function Delete(ClientID) {
-            var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
-            $("#ModalBodyDivDel").load(url, function () {
-                $("#deleteitem").modal("show");
-            })
-        }
-        function Details(ClientID) {
-            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
-            $("#ModalBodyDivDet").load(url, function () {
-                $("#detailsitem").modal("show");
-            })
-        }
-        function OrderBy(type) {
-            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
-            $("#ModalBodyDivDet").load(url, function () {
-                $("#detailsitem").modal("show");
-            })
-        }
-    </script>
-}
+            @section scripts {
+                <script>
+                    function Edit(ClientID) {
+                        var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
+                        $("#ModalBodyDiv").load(url, function () {
+                            $("#edititem").modal("show");
+                        })
+                    }
+                    function Delete(ClientID) {
+                        var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
+                        $("#ModalBodyDivDel").load(url, function () {
+                            $("#deleteitem").modal("show");
+                        })
+                    }
+                    function Details(ClientID) {
+                        var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+                        $("#ModalBodyDivDet").load(url, function () {
+                            $("#detailsitem").modal("show");
+                        })
+                    }
+                    function OrderBy(type) {
+                        var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+                        $("#ModalBodyDivDet").load(url, function () {
+                            $("#detailsitem").modal("show");
+                        })
+                    }
+                </script>
+            }
