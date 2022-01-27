@@ -166,6 +166,20 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = item.TrsCode;
                 Codes.Add(code);
             }
+            foreach (var credit in Credits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = credit.CredCode;
+                code.Text = credit.CredCode;
+                Codes.Add(code);
+            }
+            foreach (var debit in Debits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = debit.DebCode;
+                code.Text = debit.DebCode;
+                Codes.Add(code);
+            }
             TempData["Codes"] = Codes;
             viewModel.TransactionExt = new TransactionExt();
 
@@ -409,6 +423,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transaction_Details_Edit(int id, string User_OID)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
             Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                                           .Select(x => x.First())
@@ -419,6 +435,20 @@ namespace PersonalFinanceFrontEnd.Controllers
                 SelectListItem code = new SelectListItem();
                 code.Value = item.TrsCode;
                 code.Text = item.TrsCode;
+                Codes.Add(code);
+            }
+            foreach (var credit in Credits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = credit.CredCode;
+                code.Text = credit.CredCode;
+                Codes.Add(code);
+            }
+            foreach (var debit in Debits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = debit.DebCode;
+                code.Text = debit.DebCode;
                 Codes.Add(code);
             }
             TempData["Codes"] = Codes;
@@ -742,6 +772,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
             ViewModel viewModel = new ViewModel();
 
             //############################################################################################################################
@@ -846,6 +878,20 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = item.TrsCode;
                 Codes.Add(code);
             }
+            foreach (var credit in Credits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = credit.CredCode;
+                code.Text = credit.CredCode;
+                Codes.Add(code);
+            }
+            foreach (var debit in Debits)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = debit.DebCode;
+                code.Text = debit.DebCode;
+                Codes.Add(code);
+            }
             TempData["Codes"] = Codes;
             viewModel.TransactionExt = new TransactionExt();
             return View(viewModel);
@@ -912,9 +958,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     TempData["sendFlagTr"] = 3;
                     Transaction_Balance_Update(tr.Usr_OID);
+                    Transaction_Credit_Debit_Update(tr);
                     return RedirectToAction(nameof(Transactions));
                 }
             }
+            
             return View();
         }
         public IActionResult KnownMovement_Add()
@@ -1098,5 +1146,81 @@ namespace PersonalFinanceFrontEnd.Controllers
             AddItem<Balance>(nameof(Balance), b);
             return 1;
         }
+
+        public int Transaction_Credit_Debit_Update(Transaction t)
+        {
+            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), t.Usr_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), t.Usr_OID);
+
+            if (t.TrsValue < 0)
+            {
+                foreach (var debit in Debits)
+                {
+                    if(t.TrsCode == debit.DebCode)
+                    {
+                        debit.RemainToPay += t.TrsValue;
+                        int div = (debit.DebValue / debit.RtNum);
+                        debit.RtPaid = debit.RtPaid + (-t.TrsValue * 1) / div;
+                        if(debit.RemainToPay <= 0)
+                        {
+                            Debit_Delete(debit);
+                        }
+                        else
+                        {
+                            Debit_Edit(debit);
+                        }
+                    }
+
+                }
+                if (t.TrsCode.StartsWith("CRE"))
+                {
+                    Credit model = new Credit();
+                    model.Usr_OID = t.Usr_OID;
+                    model.CredCode = t.TrsCode;
+                    model.CredDateTime = DateTime.UtcNow;
+                    model.CredValue = t.TrsValue;
+                    model.CredTitle = "Prestito/Anticipo";
+                    model.CredNote = "";
+
+
+                    Credit_Add(model);
+
+                }
+
+            }
+            if(t.TrsValue > 0)
+            {
+               foreach(var credit in Credits)
+                {
+                    if (t.TrsCode == credit.CredCode)
+                    {
+
+                    }
+                }
+                if (t.TrsCode.StartsWith("DEB"))
+                {
+                    Debit model = new Debit();
+                    model.Usr_OID = t.Usr_OID;
+                    model.DebCode = t.TrsCode;
+                    model.DebInsDate = DateTime.UtcNow;
+                    model.DebValue = -t.TrsValue;
+                    model.DebTitle = "Prestito/Anticipo";
+                    model.DebNote = "";
+                    model.RemainToPay = -t.TrsValue;
+                    model.RtPaid = 0;
+                    model.RtNum = 1;
+
+                    Debit_Add(model);
+
+                }
+            }
+ 
+
+            
+
+  
+            return 1;
+        }
+
     }
 }
