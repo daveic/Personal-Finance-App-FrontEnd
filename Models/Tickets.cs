@@ -9,7 +9,7 @@ namespace PersonalFinanceFrontEnd.Models
         public int ID { get; set; }
         public string TicketName { get; set; }
         public string NumTicket { get; set; }
-        public int TicketValue { get; set; }
+        public float TicketValue { get; set; }
         public string TicketNote { get; set; }
     }
 }

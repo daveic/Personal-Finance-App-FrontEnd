@@ -9,12 +9,12 @@ namespace PersonalFinanceFrontEnd.Models
         public string DebCode { get; set; }
         public string DebTitle { get; set; }
         public string CredName { get; set; }
-        public int DebValue { get; set; }        
+        public float DebValue { get; set; }        
         public DateTime DebDateTime { get; set; } //Scadenza debito
         public DateTime DebInsDate { get; set; }
-        public int RtNum { get; set; } //Numero di rate
-        public int RtPaid { get; set; } //Rate pagate
-        public int RemainToPay { get; set; } //Importo da pagare
+        public float RtNum { get; set; } //Numero di rate
+        public float RtPaid { get; set; } //Rate pagate
+        public float RemainToPay { get; set; } //Importo da pagare
         public string DebNote { get; set; }
     }
 }
