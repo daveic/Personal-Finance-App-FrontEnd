@@ -201,7 +201,7 @@ input {
     position: relative;
     display: inline-block;
     width: 85px;
-    height: 24px;
+    height: 26px;
 }
 
     .switch input {
@@ -214,7 +214,7 @@ input {
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 2px;
     background-color: rgba(var(--bs-danger-rgb));
     -webkit-transition: .4s;
     transition: .4s;
