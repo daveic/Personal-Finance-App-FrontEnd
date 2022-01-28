@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using System.Globalization;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -18,7 +19,15 @@ namespace PersonalFinanceFrontEnd
     {
         public Startup(IConfiguration configuration)
         {
+            var culture = new CultureInfo("sl-SI");
+
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberDecimalSeparator = ",";
+            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberGroupSeparator = ".";
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }

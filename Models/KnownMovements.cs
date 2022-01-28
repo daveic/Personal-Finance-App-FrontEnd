@@ -8,7 +8,7 @@ namespace PersonalFinanceFrontEnd.Models
         public int ID { get; set; }
         public string KMType { get; set; }
         public string KMTitle { get; set; }
-        public float KMValue { get; set; }
+        public double KMValue { get; set; }
         public string KMNote { get; set; }
     }
 }

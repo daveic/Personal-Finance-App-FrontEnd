@@ -22,11 +22,11 @@ namespace PersonalFinanceFrontEnd.Models
         public IEnumerable<Debit> Debits { get; set; }
         public Debit Debit { get; set; }
         public int state { get; internal set; }
-        public float TransactionSum { get; set; }
-        public float CreditSum { get; set; }
-        public float DebitSum { get; set; }
-        public float TotWithDebits { get; set; }
-        public float TotNoDebits { get; set; }
+        public double TransactionSum { get; set; }
+        public double CreditSum { get; set; }
+        public double DebitSum { get; set; }
+        public double TotWithDebits { get; set; }
+        public double TotNoDebits { get; set; }
         public List<Bank> BankList { get; set; }
         public List<Ticket> TicketList { get; set; }
         public Bank Contanti { get; set; }

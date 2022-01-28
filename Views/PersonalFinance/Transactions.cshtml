@@ -1,4 +1,5 @@
 ﻿@model ViewModel
+@using System.Globalization
 <h2>Archivio Transazioni</h2>
 <br />
 <!-- Modal ADD-->
@@ -173,7 +174,7 @@ else if (Model.state == 3)
                                         <td style="text-align:right;">
                                             @item.TrsDateTime.ToString("dd/MM/yyyy")
                                         </td>
-                                        <td style="text-align:right;">@item.TrsValue €</td>
+                                        <td style="text-align:right;">@item.TrsValue.ToString("C")</td>
                                         <td style="text-align:right;">@item.TrsNote</td>
                                         <td style="white-space: nowrap; text-align:right">
                                             <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
@@ -191,14 +192,14 @@ else if (Model.state == 3)
 
                             @if (ViewBag.Page == 0)
                             {
-                            <li class="page-item disabled">
+                                <li class="page-item disabled">
 
-                                <a class="page-link" href="#" tabindex="-1">
-                                    <span class="material-icons" style="line-height: inherit;">
-                                        navigate_before
-                                    </span>
-                                </a>
-                            </li>
+                                    <a class="page-link" href="#" tabindex="-1">
+                                        <span class="material-icons" style="line-height: inherit;">
+                                            navigate_before
+                                        </span>
+                                    </a>
+                                </li>
                                 <li class="page-item active">
                                     <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
                                         new
@@ -233,7 +234,7 @@ else if (Model.state == 3)
                                         <span class="material-icons" style="line-height: inherit;">
                                             navigate_before
                                         </span>
-                                   </a>
+                                    </a>
                                 </li>
                                 <li class="page-item active">
                                     <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
@@ -249,7 +250,7 @@ else if (Model.state == 3)
                                         <span class="material-icons" style="line-height: inherit;">
                                             navigate_next
                                         </span>
-                                   </a>
+                                    </a>
                                 </li>
                             }
                             @if (ViewBag.Page == ViewBag.MaxPage)
@@ -268,7 +269,7 @@ else if (Model.state == 3)
                                         <span class="material-icons" style="line-height: inherit;">
                                             navigate_before
                                         </span>
-                                   </a>
+                                    </a>
                                 </li>
                                 <li class="page-item disabled">
                                     <a class="page-link" href="#" tabindex="-1">
@@ -280,38 +281,38 @@ else if (Model.state == 3)
                             }
                         </ul>
                     </div>
-           
-                </div>                        
+
+                </div>
             </div>
         </div>
     </div>
- }
+}
 
-            @section scripts {
-                <script>
-                    function Edit(ClientID) {
-                        var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
-                        $("#ModalBodyDiv").load(url, function () {
-                            $("#edititem").modal("show");
-                        })
-                    }
-                    function Delete(ClientID) {
-                        var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
-                        $("#ModalBodyDivDel").load(url, function () {
-                            $("#deleteitem").modal("show");
-                        })
-                    }
-                    function Details(ClientID) {
-                        var url = "/PersonalFinance/Transaction_Details/" + ClientID;
-                        $("#ModalBodyDivDet").load(url, function () {
-                            $("#detailsitem").modal("show");
-                        })
-                    }
-                    function OrderBy(type) {
-                        var url = "/PersonalFinance/Transaction_Details/" + ClientID;
-                        $("#ModalBodyDivDet").load(url, function () {
-                            $("#detailsitem").modal("show");
-                        })
-                    }
-                </script>
-            }
+@section scripts {
+    <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#edititem").modal("show");
+            })
+        }
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+        function Details(ClientID) {
+            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+        function OrderBy(type) {
+            var url = "/PersonalFinance/Transaction_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+    </script>
+}

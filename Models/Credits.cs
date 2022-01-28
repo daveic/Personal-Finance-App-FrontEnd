@@ -10,7 +10,7 @@ namespace PersonalFinanceFrontEnd.Models
         public string CredCode { get; set; }
         public string CredTitle { get; set; }
         public string DebName { get; set; }
-        public float CredValue { get; set; }
+        public double CredValue { get; set; }
         public DateTime CredDateTime { get; set; }    
         public string CredNote { get; set; }
     }

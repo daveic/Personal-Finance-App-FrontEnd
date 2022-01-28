@@ -42,25 +42,25 @@ namespace PersonalFinanceFrontEnd.Controllers
                 Bank b = new Bank { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
                 int result = AddItem<Bank>(nameof(Bank), b);
             }
-            float TransactionSum = 0;
+            double TransactionSum = 0;
             foreach (var item in Transactions)
             {
                 TransactionSum += item.TrsValue;
             }
-            float CreditSum = 0;
+            double CreditSum = 0;
             foreach (var item in Credits)
             {
                 CreditSum += item.CredValue;
             }
-            float DebitSum = 0;
+            double DebitSum = 0;
             foreach (var item in Debits)
             {
                 DebitSum += item.DebValue;
             }
             // Totale saldo + crediti - debiti
-            float TotWithDebits = TransactionSum + CreditSum - DebitSum;
+            double TotWithDebits = TransactionSum + CreditSum - DebitSum;
             // Totale saldo + crediti
-            float TotNoDebits = TransactionSum + CreditSum;
+            double TotNoDebits = TransactionSum + CreditSum;
 
 
             //############################################################################################################################
@@ -213,10 +213,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodesIn = jsonCodes; ViewBag.CodesInV = strCodes; }
 
             int i = 0;
-            float totalCountIn = 0;
-            float totalCountOut = 0;
+            double totalCountIn = 0;
+            double totalCountOut = 0;
 
-            float[] count = new float[strCodes.Count];
+            double[] count = new double[strCodes.Count];
             foreach (var item in strCodes)
             {
                 var CodeValues = Transactions.Where(x => x.TrsCode == item);
@@ -1099,8 +1099,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-            float tot = 0;
-            float totTransaction = 0;
+            double tot = 0;
+            double totTransaction = 0;
 
             foreach (var item in Banks)
             {
@@ -1137,7 +1137,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             b.BalDateTime = DateTime.UtcNow;
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
 
-            float totTransaction = 0;
+            double totTransaction = 0;
             foreach (var item in Transactions)
             {
                 totTransaction += item.TrsValue;

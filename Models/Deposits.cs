@@ -10,8 +10,8 @@ namespace PersonalFinanceFrontEnd.Models
         public string BankName { get; set; }
         public DateTime InitDate { get; set; }
         public DateTime EndDate { get; set; }
-        public float DepValue { get; set; }
-        public float PercGrow { get; set; }
+        public double DepValue { get; set; }
+        public double PercGrow { get; set; }
         public string BankNote { get; set; }
     }
 }

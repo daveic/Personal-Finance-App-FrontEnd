@@ -40,7 +40,7 @@
                                     <td>@item.CredCode</td>
                                     <td>@item.CredTitle</td>
                                     <td>@item.DebName</td>
-                                    <td>@item.CredValue €</td>
+                                    <td>@item.CredValue.ToString("C")</td>
                                     <td>@item.CredDateTime.ToString("dd/MM/yyyy")</td>
                                     <td>@item.CredNote</td>
                                 </tr>
@@ -87,7 +87,7 @@
                                         <td>@item.DebCode</td>
                                         <td>@item.DebTitle</td>
                                         <td>@item.CredName</td>
-                                        <td>@item.DebValue €</td>
+                                        <td>@item.DebValue.ToString("C")</td>
                                         <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
                                         <td>@item.DebNote</td>
                                     </tr>

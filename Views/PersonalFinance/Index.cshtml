@@ -28,11 +28,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <h4 class="card-title" style="vertical-align: bottom">Saldo attuale: </h4>
                             </div>
-                            <div class="col-6 card-numbers">
-                                <h2 style="text-align: right">@Model.TransactionSum €</h2>
+                            <div class="col-7 card-numbers">
+                                <h2 style="text-align: right">@Model.TransactionSum.ToString("C")</h2>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                                 <h4 class="card-title" style="vertical-align: bottom">Totale crediti: </h4>
                             </div>
                             <div class="col-6">
-                                <h3 style="text-align: right">@Model.CreditSum €</h3>
+                                <h3 style="text-align: right">@Model.CreditSum.ToString("C")</h3>
                             </div>
                         </div>
                     </div>
@@ -62,11 +62,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-6">
                                 <h4 class="card-title" style="vertical-align: bottom">Totale debiti: </h4>
                             </div>
-                            <div class="col-5">
-                                <h3 style="text-align: right">@Model.DebitSum €</h3>
+                            <div class="col-6">
+                                <h3 style="text-align: right">@Model.DebitSum.ToString("C")</h3>
                             </div>
                         </div>
                     </div>
@@ -81,11 +81,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-6">
                                 <h3 class="card-title" style="vertical-align: bottom">Totale calcolato: </h3>
                             </div>
-                            <div class="col-4">
-                                <h2 style="text-align: right">@Model.TotWithDebits €</h2>
+                            <div class="col-6">
+                                <h2 style="text-align: right">@Model.TotWithDebits.ToString("C")</h2>
                             </div>
                         </div>
                     </div>
@@ -98,11 +98,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-6">
                                 <h3 class="card-title" style="vertical-align: bottom">Saldo totale: </h3>
                             </div>
-                            <div class="col-4">
-                                <h2 style="text-align: right">@Model.TotNoDebits €</h2>
+                            <div class="col-6">
+                                <h2 style="text-align: right">@Model.TotNoDebits.ToString("C")</h2>
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@
                 <div class="card-body">
                     <div class="row">
                         <h4 style="text-align:right;">
-                            Totale entrate: @ViewBag.TotCountIn €
+                            Totale entrate: @ViewBag.TotCountIn.ToString("C")
                         </h4>
                     </div>
                     <div class="row">
@@ -214,7 +214,7 @@
                         <div class="col-2" style="margin-top: 3px;">
                             @foreach (var item in ViewBag.CodeValuesInV)
                             {
-                                <small style="text-align:left;">@item €</small><br />
+                                <small style="text-align:left;">@item.ToString("C")</small><br />
                             }
                         </div>
 
@@ -229,7 +229,7 @@
                 <div class="card-body">
                     <div class="row">
                         <h4 style="text-align:right;">
-                            Totale uscite: @ViewBag.TotCountOut €
+                            Totale uscite: @ViewBag.TotCountOut.ToString("C")
                         </h4>
                     </div>
                     <div class="row">
@@ -239,7 +239,7 @@
                         <div class="col-2" style="margin-top: 3px;">
                             @foreach (var item in ViewBag.CodeValuesOutV)
                             {
-                                <small style="text-align:left;">@item €</small><br />
+                                <small style="text-align:left;">@item.ToString("C")</small><br />
                             }
                         </div>
 
