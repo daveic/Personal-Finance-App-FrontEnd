@@ -827,7 +827,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             //############################################################################################################################
             //############################################################################################################################
 
-            //Transactions = Transactions.Reverse();
+            Transactions = Transactions.Reverse();
             //## ORDINAMENTO #############################################################################################################
             List<SelectListItem> orderByList = new List<SelectListItem>();
             SelectListItem datetimeAsc = new SelectListItem() { Text = "Data crescente", Value = "Data crescente" };
@@ -855,8 +855,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             LastChoices.Add(selectedCode);
             LastChoices.Add(selectedMonth);
             LastChoices.Add(selectedYear);
+
             ViewBag.LastChoices = LastChoices;
-            const int PageSize = 15;
+            const int PageSize = 5;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);

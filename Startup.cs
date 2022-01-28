@@ -19,11 +19,12 @@ namespace PersonalFinanceFrontEnd
     {
         public Startup(IConfiguration configuration)
         {
-            var culture = new CultureInfo("sl-SI");
+            var ita = new CultureInfo("it-IT");
 
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = ita;
+            CultureInfo.DefaultThreadCurrentUICulture = ita;
 
+            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalDigits = 2;
             CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberDecimalSeparator = ",";
             CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberGroupSeparator = ".";
             Configuration = configuration;

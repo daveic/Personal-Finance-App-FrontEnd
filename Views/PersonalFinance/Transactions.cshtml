@@ -149,8 +149,8 @@ else if (Model.state == 3)
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Categoria</th>
                                     <th scope="col" style="text-align:right;">Descrizione</th>
-                                    <th scope="col" style="text-align:right;">Data</th>
                                     <th scope="col" style="text-align:right;">Importo</th>
+                                    <th scope="col" style="text-align:right;">Data</th>
                                     <th scope="col" style="text-align:right;">Note</th>
                                     <th scope="col" style="text-align:right;">Azioni</th>
                                 </tr>
@@ -158,30 +158,30 @@ else if (Model.state == 3)
                             <tbody>
                                 @foreach (var item in Model.Transactions)
                                 {
-                                    <tr>
-                                        <td>
-                                            @if (item.TrsValue >= 0)
-                                            {
-                                                <span class="badge rounded-pill bg-success">Entrata</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge rounded-pill bg-danger">Uscita</span>
-                                            }
-                                        </td>
-                                        <td>@item.TrsCode</td>
-                                        <td style="text-align:right;">@item.TrsTitle</td>
-                                        <td style="text-align:right;">
-                                            @item.TrsDateTime.ToString("dd/MM/yyyy")
-                                        </td>
-                                        <td style="text-align:right;">@item.TrsValue.ToString("C")</td>
-                                        <td style="text-align:right;">@item.TrsNote</td>
-                                        <td style="white-space: nowrap; text-align:right">
-                                            <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
-                                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                            <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        @if (item.TrsValue >= 0)
+                                        {
+                                            <span class="badge rounded-pill bg-success">Entrata</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge rounded-pill bg-danger">Uscita</span>
+                                        }
+                                    </td>
+                                    <td>@item.TrsCode</td>
+                                    <td style="text-align:right;">@item.TrsTitle</td>
+                                    <td style="text-align:right;">@item.TrsValue.ToString("C")</td>
+                                    <td style="text-align:right;">
+                                        @item.TrsDateTime.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td style="text-align:right;">@item.TrsNote</td>
+                                    <td style="white-space: nowrap; text-align:right">
+                                        <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
+                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                    </td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
@@ -190,7 +190,7 @@ else if (Model.state == 3)
 
                         <ul class="pagination">
 
-                            @if (ViewBag.Page == 0)
+                            @if (ViewBag.Page == 0 && ViewBag.MaxPage!=0)
                             {
                                 <li class="page-item disabled">
 
@@ -253,7 +253,7 @@ else if (Model.state == 3)
                                     </a>
                                 </li>
                             }
-                            @if (ViewBag.Page == ViewBag.MaxPage)
+                            @if (ViewBag.Page == ViewBag.MaxPage && ViewBag.Page!=0)
                             {
                                 <li class="page-item active">
                                     <a class="page-link" href="@Url.Action("Transactions",

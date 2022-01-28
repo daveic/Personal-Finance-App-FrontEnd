@@ -1,5 +1,5 @@
 ﻿@model ViewModel
-
+@using System.Globalization
 <h2>Wallet</h2>
 
 <br />
@@ -224,19 +224,19 @@
                         <tbody>
                             @foreach (var item in Model.Deposits)
                             {
-                            <tr>
-                                <td>@item.ID</td>
-                                <td>@item.BankName</td>
-                                <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
-                                <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
-                                <td type="number">@item.DepValue.ToString("C")</td>
-                                <td>@item.PercGrow %</td>
-                                <td>@item.BankNote</td>
-                                <td style='white-space: nowrap'>
-                                    <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                    <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>@item.ID</td>
+                                    <td>@item.BankName</td>
+                                    <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                                    <td type="number">@item.DepValue.ToString("C")</td>
+                                    <td>@item.PercGrow %</td>
+                                    <td>@item.BankNote</td>
+                                    <td style='white-space: nowrap'>
+                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -269,18 +269,18 @@
                         <tbody>
                             @foreach (var item in Model.Tickets)
                             {
-                            <tr>
-                                <td>@item.ID</td>
-                                <td>@item.TicketName</td>
-                                <td>@item.TicketValue.ToString("C")</td>
-                                <td type="number">@item.NumTicket</td>
-                                <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C"))</td>
-                                <td>@item.TicketNote</td>
-                                <td style='white-space: nowrap'>
-                                    <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                    <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>@item.ID</td>
+                                    <td>@item.TicketName</td>
+                                    <td>@item.TicketValue.ToString("C")</td>
+                                    <td type="number">@item.NumTicket</td>
+                                    <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C"))</td>
+                                    <td>@item.TicketNote</td>
+                                    <td style='white-space: nowrap'>
+                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -306,7 +306,7 @@
                 $("#deletebank").modal("show");
             })
         }
-        
+
         function EditDeposit(ClientID) {
             var url = "/PersonalFinance/Deposit_Edit/" + ClientID;
             $("#ModalBodyDivde").load(url, function () {
