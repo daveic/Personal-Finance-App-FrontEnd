@@ -966,7 +966,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Transaction_Add()
         {
-            TransactionExt model = new TransactionExt();
+            Transaction model = new Transaction();
             return View(model);
         }
         [HttpPost]
@@ -1096,11 +1096,13 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<Ticket> TicketList = new List<Ticket>();
             foreach (var item in model.Banks)
             {
+                item.input_value = item.BankValue.ToString();
                 BankList.Add(item);
             }
             model.BankList = BankList;
             foreach (var item in model.Tickets)
             {
+                item.input_value = item.TicketValue.ToString();
                 TicketList.Add(item);
             }
             model.TicketList = TicketList;
@@ -1109,6 +1111,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Fast_Update(ViewModel model)
         {
+
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<Bank> BankList = model.BankList;
@@ -1121,7 +1124,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (item.ID == bank.ID)
                     {
-                        bank.BankValue = item.BankValue;
+                        item.input_value = item.input_value.Replace(".", ",");
+                        bank.BankValue = Convert.ToDouble(item.input_value);
                         int result = EditItemID<Bank>(nameof(Bank), bank);
                     }
                 }
