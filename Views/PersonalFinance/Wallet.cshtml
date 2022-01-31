@@ -211,7 +211,6 @@
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">ID</th>
                                 <th scope="col">Banca</th>
                                 <th scope="col">Data inizio</th>
                                 <th scope="col">Data fine</th>
@@ -225,7 +224,6 @@
                             @foreach (var item in Model.Deposits)
                             {
                                 <tr>
-                                    <td>@item.ID</td>
                                     <td>@item.BankName</td>
                                     <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
                                     <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
@@ -257,7 +255,6 @@
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">ID</th>
                                 <th scope="col">Gestore</th>
                                 <th scope="col">Valore singolo</th>
                                 <th scope="col">Numero</th>
@@ -270,7 +267,6 @@
                             @foreach (var item in Model.Tickets)
                             {
                                 <tr>
-                                    <td>@item.ID</td>
                                     <td>@item.TicketName</td>
                                     <td>@item.TicketValue.ToString("C")</td>
                                     <td type="number">@item.NumTicket</td>
