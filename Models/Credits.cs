@@ -13,5 +13,6 @@ namespace PersonalFinanceFrontEnd.Models
         public double CredValue { get; set; }
         public DateTime CredDateTime { get; set; }    
         public string CredNote { get; set; }
+        public string input_value { get; set; }
     }
 }

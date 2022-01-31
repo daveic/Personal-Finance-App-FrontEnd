@@ -19,6 +19,10 @@ namespace PersonalFinanceFrontEnd.Models
         public double TrsValue { get; set; }
         public string TrsNote { get; set; }
 
+        public bool Type { get; set; }
+        public string NewTrsCode { get; set; }
+        public string input_value { get; set; }
+
     }
 }
     

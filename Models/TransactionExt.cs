@@ -17,10 +17,11 @@ namespace PersonalFinanceFrontEnd.Models
         public string TrsCode { get; set; }
         public string TrsTitle { get; set; }
         public DateTime TrsDateTime { get; set; }
-        public double TrsValue { get; set; }
+        public string TrsValue { get; set; }
         public string TrsNote { get; set; }
         public bool Type { get; set; }
         public string NewTrsCode { get; set; }
+        public double TrsValueEdit { get; set; }
     }
 }
     

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http;
@@ -181,7 +182,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 Codes.Add(code);
             }
             TempData["Codes"] = Codes;
-            viewModel.TransactionExt = new TransactionExt();
+            viewModel.Transaction = new Transaction();
 
             GetDonutData(TransactionsIn, 1);
             GetDonutData(TransactionsOut, 0);
@@ -388,31 +389,38 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credit_Details(int id)
         {
             Credit Credit = GetItemID<Credit>(nameof(Credit), id);
+            Credit.input_value = Credit.CredValue.ToString();
             return PartialView(Credit);
         }
         public ActionResult Debit_Details(int id)
         {
             Debit Debit = GetItemID<Debit>(nameof(Debit), id);
+            Debit.input_value = Debit.DebValue.ToString();
+            Debit.input_value_remain = Debit.RemainToPay.ToString();
             return PartialView(Debit);
         }
         public ActionResult KnownMovement_Details(int id)
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
+            KnownMovement.input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }
         public ActionResult Bank_Details(int id)
         {
             Bank Bank = GetItemID<Bank>(nameof(Bank), id);
+            Bank.input_value = Bank.BankValue.ToString();
             return PartialView(Bank);
         }
         public ActionResult Deposit_Details(int id)
         {
             Deposit Deposit = GetItemID<Deposit>(nameof(Deposit), id);
+            Deposit.input_value = Deposit.DepValue.ToString();
             return PartialView(Deposit);
         }
         public ActionResult Ticket_Details(int id)
         {
             Ticket Ticket = GetItemID<Ticket>(nameof(Ticket), id);
+            Ticket.input_value = Ticket.TicketValue.ToString();
             return PartialView(Ticket);
         }
         public ActionResult Transaction_Details(int id)
@@ -451,12 +459,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = debit.DebCode;
                 Codes.Add(code);
             }
-            TempData["Codes"] = Codes;
-            TransactionExt tr = new TransactionExt() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
-            if (tr.TrsValue < 0) tr.Type = false; else tr.Type = true;
-       //     if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
-         //   if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
-            return PartialView(tr);
+            TempData["Codes"] = Codes;            
+          
+            if (t.TrsValue < 0) t.Type = false; else t.Type = true;
+            t.input_value = t.TrsValue.ToString();
+            return PartialView(t);
         }
 
         //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
@@ -580,6 +587,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Edit(Credit c)
         {
+            c.input_value = c.input_value.Replace(".", ",");
+            c.CredValue = Convert.ToDouble(c.input_value);
             ClaimsPrincipal currentUser = this.User;
             c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Credit>(nameof(Credit), c);
@@ -597,6 +606,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Edit(Debit d)
         {
+            d.input_value = d.input_value.Replace(".", ",");
+            d.DebValue = Convert.ToDouble(d.input_value);
+            d.input_value_remain = d.input_value_remain.Replace(".", ",");
+            d.RemainToPay = Convert.ToDouble(d.input_value_remain);
             ClaimsPrincipal currentUser = this.User;
             d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Debit>(nameof(Debit), d);
@@ -610,23 +623,24 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transaction_Edit(int id)
         {
             ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;            
             return Transaction_Details_Edit(id, User_OID);
         }
         [HttpPost]
-        public ActionResult Transaction_Edit(TransactionExt t)
+        public ActionResult Transaction_Edit(Transaction t)
         {
+            t.input_value = t.input_value.Replace(".", ",");
+            t.TrsValue = Convert.ToDouble(t.input_value);
             if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
             if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
             ClaimsPrincipal currentUser = this.User;
-            tr.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Transaction>(nameof(Transaction), tr);
+            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = EditItemID<Transaction>(nameof(Transaction), t);
             if (result == 0)
             {
                 TempData["sendFlagTr"] = 2;
-                Transaction_Balance_Update(tr.Usr_OID);
+                Transaction_Balance_Update(t.Usr_OID);
                 return RedirectToAction(nameof(Transactions));
             }
             return View();
@@ -638,6 +652,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Edit(KnownMovement k)
         {
+            k.input_value = k.input_value.Replace(".", ",");
+            k.KMValue = Convert.ToDouble(k.input_value);
             ClaimsPrincipal currentUser = this.User;
             k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
@@ -656,6 +672,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Edit(Bank b)
         {
+            b.input_value = b.input_value.Replace(".", ",");
+            b.BankValue = Convert.ToDouble(b.input_value);
             ClaimsPrincipal currentUser = this.User;
             b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Bank>(nameof(Bank), b);
@@ -674,6 +692,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Edit(Deposit d)
         {
+            d.input_value = d.input_value.Replace(".", ",");
+            d.DepValue = Convert.ToDouble(d.input_value);
             ClaimsPrincipal currentUser = this.User;
             d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Deposit>(nameof(Deposit), d);
@@ -691,6 +711,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Edit(Ticket t)
         {
+            t.input_value = t.input_value.Replace(".", ",");
+            t.TicketValue = Convert.ToDouble(t.input_value);
             ClaimsPrincipal currentUser = this.User;
             t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Ticket>(nameof(Ticket), t);
@@ -894,7 +916,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 Codes.Add(code);
             }
             TempData["Codes"] = Codes;
-            viewModel.TransactionExt = new TransactionExt();
+            viewModel.Transaction = new Transaction();
             return View(viewModel);
         }
 
@@ -908,6 +930,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Add(Credit c)
         {
+            c.input_value = c.input_value.Replace(".", ",");
+            c.CredValue = Convert.ToDouble(c.input_value);
             ClaimsPrincipal currentUser = this.User;
             c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Credit>(nameof(Credit), c);
@@ -926,6 +950,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Add(Debit d)
         {
+            d.input_value_remain = d.input_value_remain.Replace(".", ",");
+            d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+            d.input_value = d.input_value.Replace(".", ",");
+            d.DebValue = Convert.ToDouble(d.input_value);
             ClaimsPrincipal currentUser = this.User;
             d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Debit>(nameof(Debit), d);
@@ -942,24 +970,26 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Transaction_Add(TransactionExt t)
+        public ActionResult Transaction_Add(Transaction t)
         {
+            t.input_value = t.input_value.Replace(".", ",");
+            t.TrsValue = Convert.ToDouble(t.input_value);
             if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = t.TrsValue, TrsNote = t.TrsNote };
+           // Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = Mydecimal, TrsNote = t.TrsNote };
             ClaimsPrincipal currentUser = this.User;
-            tr.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", tr);
+                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", t);
                 postTask.Wait();
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
                     TempData["sendFlagTr"] = 3;
-                    Transaction_Balance_Update(tr.Usr_OID);
-                    Transaction_Credit_Debit_Update(tr);
+                    Transaction_Balance_Update(t.Usr_OID);
+                    Transaction_Credit_Debit_Update(t);
                     return RedirectToAction(nameof(Transactions));
                 }
             }
@@ -968,12 +998,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult KnownMovement_Add()
         {
-            KnownMovement model = new KnownMovement();
+            KnownMovement model = new KnownMovement();            
             return View(model);
         }
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
+            k.input_value = k.input_value.Replace(".", ",");
+            k.KMValue = Convert.ToDouble(k.input_value);
             ClaimsPrincipal currentUser = this.User;
             k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
@@ -993,6 +1025,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Add(Bank b)
         {
+            b.input_value = b.input_value.Replace(".", ",");
+            b.BankValue = Convert.ToDouble(b.input_value);
             ClaimsPrincipal currentUser = this.User;
             b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Bank>(nameof(Bank), b);
@@ -1012,6 +1046,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Add(Deposit d)
         {
+            d.input_value = d.input_value.Replace(".", ",");
+            d.DepValue = Convert.ToDouble(d.input_value);
             ClaimsPrincipal currentUser = this.User;
             d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Deposit>(nameof(Deposit), d);
@@ -1030,6 +1066,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Add(Ticket t)
         {
+            t.input_value = t.input_value.Replace(".", ",");
+            t.TicketValue = Convert.ToDouble(t.input_value);
             ClaimsPrincipal currentUser = this.User;
             t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Ticket>(nameof(Ticket), t);

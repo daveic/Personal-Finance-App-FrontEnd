@@ -11,5 +11,6 @@ namespace PersonalFinanceFrontEnd.Models
         public string NumTicket { get; set; }
         public double TicketValue { get; set; }
         public string TicketNote { get; set; }
+        public string input_value { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace PersonalFinanceFrontEnd.Models
         public string Iban { get; set; }
         public double BankValue { get; set; }
         public string BankNote { get; set; }
+        public string input_value { get; set; }
     }
 }

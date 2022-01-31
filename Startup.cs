@@ -19,14 +19,15 @@ namespace PersonalFinanceFrontEnd
     {
         public Startup(IConfiguration configuration)
         {
-            var ita = new CultureInfo("it-IT");
+            //var ita = new CultureInfo("it-IT");
 
-            CultureInfo.DefaultThreadCurrentCulture = ita;
-            CultureInfo.DefaultThreadCurrentUICulture = ita;
+          //  CultureInfo.DefaultThreadCurrentCulture = ita;
+           // CultureInfo.DefaultThreadCurrentUICulture = ita;
 
-            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalDigits = 2;
-            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberDecimalSeparator = ",";
-            CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberGroupSeparator = ".";
+            //CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalDigits = 2;
+            //CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberDecimalSeparator = ",";
+            //CultureInfo.DefaultThreadCurrentCulture.NumberFormat.NumberGroupSeparator = ".";
+           // CultureInfo.DefaultThreadCurrentCulture.NumberFormat.CurrencyDecimalSeparator = ",";
             Configuration = configuration;
 
         }
