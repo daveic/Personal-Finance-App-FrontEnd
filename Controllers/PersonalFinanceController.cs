@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Services.Client;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Azure.ActiveDirectory.GraphClient;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
@@ -35,9 +33,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             var Email = User.FindFirst("preferred_username").Value;
             ViewBag.NAME = userName;
             ViewBag.id = User_OID;
-            var httpClient = new HttpClient();
-          //  httpClient.SetBearerToken(info.AuthenticationTokens.Where(t => t.Name.Equals("access_token")).First().Value);
-            var pictureResult = httpClient.GetAsync("https://graph.microsoft.com/v1.0/me/photo/$value").Result;
+
+
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
@@ -1276,34 +1273,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-        const string ThumbUrl = "https://graph.windows.net/myorganization/users/{0}/thumbnailPhoto?api-version=1.6";
-
-        // Attempts to retrieve the thumbnail image for the specified user, with fallback.
-        // Returns: Fully formatted string for supplying as the src attribute value of an img tag.
-        private async Task<string> GetUserThumbnailAsync(string userId)
-        {
-            var servicePoint = new Uri("https://graph.windows.net");
-            var serviceRoot = new Uri(servicePoint, "<your tenant>"); //e.g. xxx.onmicrosoft.com
-            const string clientId = "<clientId>";
-            const string secretKey = "<secretKey>";// ClientID and SecretKey are defined when you register application with Azure AD
-            var authContext = new AuthenticationContext("https://login.windows.net/<tenant>/oauth2/token");
-            var credential = new Microsoft.IdentityModel.Clients.ActiveDirectory.ClientCredential(clientId, secretKey);
-            ActiveDirectoryClient directoryClient = new ActiveDirectoryClient(serviceRoot, async () =>
-            {
-                var result = await authContext.AcquireTokenAsync("https://graph.windows.net/", credential);
-                return result.AccessToken;
-            });
-
-            var user = await directoryClient.Users.Where(x => x.UserPrincipalName == "<username>").ExecuteSingleAsync();
-            DataServiceStreamResponse photo = await user.ThumbnailPhoto.DownloadAsync();
-            using (MemoryStream s = new MemoryStream())
-            {
-                photo.Stream.CopyTo(s);
-                var encodedImage = Convert.ToBase64String(s.ToArray());
-            }
-            return "ok";
-        }
 
 
     }

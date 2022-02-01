@@ -5,6 +5,13 @@
     <UserSecretsId>daa262a5-8f20-4c22-8da3-339ee81958c3</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="wwwroot\scripts1\**" />
+    <Content Remove="wwwroot\scripts1\**" />
+    <EmbeddedResource Remove="wwwroot\scripts1\**" />
+    <None Remove="wwwroot\scripts1\**" />
+  </ItemGroup>
+
 
     <ItemGroup>
         <Folder Include="wwwroot\images\" />
@@ -16,12 +23,7 @@
 	</ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="wwwroot\scripts1\" />
-  </ItemGroup>
-	
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-    <PackageReference Include="Microsoft.Azure.ActiveDirectory.GraphClient" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
       <PrivateAssets>all</PrivateAssets>
@@ -32,7 +34,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.22.1" />
+    <PackageReference Include="Microsoft.Identity.Web" Version="1.22.2" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.2.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />

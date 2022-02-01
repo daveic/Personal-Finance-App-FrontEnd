@@ -34,59 +34,75 @@
     <div class="sidebar-container">
 
         <div class="sidebar-logo">
-            @if (User.Identity.IsAuthenticated)
-            {
-            <h3>
-                Ciao @ViewBag.Name!
-            </h3>
-            }
+            pfa - wallet
         </div>
 
         <ul class="sidebar-navigation">
-            <li class="header">Navigation</li>
-            <li>
-                <a href="/PersonalFinance/Index">
-                    <i class="fa fa-home" aria-hidden="true"></i> Dashboard
-                </a>
-            </li>
-            <li>
-                <a href="/PersonalFinance/Transactions">
-                    <i class="fa fa-tachometer" aria-hidden="true"></i> Archivio Transazioni
-                </a>
-            </li>
-            <!-- Dropdown-->
-            <li class="panel panel-default" id="dropdown">
-                <a data-toggle="collapse" href="#dropdown-lvl1">
-                    <i class="fa fa-home"></i> Crediti e Debiti
-                    <span class="caret"></span>
-                </a>
-                <!-- Dropdown level 1 -->
-                <div id="dropdown-lvl1" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <ul class="nav navbar-nav">
-                            <li><a href="/PersonalFinance/Credits_Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Panoramica</a></li>
-                            <li><a href="/PersonalFinance/Credits"><i class="fa fa-home" aria-hidden="true"></i>•  Crediti</a></li>
-                            <li><a href="/PersonalFinance/Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Debiti</a></li>
-                        </ul>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="header">
+
+                    Benvenuto, @ViewBag.Name
+                    
+                </li>
+                }
+                <li>
+                    <a href="/PersonalFinance/Index">
+                        <i aria-hidden="true">
+                            <span style="vertical-align:sub" class="material-icons">space_dashboard</span>
+                        </i>&nbsp;&nbsp;Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/PersonalFinance/Transactions">
+                        <i aria-hidden="true">
+                            <span style="vertical-align:sub" class="material-icons">history</span>
+                        </i>&nbsp;&nbsp;Archivio Transazioni
+                    </a>
+                </li>
+                <!-- Dropdown-->
+                <li class="panel panel-default" id="dropdown">
+                    <a data-toggle="collapse" href="#dropdown-lvl1">
+                        <i class="fa fa-home"></i> Crediti e Debiti
+                        <span class="caret"></span>
+                    </a>
+                    <!-- Dropdown level 1 -->
+                    <div id="dropdown-lvl1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <ul class="nav navbar-nav">
+                                <li><a href="/PersonalFinance/Credits_Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Panoramica</a></li>
+                                <li><a href="/PersonalFinance/Credits"><i class="fa fa-home" aria-hidden="true"></i>•  Crediti</a></li>
+                                <li><a href="/PersonalFinance/Debits"><i class="fa fa-home" aria-hidden="true"></i>•  Debiti</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <li>
-                <a href="/PersonalFinance/KnownMovements">
-                    <i class="fa fa-users" aria-hidden="true"></i> Movimenti fissi
-                </a>
-            </li>
-            <li>
-                <a href="/PersonalFinance/Wallet">
-                    <i class="fa fa-cog" aria-hidden="true"></i> Wallet
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-info-circle" aria-hidden="true"></i> Previsioni - Budget
-                </a>
-            </li>
-        </ul>
+                </li>
+                <li>
+                    <a href="/PersonalFinance/KnownMovements">
+                        <i aria-hidden="true">
+                            <span style="vertical-align:sub" class="material-icons">swap_horiz</span>
+                        </i>&nbsp;&nbsp;Movimenti fissi
+                    </a>
+                </li>
+                <li>
+                    
+                    <a href="/PersonalFinance/Wallet">
+                        <h6>
+                            <i aria-hidden="true">
+                                <span style="vertical-align:sub" class="material-icons">account_balance_wallet</span>
+                            </i>&nbsp;&nbsp;Wallet
+                        </h6>
+                    </a>
+                    
+                </li>
+                <li>
+                    <a href="#">
+                        <i aria-hidden="true">
+                            <span style="vertical-align:sub" class="material-icons">trending_up</span>
+                        </i>&nbsp;&nbsp;Previsioni - Budget
+                    </a>
+                </li>
+            </ul>
 
     </div>
 
@@ -120,9 +136,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/jsindex.js" asp-append-version="true"></script>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
         <div class="container">
-            &copy; 2022 - Personal Finance App - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - Personal Finance App
         </div>
     </footer>
 </body>
