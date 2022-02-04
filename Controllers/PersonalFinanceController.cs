@@ -591,12 +591,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Credit_Details(id);
         }
         [HttpPost]
-        public ActionResult Credit_Edit(Credit c)
+        public ActionResult Credit_Edit(Credit c, int i)
         {
-            c.input_value = c.input_value.Replace(".", ",");
-            c.CredValue = Convert.ToDouble(c.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (i != 1)
+            {
+                c.input_value = c.input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.input_value);
+                ClaimsPrincipal currentUser = this.User;
+                c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             int result = EditItemID<Credit>(nameof(Credit), c);
             if (result == 0)
             {
@@ -610,12 +613,16 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Debit_Details(id);
         }
         [HttpPost]
-        public ActionResult Debit_Edit(Debit d)
+        public ActionResult Debit_Edit(Debit d, int i)
         {
-            d.input_value = d.input_value.Replace(".", ",");
-            d.DebValue = Convert.ToDouble(d.input_value);
-            d.input_value_remain = d.input_value_remain.Replace(".", ",");
-            d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+            if (i!=1)
+            {
+                d.input_value = d.input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.input_value);
+                d.input_value_remain = d.input_value_remain.Replace(".", ",");
+                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+            }
+
             ClaimsPrincipal currentUser = this.User;
             d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = EditItemID<Debit>(nameof(Debit), d);
@@ -934,12 +941,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Credit_Add(Credit c)
+        public ActionResult Credit_Add(Credit c, int i)
         {
-            c.input_value = c.input_value.Replace(".", ",");
-            c.CredValue = Convert.ToDouble(c.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (i != 1)
+            {
+                c.input_value = c.input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.input_value);
+                ClaimsPrincipal currentUser = this.User;
+                c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
             {
@@ -954,14 +964,17 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(model);
         }
         [HttpPost]
-        public ActionResult Debit_Add(Debit d)
+        public ActionResult Debit_Add(Debit d, int i)
         {
-            d.input_value_remain = d.input_value_remain.Replace(".", ",");
-            d.RemainToPay = Convert.ToDouble(d.input_value_remain);
-            d.input_value = d.input_value.Replace(".", ",");
-            d.DebValue = Convert.ToDouble(d.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (i != 1)
+            {
+                d.input_value_remain = d.input_value_remain.Replace(".", ",");
+                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+                d.input_value = d.input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.input_value);
+                ClaimsPrincipal currentUser = this.User;
+                d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
             int result = AddItem<Debit>(nameof(Debit), d);
             if (result == 0)
             {
@@ -998,8 +1011,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     Transaction_Credit_Debit_Update(t);
                     return RedirectToAction(nameof(Transactions));
                 }
-            }
-            
+            }            
             return View();
         }
         public IActionResult KnownMovement_Add()
@@ -1209,13 +1221,14 @@ namespace PersonalFinanceFrontEnd.Controllers
                     {
                         debit.RemainToPay += t.TrsValue;
                         debit.RtPaid = debit.RtPaid + (-t.TrsValue * 1) / (debit.DebValue / debit.RtNum);
+                        
                         if(debit.RemainToPay <= 0)
                         {
                             Debit_Delete(debit);
                         }
                         else
                         {
-                            Debit_Edit(debit);
+                            Debit_Edit(debit, 1);
                         }
                     }
 
@@ -1231,8 +1244,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     model.CredNote = "";
 
 
-                    Credit_Add(model);
-
+                    Credit_Add(model, 1);
                 }
 
             }
@@ -1242,7 +1254,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (t.TrsCode == credit.CredCode)
                     {
-
+                          credit.CredValue -= t.TrsValue;
+                        if (credit.CredValue <= 0)
+                        {
+                            Credit_Delete(credit);
+                        }
+                        else
+                        {
+                            Credit_Edit(credit, 1);
+                        }
                     }
                 }
                 if (t.TrsCode.StartsWith("DEB"))
@@ -1258,15 +1278,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                     model.RtPaid = 0;
                     model.RtNum = 1;
 
-                    Debit_Add(model);
-
+                    Debit_Add(model, 1);
                 }
             }
- 
-
             
-
-  
             return 1;
         }
 
