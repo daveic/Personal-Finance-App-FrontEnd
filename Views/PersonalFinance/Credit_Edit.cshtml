@@ -11,15 +11,20 @@
             <h4>Modifica credito con ID: @Model.ID</h4>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="CredCode">Codice Credito</label>
                 <input type="text" class="form-control" asp-for="CredCode" style="background-color: #444">
                 <span asp-validation-for="CredCode" class="text-danger"></span>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="CredTitle">Titolo</label>
                 <input type="text" class="form-control" asp-for="CredTitle" style="background-color: #444">
                 <span asp-validation-for="CredTitle" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="CredDateTime">Data inserimento</label>
+                <input type="date" class="form-control" asp-for="CredDateTime" style="background-color: #444">
+                <span asp-validation-for="CredDateTime" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
@@ -32,13 +37,6 @@
                 <label for="recipient-name" class="col-form-label" asp-for="input_value">Importo</label>
                 <input type="text" class="form-control" asp-for="input_value" placeholder="€" style="background-color: #444">
                 <span asp-validation-for="input_value" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <label for="recipient-name" class="col-form-label" asp-for="CredDateTime">Data inserimento</label>
-                <input type="date" class="form-control" asp-for="CredDateTime" style="background-color: #444">
-                <span asp-validation-for="CredDateTime" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
