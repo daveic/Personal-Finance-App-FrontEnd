@@ -30,7 +30,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userName = User.FindFirst("name").Value;
-            var Email = User.FindFirst("preferred_username").Value;
+           // var Email = User.FindFirst("preferred_username").Value;
             ViewBag.NAME = userName;
             ViewBag.id = User_OID;
 
@@ -1120,7 +1120,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             model.BankList = BankList;
             foreach (var item in model.Tickets)
             {
-                item.input_value = item.TicketValue.ToString();
+                item.input_value = item.NumTicket.ToString();
                 TicketList.Add(item);
             }
             model.TicketList = TicketList;
@@ -1145,6 +1145,17 @@ namespace PersonalFinanceFrontEnd.Controllers
                         item.input_value = item.input_value.Replace(".", ",");
                         bank.BankValue = Convert.ToDouble(item.input_value);
                         int result = EditItemID<Bank>(nameof(Bank), bank);
+                    }
+                }
+            }
+            foreach (var itemt in TicketList)
+            {
+                foreach (var ticket in Tickets)
+                {
+                    if (itemt.ID == ticket.ID)
+                    {
+                        ticket.NumTicket = itemt.input_value;
+                        int result = EditItemID<Ticket>(nameof(Ticket), ticket);
                     }
                 }
             }
