@@ -111,23 +111,23 @@ else if (Model.state == 3)
             <div class="card shadow p-3 border-light mb-3">
                 <div class="card-header">ORDINA</div>
                 <div class="card-body">
-                    <label>Ordina per:</label>
+                    <label style="padding-bottom:10px">Ordina per:</label>
                     @Html.DropDownList("orderBy", (List<SelectListItem>)ViewBag.OrderBy, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                 </div>
             </div>
             <div class="card shadow p-3 border-warning mb-3">
                 <div class="card-header">FILTRI</div>
                 <div class="card-body">
-                    <label>Entrata/Uscita:</label>
+                    <label style="padding-bottom:10px">Entrata/Uscita:</label>
                     @Html.DropDownList("selectedType", (List<SelectListItem>)ViewBag.Type, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
-                    <label>Categoria:</label>
+                    <label style="padding-bottom: 10px; padding-top: 8px">Categoria:</label>
                     @{
                         var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                     }
                     @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
-                    <label>Mese:</label>
+                    <label style="padding-bottom: 10px; padding-top: 8px">Mese:</label>
                     @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
-                    <label>Anno:</label>
+                    <label style="padding-bottom: 10px; padding-top: 8px">Anno:</label>
                     @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                 </div>
             </div>

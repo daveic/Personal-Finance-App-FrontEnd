@@ -892,7 +892,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             LastChoices.Add(selectedYear);
 
             ViewBag.LastChoices = LastChoices;
-            const int PageSize = 5;
+            const int PageSize = 20;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
@@ -914,19 +914,36 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = item.TrsCode;
                 Codes.Add(code);
             }
+            bool isPresent = false;
             foreach (var credit in Credits)
             {
-                SelectListItem code = new SelectListItem();
-                code.Value = credit.CredCode;
-                code.Text = credit.CredCode;
-                Codes.Add(code);
+                foreach(var item in Codes)
+                {
+                    if (credit.CredCode == item.Value) isPresent = true;
+                }
+                if (isPresent is true)
+                {
+                    SelectListItem code = new SelectListItem();
+                    code.Value = credit.CredCode;
+                    code.Text = credit.CredCode;
+                    Codes.Add(code);
+                }
+                isPresent = false;
             }
             foreach (var debit in Debits)
             {
-                SelectListItem code = new SelectListItem();
+                foreach (var item in Codes)
+                {
+                    if (debit.DebCode == item.Value) isPresent = true;
+                }
+                if (isPresent is false)
+                {
+                    SelectListItem code = new SelectListItem();
                 code.Value = debit.DebCode;
                 code.Text = debit.DebCode;
                 Codes.Add(code);
+                }
+                isPresent = false;
             }
             TempData["Codes"] = Codes;
             viewModel.Transaction = new Transaction();
