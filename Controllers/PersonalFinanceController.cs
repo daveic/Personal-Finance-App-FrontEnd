@@ -30,7 +30,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userName = User.FindFirst("name").Value;
-           // var Email = User.FindFirst("preferred_username").Value;
             ViewBag.NAME = userName;
             ViewBag.id = User_OID;
 
@@ -744,6 +743,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetCredits(User_OID);
             viewModel.Credit = new Credit();
@@ -756,6 +757,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetCredits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
@@ -767,6 +770,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             ViewModel viewModel = new ViewModel();
             viewModel.Debits = GetDebits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
@@ -778,6 +783,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             ViewModel viewModel = new ViewModel();
             viewModel.Banks = GetBanks(User_OID);
             viewModel.Bank = new Bank();
@@ -793,6 +800,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
             ViewModel viewModel = new ViewModel();
             viewModel.KnownMovements = KnownMovements;
@@ -806,6 +815,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
             IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);

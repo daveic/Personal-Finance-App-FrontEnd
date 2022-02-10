@@ -131,19 +131,20 @@
             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; height: 33rem;">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             SALDO
                         </div>
-                        <div class="col-sm-2">
-
-                            @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
+                        <div class="col-sm-1" style="text-align:right;">
+                            <label>MESE:</label>
                         </div>
-
                         <div class="col-sm-2">
-
-                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item" })
-
+                            @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item-inline" })
+                        </div>
+                        <div class="col-sm-1" style="text-align:right;">
+                            <label>ANNO:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, "Tutti", new { onchange = "form.submit();", @class = "dropdown-item-inline" })
                         </div>
                     </div>
                 </div>

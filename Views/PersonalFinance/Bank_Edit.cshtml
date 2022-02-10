@@ -18,7 +18,7 @@
             </div>
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="input_value">Saldo attuale (in €)</label>
-                <input type="text" class="form-control" asp-for="input_value" style="background-color: #444" placeholder="€">
+                <input type="text" class="form-control" readonly asp-for="input_value" style="background-color: #444" placeholder="€">
                 <span asp-validation-for="input_value" class="text-danger"></span>
             </div>
         </div>
@@ -41,17 +41,3 @@
         </div>
     </div>
 </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
