@@ -172,19 +172,36 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = item.TrsCode;
                 Codes.Add(code);
             }
+            bool isPresent = false;
             foreach (var credit in Credits)
             {
-                SelectListItem code = new SelectListItem();
-                code.Value = credit.CredCode;
-                code.Text = credit.CredCode;
-                Codes.Add(code);
+                foreach (var item in Codes)
+                {
+                    if (credit.CredCode == item.Value) isPresent = true;
+                }
+                if (isPresent is true)
+                {
+                    SelectListItem code = new SelectListItem();
+                    code.Value = credit.CredCode;
+                    code.Text = credit.CredCode;
+                    Codes.Add(code);
+                }
+                isPresent = false;
             }
             foreach (var debit in Debits)
             {
-                SelectListItem code = new SelectListItem();
-                code.Value = debit.DebCode;
-                code.Text = debit.DebCode;
-                Codes.Add(code);
+                foreach (var item in Codes)
+                {
+                    if (debit.DebCode == item.Value) isPresent = true;
+                }
+                if (isPresent is false)
+                {
+                    SelectListItem code = new SelectListItem();
+                    code.Value = debit.DebCode;
+                    code.Text = debit.DebCode;
+                    Codes.Add(code);
+                }
+                isPresent = false;
             }
             TempData["Codes"] = Codes;
             viewModel.Transaction = new Transaction();
@@ -450,19 +467,36 @@ namespace PersonalFinanceFrontEnd.Controllers
                 code.Text = item.TrsCode;
                 Codes.Add(code);
             }
+            bool isPresent = false;
             foreach (var credit in Credits)
             {
-                SelectListItem code = new SelectListItem();
-                code.Value = credit.CredCode;
-                code.Text = credit.CredCode;
-                Codes.Add(code);
+                foreach (var item in Codes)
+                {
+                    if (credit.CredCode == item.Value) isPresent = true;
+                }
+                if (isPresent is true)
+                {
+                    SelectListItem code = new SelectListItem();
+                    code.Value = credit.CredCode;
+                    code.Text = credit.CredCode;
+                    Codes.Add(code);
+                }
+                isPresent = false;
             }
             foreach (var debit in Debits)
             {
-                SelectListItem code = new SelectListItem();
-                code.Value = debit.DebCode;
-                code.Text = debit.DebCode;
-                Codes.Add(code);
+                foreach (var item in Codes)
+                {
+                    if (debit.DebCode == item.Value) isPresent = true;
+                }
+                if (isPresent is false)
+                {
+                    SelectListItem code = new SelectListItem();
+                    code.Value = debit.DebCode;
+                    code.Text = debit.DebCode;
+                    Codes.Add(code);
+                }
+                isPresent = false;
             }
             TempData["Codes"] = Codes;            
           
@@ -950,9 +984,9 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (isPresent is false)
                 {
                     SelectListItem code = new SelectListItem();
-                code.Value = debit.DebCode;
-                code.Text = debit.DebCode;
-                Codes.Add(code);
+                    code.Value = debit.DebCode;
+                    code.Text = debit.DebCode;
+                    Codes.Add(code);
                 }
                 isPresent = false;
             }
@@ -1023,7 +1057,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             t.TrsValue = Convert.ToDouble(t.input_value);
             if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-           // Transaction tr = new Transaction() { ID = t.ID, TrsCode = t.TrsCode, TrsTitle = t.TrsTitle, TrsDateTime = t.TrsDateTime, TrsValue = Mydecimal, TrsNote = t.TrsNote };
             ClaimsPrincipal currentUser = this.User;
             t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             using (var client = new HttpClient())
