@@ -171,7 +171,7 @@ else if (Model.state == 3)
                                     </td>
                                     <td>@item.TrsCode</td>
                                     <td style="text-align:right;">@item.TrsTitle</td>
-                                    <td style="text-align:right;">@item.TrsValue.ToString("C")</td>
+                                    <td style="text-align:right;">@item.TrsValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td style="text-align:right;">
                                         @item.TrsDateTime.ToString("dd/MM/yyyy")
                                     </td>
