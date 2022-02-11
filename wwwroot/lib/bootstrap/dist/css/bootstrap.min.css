@@ -162,11 +162,8 @@ p {
 }
 
 abbr[data-bs-original-title], abbr[title] {
-    -webkit-text-decoration: underline dotted;
     text-decoration: underline dotted;
     cursor: help;
-    -webkit-text-decoration-skip-ink: none;
-    text-decoration-skip-ink: none
 }
 
 address {
@@ -2245,7 +2242,6 @@ progress {
     border: 1px solid #222;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none;
     border-radius: .25rem;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out
 }
@@ -2309,8 +2305,6 @@ progress {
 .form-control::file-selector-button {
     padding: .375rem .75rem;
     margin: -.375rem -.75rem;
-    -webkit-margin-end: .75rem;
-    -moz-margin-end: .75rem;
     margin-inline-end: .75rem;
     color: #fff;
     background-color: #444;
@@ -2473,7 +2467,6 @@ textarea.form-control-lg {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -2542,9 +2535,7 @@ textarea.form-control-lg {
     border: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none;
     -webkit-print-color-adjust: exact;
-    color-adjust: exact
 }
 
     .form-check-input[type=checkbox] {
@@ -2678,7 +2669,6 @@ textarea.form-control-lg {
         -webkit-transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
         -webkit-appearance: none;
-        appearance: none
     }
 
 @media (prefers-reduced-motion:reduce) {
@@ -2711,7 +2701,6 @@ textarea.form-control-lg {
     -moz-transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     transition: background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     -moz-appearance: none;
-    appearance: none
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -4431,7 +4420,6 @@ textarea.form-control-lg {
             position: inherit;
             bottom: 0;
             z-index: 1000;
-            -ms-flex-positive: 1;
             flex-grow: 1;
             visibility: visible !important;
             background-color: transparent;
@@ -4451,7 +4439,6 @@ textarea.form-control-lg {
         .navbar-expand-sm .offcanvas-body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-positive: 0;
             flex-grow: 0;
             padding: 0;
             overflow-y: visible
@@ -5087,7 +5074,6 @@ textarea.form-control-lg {
     background-color: #222;
     border: 0;
     border-radius: 0;
-    overflow-anchor: none;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,border-radius .15s ease
 }
 
@@ -5110,7 +5096,6 @@ textarea.form-control-lg {
     }
 
 .accordion-button::after {
-    -ms-flex-negative: 0;
     flex-shrink: 0;
     width: 1.25rem;
     height: 1.25rem;
@@ -5932,7 +5917,7 @@ textarea.form-control-lg {
     height: 1em;
     padding: .25em .25em;
     color: #fff;
-    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em no-repeat;
     border: 0;
     border-radius: .25rem;
     opacity: .4
@@ -5985,8 +5970,6 @@ textarea.form-control-lg {
     }
 
 .toast-container {
-    width: -webkit-max-content;
-    width: -moz-max-content;
     width: max-content;
     max-width: 100%;
     pointer-events: none
@@ -7808,7 +7791,7 @@ textarea.form-control-lg {
 }
 
 .justify-content-evenly {
-    -ms-flex-pack: space-evenly !important;
+    -ms-flex-pack: !important;
     justify-content: space-evenly !important
 }
 
@@ -8631,9 +8614,9 @@ textarea.form-control-lg {
 
 .user-select-auto {
     -webkit-user-select: auto !important;
-    -moz-user-select: auto !important;
-    -ms-user-select: auto !important;
-    user-select: auto !important
+    -moz-user-select: !important;
+    -ms-user-select: !important;
+    user-select: !important
 }
 
 .user-select-none {
@@ -8872,7 +8855,7 @@ textarea.form-control-lg {
     }
 
     .justify-content-sm-evenly {
-        -ms-flex-pack: space-evenly !important;
+        -ms-flex-pack: !important;
         justify-content: space-evenly !important
     }
 
@@ -9569,7 +9552,7 @@ textarea.form-control-lg {
     }
 
     .justify-content-md-evenly {
-        -ms-flex-pack: space-evenly !important;
+        -ms-flex-pack: !important;
         justify-content: space-evenly !important
     }
 
@@ -10266,7 +10249,7 @@ textarea.form-control-lg {
     }
 
     .justify-content-lg-evenly {
-        -ms-flex-pack: space-evenly !important;
+        -ms-flex-pack: !important;
         justify-content: space-evenly !important
     }
 
@@ -10963,7 +10946,7 @@ textarea.form-control-lg {
     }
 
     .justify-content-xl-evenly {
-        -ms-flex-pack: space-evenly !important;
+        -ms-flex-pack: !important;
         justify-content: space-evenly !important
     }
 
@@ -11586,12 +11569,10 @@ textarea.form-control-lg {
     }
 
     .flex-xxl-shrink-0 {
-        -ms-flex-negative: 0 !important;
         flex-shrink: 0 !important
     }
 
     .flex-xxl-shrink-1 {
-        -ms-flex-negative: 1 !important;
         flex-shrink: 1 !important
     }
 
@@ -11660,7 +11641,7 @@ textarea.form-control-lg {
     }
 
     .justify-content-xxl-evenly {
-        -ms-flex-pack: space-evenly !important;
+        -ms-flex-pack: !important;
         justify-content: space-evenly !important
     }
 
