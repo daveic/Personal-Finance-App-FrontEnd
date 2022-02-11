@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<!--<html lang="en">-->
 <system.web>
 
     <!--<globalization uiCulture="it" culture="it-IT" />-->
@@ -15,7 +15,7 @@
     @RenderSection("scripts", required: false)
 
 
-    <meta charset="utf-8" />
+    <meta charset="utf-16" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PersonalFinance</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -23,7 +23,7 @@
 
 </head>
 <body>
-    @{ 
+    @{
 
     }
     <style>
@@ -43,70 +43,70 @@
                 <li class="header">
 
                     Benvenuto, @ViewBag.Name
-                    
+
                 </li>
-                }
-                <li>
-                    <a href="/PersonalFinance/Index">
-                        <i aria-hidden="true">
-                            <span style="vertical-align:sub" class="material-icons">space_dashboard</span>
-                        </i>&nbsp;&nbsp;Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="/PersonalFinance/Transactions">
-                        <i aria-hidden="true">
-                            <span style="vertical-align:sub" class="material-icons">history</span>
-                        </i>&nbsp;&nbsp;Archivio Transazioni
-                    </a>
-                </li>
-                <!-- Dropdown-->
-                <li class="panel panel-default" id="dropdown">
-                    <a data-toggle="collapse" href="#dropdown-lvl1">
-                        <i>
-                            <span style="vertical-align:sub" class="material-icons">
-                                segment
-                            </span>
-                        </i>&nbsp;&nbsp;Crediti e Debiti
-                        <span class="caret"></span>
-                    </a>
-                    <!-- Dropdown level 1 -->
-                    <div id="dropdown-lvl1" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <ul class="nav navbar-nav">
-                                <li><a href="/PersonalFinance/Credits_Debits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">savings</span></i>&nbsp;&nbsp;Panoramica</a></li>
-                                <li><a href="/PersonalFinance/Credits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">thumb_up_alt</span></i>&nbsp;&nbsp;Crediti</a></li>
-                                <li><a href="/PersonalFinance/Debits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">thumb_down_alt</span></i>&nbsp;&nbsp; Debiti</a></li>
-                            </ul>
-                        </div>
+            }
+            <li>
+                <a href="/PersonalFinance/Index">
+                    <i aria-hidden="true">
+                        <span style="vertical-align:sub" class="material-icons">space_dashboard</span>
+                    </i>&nbsp;&nbsp;Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="/PersonalFinance/Transactions">
+                    <i aria-hidden="true">
+                        <span style="vertical-align:sub" class="material-icons">history</span>
+                    </i>&nbsp;&nbsp;Archivio Transazioni
+                </a>
+            </li>
+            <!-- Dropdown-->
+            <li class="panel panel-default" id="dropdown">
+                <a data-toggle="collapse" href="#dropdown-lvl1">
+                    <i>
+                        <span style="vertical-align:sub" class="material-icons">
+                            segment
+                        </span>
+                    </i>&nbsp;&nbsp;Crediti e Debiti
+                    <span class="caret"></span>
+                </a>
+                <!-- Dropdown level 1 -->
+                <div id="dropdown-lvl1" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul class="nav navbar-nav">
+                            <li><a href="/PersonalFinance/Credits_Debits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">savings</span></i>&nbsp;&nbsp;Panoramica</a></li>
+                            <li><a href="/PersonalFinance/Credits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">thumb_up_alt</span></i>&nbsp;&nbsp;Crediti</a></li>
+                            <li><a href="/PersonalFinance/Debits"><i aria-hidden="true"><span style="vertical-align:sub" class="material-icons">thumb_down_alt</span></i>&nbsp;&nbsp; Debiti</a></li>
+                        </ul>
                     </div>
-                </li>
-                <li>
-                    <a href="/PersonalFinance/KnownMovements">
+                </div>
+            </li>
+            <li>
+                <a href="/PersonalFinance/KnownMovements">
+                    <i aria-hidden="true">
+                        <span style="vertical-align:sub" class="material-icons">swap_horiz</span>
+                    </i>&nbsp;&nbsp;Movimenti fissi
+                </a>
+            </li>
+            <li>
+
+                <a href="/PersonalFinance/Wallet">
+                    <h6>
                         <i aria-hidden="true">
-                            <span style="vertical-align:sub" class="material-icons">swap_horiz</span>
-                        </i>&nbsp;&nbsp;Movimenti fissi
-                    </a>
-                </li>
-                <li>
-                    
-                    <a href="/PersonalFinance/Wallet">
-                        <h6>
-                            <i aria-hidden="true">
-                                <span style="vertical-align:sub" class="material-icons">account_balance_wallet</span>
-                            </i>&nbsp;&nbsp;Wallet
-                        </h6>
-                    </a>
-                    
-                </li>
-                <li>
-                    <a href="#">
-                        <i aria-hidden="true">
-                            <span style="vertical-align:sub" class="material-icons">trending_up</span>
-                        </i>&nbsp;&nbsp;Previsioni - Budget
-                    </a>
-                </li>
-            </ul>
+                            <span style="vertical-align:sub" class="material-icons">account_balance_wallet</span>
+                        </i>&nbsp;&nbsp;Wallet
+                    </h6>
+                </a>
+
+            </li>
+            <li>
+                <a href="#">
+                    <i aria-hidden="true">
+                        <span style="vertical-align:sub" class="material-icons">trending_up</span>
+                    </i>&nbsp;&nbsp;Previsioni - Budget
+                </a>
+            </li>
+        </ul>
 
     </div>
 
