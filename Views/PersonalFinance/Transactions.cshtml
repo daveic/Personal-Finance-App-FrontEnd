@@ -99,11 +99,6 @@ else if (Model.state == 3)
 
 
 
-
-
-
-
-
 @using (Html.BeginForm("Transactions", "PersonalFinance", FormMethod.Get))
 {
     <div class="row" style="margin: 0 auto;">
@@ -187,9 +182,7 @@ else if (Model.state == 3)
                         </table>
                     </div>
                     <div class="modal-footer">
-
                         <ul class="pagination">
-
                             @if (ViewBag.Page == 0 && ViewBag.MaxPage!=0)
                             {
                                 <li class="page-item disabled">

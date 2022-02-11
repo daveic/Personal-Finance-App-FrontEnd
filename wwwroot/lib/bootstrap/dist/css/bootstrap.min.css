@@ -307,7 +307,6 @@ caption {
 
 th {
     text-align: inherit;
-    text-align: -webkit-match-parent
 }
 
 tbody, td, tfoot, th, thead, tr {
@@ -644,7 +643,7 @@ progress {
 }
 
     .row > * {
-        -ms-flex-negative: 0;
+        --ms-flex-negative: 0;
         flex-shrink: 0;
         width: 100%;
         max-width: 100%;
@@ -2264,7 +2263,7 @@ progress {
     box-shadow: 0 0 0 .25rem rgba(55,90,127,.25)
 }
 
-.form-control::-webkit-date-and-time-value {
+.form-control::-webkit-color-datetime-edit-text {
     height: 1.5em
 }
 
@@ -2283,7 +2282,7 @@ progress {
     opacity: 1
 }
 
-.form-control::-ms-input-placeholder {
+.form-control::-moz-placeholder {
     color: #888;
     opacity: 1
 }
@@ -2326,7 +2325,7 @@ progress {
 .form-control::-webkit-file-upload-button {
     padding: .375rem .75rem;
     margin: -.375rem -.75rem;
-    -webkit-margin-end: .75rem;
+    --webkit-margin-end: .75rem;
     margin-inline-end: .75rem;
     color: #fff;
     background-color: #444;
@@ -2378,15 +2377,12 @@ progress {
     .form-control-sm::file-selector-button {
         padding: .25rem .5rem;
         margin: -.25rem -.5rem;
-        -webkit-margin-end: .5rem;
-        -moz-margin-end: .5rem;
         margin-inline-end: .5rem
     }
 
     .form-control-sm::-webkit-file-upload-button {
         padding: .25rem .5rem;
         margin: -.25rem -.5rem;
-        -webkit-margin-end: .5rem;
         margin-inline-end: .5rem
     }
 
@@ -2400,15 +2396,15 @@ progress {
     .form-control-lg::file-selector-button {
         padding: .5rem 1rem;
         margin: -.5rem -1rem;
-        -webkit-margin-end: 1rem;
-        -moz-margin-end: 1rem;
+        --webkit-margin-end: 1rem;
+        --moz-margin-end: 1rem;
         margin-inline-end: 1rem
     }
 
     .form-control-lg::-webkit-file-upload-button {
         padding: .5rem 1rem;
         margin: -.5rem -1rem;
-        -webkit-margin-end: 1rem;
+        --webkit-margin-end: 1rem;
         margin-inline-end: 1rem
     }
 
@@ -2434,7 +2430,7 @@ textarea.form-control-lg {
         cursor: pointer
     }
 
-    .form-control-color::-moz-color-swatch {
+    .form-control-color::-webkit-color-swatch {
         height: 1.5em;
         border-radius: .25rem
     }
@@ -2448,7 +2444,7 @@ textarea.form-control-lg {
     display: block;
     width: 100%;
     padding: .375rem 2.25rem .375rem .75rem;
-    -moz-padding-start: calc(.75rem - 3px);
+    --moz-padding-start: calc(.75rem - 3px);
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -2636,7 +2632,6 @@ textarea.form-control-lg {
     background-color: transparent;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none
 }
 
     .form-range:focus {
@@ -2647,7 +2642,7 @@ textarea.form-control-lg {
             box-shadow: 0 0 0 1px #222,0 0 0 .25rem rgba(55,90,127,.25)
         }
 
-        .form-range:focus::-moz-range-thumb {
+        .form-range:focus::-webkit-slider-thumb {
             box-shadow: 0 0 0 1px #222,0 0 0 .25rem rgba(55,90,127,.25)
         }
 
@@ -2688,7 +2683,7 @@ textarea.form-control-lg {
     border-radius: 1rem
 }
 
-.form-range::-moz-range-thumb {
+.form-range::-webkit-scrollbar-thumb {
     width: 1rem;
     height: 1rem;
     background-color: #375a7f;
@@ -2700,17 +2695,17 @@ textarea.form-control-lg {
 }
 
 @media (prefers-reduced-motion:reduce) {
-    .form-range::-moz-range-thumb {
+    .form-range {
         -moz-transition: none;
         transition: none
     }
 }
 
-.form-range::-moz-range-thumb:active {
+.form-range::-webkit-slider-thumb:active {
     background-color: #c3ced9
 }
 
-.form-range::-moz-range-track {
+.form-range::-ms-track {
     width: 100%;
     height: .5rem;
     color: transparent;
@@ -2728,7 +2723,7 @@ textarea.form-control-lg {
         background-color: #adb5bd
     }
 
-    .form-range:disabled::-moz-range-thumb {
+    .form-range:disabled::-webkit-scrollbar-thumb {
         background-color: #adb5bd
     }
 
@@ -2778,7 +2773,7 @@ textarea.form-control-lg {
         color: transparent
     }
 
-    .form-floating > .form-control::-ms-input-placeholder {
+    .form-floating > .form-control::-moz-placeholder {
         color: transparent
     }
 
@@ -2786,7 +2781,7 @@ textarea.form-control-lg {
         color: transparent
     }
 
-    .form-floating > .form-control:not(:-moz-placeholder-shown) {
+    .form-floating > .form-control:not(:-moz-placeholder) {
         padding-top: 1.625rem;
         padding-bottom: .625rem
     }
@@ -2796,7 +2791,7 @@ textarea.form-control-lg {
         padding-bottom: .625rem
     }
 
-    .form-floating > .form-control:focus, .form-floating > .form-control:not(:placeholder-shown) {
+    .form-floating > .form-control:focus, .form-floating > .form-control:not(:-moz-placeholder) {
         padding-top: 1.625rem;
         padding-bottom: .625rem
     }
@@ -2811,7 +2806,7 @@ textarea.form-control-lg {
     padding-bottom: .625rem
 }
 
-.form-floating > .form-control:not(:-moz-placeholder-shown) ~ label {
+.form-floating > .form-control:not(:-moz-placeholder) ~ label {
     opacity: .65;
     transform: scale(.85) translateY(-.5rem) translateX(.15rem)
 }
@@ -2821,7 +2816,7 @@ textarea.form-control-lg {
     transform: scale(.85) translateY(-.5rem) translateX(.15rem)
 }
 
-.form-floating > .form-control:focus ~ label, .form-floating > .form-control:not(:placeholder-shown) ~ label, .form-floating > .form-select ~ label {
+.form-floating > .form-control:focus ~ label, .form-floating > .form-control:not(:-moz-placeholder) ~ label, .form-floating > .form-select ~ label {
     opacity: .65;
     -webkit-transform: scale(.85) translateY(-.5rem) translateX(.15rem);
     transform: scale(.85) translateY(-.5rem) translateX(.15rem)
@@ -4320,9 +4315,9 @@ textarea.form-control-lg {
 }
 
 .navbar-collapse {
-    -ms-flex-preferred-size: 100%;
+    --ms-flex-preferred-size: 100%;
     flex-basis: 100%;
-    -ms-flex-positive: 1;
+    --ms-flex-positive: 1;
     flex-grow: 1;
     -ms-flex-align: center;
     align-items: center
@@ -4467,7 +4462,6 @@ textarea.form-control-lg {
         .navbar-expand-md .navbar-collapse {
             display: -ms-flexbox !important;
             display: flex !important;
-            -ms-flex-preferred-size: auto;
             flex-basis: auto
         }
 
@@ -4483,7 +4477,7 @@ textarea.form-control-lg {
             position: inherit;
             bottom: 0;
             z-index: 1000;
-            -ms-flex-positive: 1;
+            --ms-flex-positive: 1;
             flex-grow: 1;
             visibility: visible !important;
             background-color: transparent;
@@ -4503,7 +4497,7 @@ textarea.form-control-lg {
         .navbar-expand-md .offcanvas-body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-positive: 0;
+            --ms-flex-positive: 0;
             flex-grow: 0;
             padding: 0;
             overflow-y: visible
@@ -4554,7 +4548,7 @@ textarea.form-control-lg {
             position: inherit;
             bottom: 0;
             z-index: 1000;
-            -ms-flex-positive: 1;
+            --ms-flex-positive: 1;
             flex-grow: 1;
             visibility: visible !important;
             background-color: transparent;
@@ -4574,7 +4568,7 @@ textarea.form-control-lg {
         .navbar-expand-lg .offcanvas-body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-positive: 0;
+            --ms-flex-positive: 0;
             flex-grow: 0;
             padding: 0;
             overflow-y: visible
@@ -4610,7 +4604,6 @@ textarea.form-control-lg {
         .navbar-expand-xl .navbar-collapse {
             display: -ms-flexbox !important;
             display: flex !important;
-            -ms-flex-preferred-size: auto;
             flex-basis: auto
         }
 
@@ -4626,7 +4619,7 @@ textarea.form-control-lg {
             position: inherit;
             bottom: 0;
             z-index: 1000;
-            -ms-flex-positive: 1;
+            --ms-flex-positive: 1;
             flex-grow: 1;
             visibility: visible !important;
             background-color: transparent;
@@ -4646,7 +4639,6 @@ textarea.form-control-lg {
         .navbar-expand-xl .offcanvas-body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-positive: 0;
             flex-grow: 0;
             padding: 0;
             overflow-y: visible
@@ -4682,7 +4674,6 @@ textarea.form-control-lg {
         .navbar-expand-xxl .navbar-collapse {
             display: -ms-flexbox !important;
             display: flex !important;
-            -ms-flex-preferred-size: auto;
             flex-basis: auto
         }
 
@@ -4698,7 +4689,6 @@ textarea.form-control-lg {
             position: inherit;
             bottom: 0;
             z-index: 1000;
-            -ms-flex-positive: 1;
             flex-grow: 1;
             visibility: visible !important;
             background-color: transparent;
@@ -4718,7 +4708,7 @@ textarea.form-control-lg {
         .navbar-expand-xxl .offcanvas-body {
             display: -ms-flexbox;
             display: flex;
-            -ms-flex-positive: 0;
+            --ms-flex-positive: 0;
             flex-grow: 0;
             padding: 0;
             overflow-y: visible
@@ -4753,7 +4743,7 @@ textarea.form-control-lg {
     .navbar-expand .navbar-collapse {
         display: -ms-flexbox !important;
         display: flex !important;
-        -ms-flex-preferred-size: auto;
+        --ms-flex-preferred-size: auto;
         flex-basis: auto
     }
 
@@ -4788,7 +4778,6 @@ textarea.form-control-lg {
     .navbar-expand .offcanvas-body {
         display: -ms-flexbox;
         display: flex;
-        -ms-flex-positive: 0;
         flex-grow: 0;
         padding: 0;
         overflow-y: visible
@@ -6100,7 +6089,7 @@ textarea.form-control-lg {
 .modal-header {
     display: -ms-flexbox;
     display: flex;
-    -ms-flex-negative: 0;
+    --ms-flex-negative: 0;
     flex-shrink: 0;
     -ms-flex-align: center;
     align-items: center;
@@ -6134,7 +6123,7 @@ textarea.form-control-lg {
     display: flex;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
-    -ms-flex-negative: 0;
+    --ms-flex-negative: 0;
     flex-shrink: 0;
     -ms-flex-align: center;
     align-items: center;
@@ -7044,7 +7033,7 @@ textarea.form-control-lg {
 .placeholder-wave {
     -webkit-mask-image: linear-gradient(130deg,#000 55%,rgba(0,0,0,.8) 75%,#000 95%);
     mask-image: linear-gradient(130deg,#000 55%,rgba(0,0,0,.8) 75%,#000 95%);
-    -webkit-mask-size: 200% 100%;
+    --webkit-mask-size: 200% 100%;
     mask-size: 200% 100%;
     -webkit-animation: placeholder-wave 2s linear infinite;
     animation: placeholder-wave 2s linear infinite
@@ -7052,14 +7041,14 @@ textarea.form-control-lg {
 
 @-webkit-keyframes placeholder-wave {
     100% {
-        -webkit-mask-position: -200% 0;
+        --webkit-mask-position: -200% 0;
         mask-position: -200% 0
     }
 }
 
 @keyframes placeholder-wave {
     100% {
-        -webkit-mask-position: -200% 0;
+        --webkit-mask-position: -200% 0;
         mask-position: -200% 0
     }
 }
@@ -7697,22 +7686,21 @@ textarea.form-control-lg {
 }
 
 .flex-grow-0 {
-    -ms-flex-positive: 0 !important;
+    --ms-flex-positive: 0 !important;
     flex-grow: 0 !important
 }
 
 .flex-grow-1 {
-    -ms-flex-positive: 1 !important;
     flex-grow: 1 !important
 }
 
 .flex-shrink-0 {
-    -ms-flex-negative: 0 !important;
+    --ms-flex-negative: 0 !important;
     flex-shrink: 0 !important
 }
 
 .flex-shrink-1 {
-    -ms-flex-negative: 1 !important;
+    --ms-flex-negative: 1 !important;
     flex-shrink: 1 !important
 }
 
@@ -8597,7 +8585,7 @@ textarea.form-control-lg {
 }
 
 .user-select-all {
-    -webkit-user-select: all !important;
+    --webkit-user-select: all !important;
     -moz-user-select: all !important;
     user-select: all !important
 }
@@ -8761,22 +8749,22 @@ textarea.form-control-lg {
     }
 
     .flex-sm-grow-0 {
-        -ms-flex-positive: 0 !important;
+        --ms-flex-positive: 0 !important;
         flex-grow: 0 !important
     }
 
     .flex-sm-grow-1 {
-        -ms-flex-positive: 1 !important;
+        --ms-flex-positive: 1 !important;
         flex-grow: 1 !important
     }
 
     .flex-sm-shrink-0 {
-        -ms-flex-negative: 0 !important;
+        --ms-flex-negative: 0 !important;
         flex-shrink: 0 !important
     }
 
     .flex-sm-shrink-1 {
-        -ms-flex-negative: 1 !important;
+        --ms-flex-negative: 1 !important;
         flex-shrink: 1 !important
     }
 
@@ -9458,22 +9446,22 @@ textarea.form-control-lg {
     }
 
     .flex-md-grow-0 {
-        -ms-flex-positive: 0 !important;
+        --ms-flex-positive: 0 !important;
         flex-grow: 0 !important
     }
 
     .flex-md-grow-1 {
-        -ms-flex-positive: 1 !important;
+        --ms-flex-positive: 1 !important;
         flex-grow: 1 !important
     }
 
     .flex-md-shrink-0 {
-        -ms-flex-negative: 0 !important;
+        --ms-flex-negative: 0 !important;
         flex-shrink: 0 !important
     }
 
     .flex-md-shrink-1 {
-        -ms-flex-negative: 1 !important;
+        --ms-flex-negative: 1 !important;
         flex-shrink: 1 !important
     }
 
@@ -10155,22 +10143,22 @@ textarea.form-control-lg {
     }
 
     .flex-lg-grow-0 {
-        -ms-flex-positive: 0 !important;
+        --ms-flex-positive: 0 !important;
         flex-grow: 0 !important
     }
 
     .flex-lg-grow-1 {
-        -ms-flex-positive: 1 !important;
+        --ms-flex-positive: 1 !important;
         flex-grow: 1 !important
     }
 
     .flex-lg-shrink-0 {
-        -ms-flex-negative: 0 !important;
+        --ms-flex-negative: 0 !important;
         flex-shrink: 0 !important
     }
 
     .flex-lg-shrink-1 {
-        -ms-flex-negative: 1 !important;
+        --ms-flex-negative: 1 !important;
         flex-shrink: 1 !important
     }
 
@@ -10852,22 +10840,21 @@ textarea.form-control-lg {
     }
 
     .flex-xl-grow-0 {
-        -ms-flex-positive: 0 !important;
         flex-grow: 0 !important
     }
 
     .flex-xl-grow-1 {
-        -ms-flex-positive: 1 !important;
+        --ms-flex-positive: 1 !important;
         flex-grow: 1 !important
     }
 
     .flex-xl-shrink-0 {
-        -ms-flex-negative: 0 !important;
+        --ms-flex-negative: 0 !important;
         flex-shrink: 0 !important
     }
 
     .flex-xl-shrink-1 {
-        -ms-flex-negative: 1 !important;
+        --ms-flex-negative: 1 !important;
         flex-shrink: 1 !important
     }
 
@@ -11549,12 +11536,12 @@ textarea.form-control-lg {
     }
 
     .flex-xxl-grow-0 {
-        -ms-flex-positive: 0 !important;
+        --ms-flex-positive: 0 !important;
         flex-grow: 0 !important
     }
 
     .flex-xxl-grow-1 {
-        -ms-flex-positive: 1 !important;
+        --ms-flex-positive: 1 !important;
         flex-grow: 1 !important
     }
 

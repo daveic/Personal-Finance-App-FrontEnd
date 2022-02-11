@@ -159,26 +159,25 @@ else if (Model.state == 3)
 
 
 
-
-    @section scripts {
-        <script>
-            function Edit(ClientID) {
-                var url = "/PersonalFinance/Credit_Edit/" + ClientID;
-                $("#ModalBodyDiv").load(url, function () {
-                    $("#edititem").modal("show");
-                })
-            }
-            function Delete(ClientID) {
-                var url = "/PersonalFinance/Credit_Delete/" + ClientID;
-                $("#ModalBodyDivDel").load(url, function () {
-                    $("#deleteitem").modal("show");
-                })
-            }
-            function Details(ClientID) {
-                var url = "/PersonalFinance/Credit_Details/" + ClientID;
-                $("#ModalBodyDivDet").load(url, function () {
-                    $("#detailsitem").modal("show");
-                })
-            }
-        </script>
-    }
+@section scripts {
+    <script>
+        function Edit(ClientID) {
+            var url = "/PersonalFinance/Credit_Edit/" + ClientID;
+            $("#ModalBodyDiv").load(url, function () {
+                $("#edititem").modal("show");
+            })
+        }
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/Credit_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+        function Details(ClientID) {
+            var url = "/PersonalFinance/Credit_Details/" + ClientID;
+            $("#ModalBodyDivDet").load(url, function () {
+                $("#detailsitem").modal("show");
+            })
+        }
+    </script>
+}
