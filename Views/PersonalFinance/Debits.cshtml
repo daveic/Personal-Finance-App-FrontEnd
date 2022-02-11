@@ -95,55 +95,73 @@ else if (Model.state == 3)
         <p><strong>Completato!</strong> Debito creato correttamente.</p>
     </div>
 }
-<div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
-    <div class="card-header">
-        <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi debito</button>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+            <div class="card-header">DEBITI</div>
+            <div class="card-body">
+                <h4 class="card-title">Attenzione</h4>
+                <p class="card-text" align="justify">
+                    Inserire quì i debiti o finanziamenti aperti da restituire che, tuttavia, sono previsti nel futuro e/o a rate e non hanno un immediato riscontro sul
+                    saldo totale. Non corrispondono cioè ad una entrata evidenziabile sul saldo o nell'archivio transazioni.<br />
+                    Nuovi inserimenti e modifiche agli importi apportate in questa sezione non influenzeranno il saldo globale.<br />
+                    Eventuali prestiti ricevuti, vanno inseriti da transazione e compariranno comunque nella tabella a lato.
+                </p>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="card-body">
-            <div class="table-responsive-xl">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Codice Debito</th>
-                            <th scope="col">Titolo</th>
-                            <th scope="col">Creditore</th>
-                            <th scope="col">Importo</th>
-                            <th scope="col">Data scadenza</th>
-                            <th scope="col">Rate rimanenti</th>
-                            <th scope="col">Debito residuo</th>
-                            <th scope="col">Note</th>
-                            <th scope="col">Azioni</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Debits)
-                        {
-                        <tr>
-                            <td>@item.ID</td>
-                            <td>@item.DebCode</td>
-                            <td>@item.DebTitle</td>
-                            <td>@item.CredName</td>
-                            <td>@item.DebValue.ToString("C")</td>
-                            <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
-                            <td>@((item.RtNum- item.RtPaid).ToString("0.0"))</td>
-                            <td>@item.RemainToPay.ToString("C")</td>
-                            <td>@item.DebNote</td>
-                            <td style='white-space: nowrap'>
-                                <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
-                                <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
+    <div class="col-md-9">
+        <div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
+            <div class="card-header">
+                <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi debito</button>
+            </div>
+            <div class="card-body">
+                <div class="card-body">
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Codice Debito</th>
+                                    <th scope="col">Titolo</th>
+                                    <th scope="col">Creditore</th>
+                                    <th scope="col">Importo</th>
+                                    <th scope="col">Data scadenza</th>
+                                    <th scope="col">Rate rimanenti</th>
+                                    <th scope="col">Debito residuo</th>
+                                    <th scope="col">Note</th>
+                                    <th scope="col">Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Debits)
+                                {
+                                    <tr>
+                                        <td>@item.ID</td>
+                                        <td>@item.DebCode</td>
+                                        <td>@item.DebTitle</td>
+                                        <td>@item.CredName</td>
+                                        <td>@item.DebValue.ToString("C")</td>
+                                        <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
+                                        <td>@((item.RtNum- item.RtPaid).ToString("0.0"))</td>
+                                        <td>@item.RemainToPay.ToString("C")</td>
+                                        <td>@item.DebNote</td>
+                                        <td style='white-space: nowrap'>
+                                            <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
+                                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                            <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 
 
