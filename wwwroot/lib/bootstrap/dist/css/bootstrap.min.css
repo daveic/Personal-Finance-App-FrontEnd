@@ -398,10 +398,6 @@ legend + * {
     clear: left
 }
 
-::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-fields-wrapper, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-text, ::-webkit-datetime-edit-year-field {
-    padding: 0
-}
-
 ::-webkit-inner-spin-button {
     height: auto
 }
@@ -4248,9 +4244,7 @@ textarea.form-control-lg {
 }
 
 .nav-justified .nav-item, .nav-justified > .nav-link {
-    -ms-flex-preferred-size: 0;
     flex-basis: 0;
-    -ms-flex-positive: 1;
     flex-grow: 1;
     text-align: center
 }
@@ -4404,7 +4398,6 @@ textarea.form-control-lg {
         .navbar-expand-sm .navbar-collapse {
             display: -ms-flexbox !important;
             display: flex !important;
-            -ms-flex-preferred-size: auto;
             flex-basis: auto
         }
 
@@ -4546,7 +4539,6 @@ textarea.form-control-lg {
         .navbar-expand-lg .navbar-collapse {
             display: -ms-flexbox !important;
             display: flex !important;
-            -ms-flex-preferred-size: auto;
             flex-basis: auto
         }
 
@@ -4777,7 +4769,6 @@ textarea.form-control-lg {
         position: inherit;
         bottom: 0;
         z-index: 1000;
-        -ms-flex-positive: 1;
         flex-grow: 1;
         visibility: visible !important;
         background-color: transparent;
@@ -6958,7 +6949,6 @@ textarea.form-control-lg {
 }
 
 .offcanvas-body {
-    -ms-flex-positive: 1;
     flex-grow: 1;
     padding: 1rem 1rem;
     overflow-y: auto
