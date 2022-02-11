@@ -66,7 +66,7 @@
                                 <h4 class="card-title" style="vertical-align: bottom">Totale debiti: </h4>
                             </div>
                             <div class="col-6">
-                                <h3 style="text-align: right">@Model.DebitSum.ToString("C")</h3>
+                                <h3 style="text-align: right">@Model.DebitSum.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h3>
                             </div>
                         </div>
                     </div>

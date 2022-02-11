@@ -1,14 +1,10 @@
 ﻿<!DOCTYPE html>
-<!--<html lang="en">-->
+<html lang="en">
 <system.web>
 
     <!--<globalization uiCulture="it" culture="it-IT" />-->
 </system.web>
-<configuration>
-    <system.web>
-        <globalization uiCulture="fr" culture="fr-FR" responseEncoding="utf-8" enableClientBasedCulture="true"/>
-    </system.web>
-</configuration>
+
 <head>
     <link href="@Url.Content("~/content/main.css")" rel="stylesheet" type="text/css" />
 
@@ -36,6 +32,11 @@
             text-decoration: none;
         }
     </style>
+    <configuration>
+        <system.web>
+            <globalization uiCulture="en-US" culture="en-US" responseEncoding="utf-8" enableClientBasedCulture="true" />
+        </system.web>
+    </configuration>
     <div class="sidebar-container">
 
         <div class="sidebar-logo">
