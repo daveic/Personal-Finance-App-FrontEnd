@@ -839,7 +839,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.state = sendFlag;
             return View(viewModel);
         }
-        //TRANSACTIOONS Intermediate view
+        //TRANSACTIONS Intermediate view
         public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             ClaimsPrincipal currentUser = this.User;
@@ -989,7 +989,23 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.Transaction = new Transaction();
             return View(viewModel);
         }
-
+        //BUDGET Intermediate view        
+        public ActionResult Budget()
+        {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
+            ViewModel viewModel = new ViewModel();
+            viewModel.Banks = GetBanks(User_OID);
+            viewModel.Bank = new Bank();
+            viewModel.Deposits = GetDeposits(User_OID);
+            viewModel.Deposit = new Deposit();
+            viewModel.Tickets = GetTickets(User_OID);
+            viewModel.Ticket = new Ticket();
+            viewModel.Contanti = viewModel.Banks.First();
+            return View(viewModel);
+        }
 
         //ADD NEW Methods
         public IActionResult Credit_Add()
