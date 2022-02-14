@@ -147,7 +147,14 @@ else if (Model.state == 3)
                                         <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
                                         <td>@((item.RtNum- item.RtPaid).ToString("0.0"))</td>
                                         <td>@item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                        <td>@item.DebNote</td>
+                                        <td>
+                                            @if (@item.DebNote != null && @item.DebNote.Length > 12 )
+                                            {
+                                                @(item.DebNote.Substring(0, 12) + " ...")
+                                            }
+                                            else
+                                            {@item.DebNote}
+                                        </td>
                                         <td style='white-space: nowrap'>
                                             <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
                                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>

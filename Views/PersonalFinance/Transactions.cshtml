@@ -143,11 +143,11 @@ else if (Model.state == 3)
                                 <tr>
                                     <th scope="col">Tipo</th>
                                     <th scope="col">Categoria</th>
-                                    <th scope="col" style="text-align:right;">Descrizione</th>
-                                    <th scope="col" style="text-align:right;">Importo</th>
-                                    <th scope="col" style="text-align:right;">Data</th>
-                                    <th scope="col" style="text-align:right;">Note</th>
-                                    <th scope="col" style="text-align:right;">Azioni</th>
+                                    <th scope="col">Descrizione</th>
+                                    <th scope="col">Importo</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Note</th>
+                                    <th scope="col">Azioni</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -165,13 +165,20 @@ else if (Model.state == 3)
                                         }
                                     </td>
                                     <td>@item.TrsCode</td>
-                                    <td style="text-align:right;">@item.TrsTitle</td>
-                                    <td style="text-align:right;">@item.TrsValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                    <td style="text-align:right;">
+                                    <td>@item.TrsTitle</td>
+                                    <td>@item.TrsValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                    <td>
                                         @item.TrsDateTime.ToString("dd/MM/yyyy")
                                     </td>
-                                    <td style="text-align:right;">@item.TrsNote</td>
-                                    <td style="white-space: nowrap; text-align:right">
+                                    <td>
+                                        @if (@item.TrsNote != null && @item.TrsNote.Length > 35)
+                                        {
+                                            @(item.TrsNote.Substring(0, 35) + " ...")
+                                        }
+                                        else
+                                        {@item.TrsNote}
+                                    </td>
+                                    <td style="white-space: nowrap">
                                         <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
                                         <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                                         <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>

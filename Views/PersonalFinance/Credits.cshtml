@@ -140,7 +140,14 @@ else if (Model.state == 3)
                                         <td>@item.DebName</td>
                                         <td>@item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                         <td>@item.CredDateTime.ToString("dd/MM/yyyy")</td>
-                                        <td>@item.CredNote</td>
+                                        <td>
+                                            @if (@item.CredNote != null && @item.CredNote.Length > 12 )
+                                            {
+                                                @(item.CredNote.Substring(0, 12) + " ...")
+                                            }
+                                            else
+                                            {@item.CredNote}
+                                        </td>
                                         <td style='white-space: nowrap'>
                                             <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
                                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>

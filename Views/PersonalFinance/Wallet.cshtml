@@ -172,7 +172,9 @@
                         <td>@Model.Contanti.BankName&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="La voce Contanti è presente di default e non è eliminabile. Aggiorna periodicamente questo importo col totale dei contanti in tuo possesso.">info</span></td>
                         <td>@Model.Contanti.Iban</td>
                         <td type="number">@Model.Contanti.BankValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                        <td>@Model.Contanti.BankNote</td>
+                        <td>
+                            @Model.Contanti.BankNote
+                        </td>
                         <td style='white-space: nowrap'>
                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@Model.Contanti.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                         </td>
@@ -183,7 +185,14 @@
                             <td>@item.BankName</td>
                             <td>@item.Iban</td>
                             <td type="number">@item.BankValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                            <td>@item.BankNote</td>
+                            <td>
+                                @if (@item.BankNote != null && @item.BankNote.Length > 30)
+                                {
+                                    @(item.BankNote.Substring(0, 30) + " ...")
+                                }
+                                else
+                                {@item.BankNote}
+                            </td>
                             <td style='white-space: nowrap'>
                                 <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                                 <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
@@ -228,7 +237,14 @@
                                     <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
                                     <td type="number">@item.DepValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td>@item.PercGrow %</td>
-                                    <td>@item.BankNote</td>
+                                    <td>
+                                        @if (@item.BankNote != null && @item.BankNote.Length > 10)
+                                        {
+                                            @(item.BankNote.Substring(0, 10) + " ...")
+                                        }
+                                        else
+                                        {@item.BankNote}
+                                    </td>
                                     <td style='white-space: nowrap'>
                                         <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                                         <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
@@ -267,10 +283,17 @@
                             {
                                 <tr>
                                     <td>@item.TicketName</td>
-                                    <td>@item.TicketValue.ToString("C")</td>
+                                    <td>@item.TicketValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td type="number">@item.NumTicket</td>
                                     <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td>
-                                    <td>@item.TicketNote</td>
+                                    <td>
+                                        @if (@item.TicketNote != null && @item.TicketNote.Length > 10)
+                                        {
+                                            @(item.TicketNote.Substring(0, 10) + " ...")
+                                        }
+                                        else
+                                        {@item.TicketNote}
+                                    </td>
                                     <td style='white-space: nowrap'>
                                         <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
                                         <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>

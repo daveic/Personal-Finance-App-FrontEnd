@@ -40,7 +40,14 @@
                                     <td>@item.DebName</td>
                                     <td>@item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td>@item.CredDateTime.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.CredNote</td>
+                                    <td>
+                                        @if (@item.CredNote != null && @item.CredNote.Length > 5 )
+                                        {
+                                            @(item.CredNote.Substring(0, 5) + " ...")
+                                        }
+                                        else
+                                        {@item.CredNote}
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -84,7 +91,14 @@
                                         <td>@item.CredName</td>
                                         <td>@item.DebValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                         <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
-                                        <td>@item.DebNote</td>
+                                        <td>
+                                            @if (@item.DebNote != null && @item.DebNote.Length > 5 )
+                                            {
+                                                @(item.DebNote.Substring(0, 5) + " ...")
+                                            }
+                                            else
+                                            {@item.DebNote}
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
