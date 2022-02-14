@@ -74,7 +74,7 @@
                     <a href="/PersonalFinance/Wallet">
                         <i aria-hidden="true">
                             <span style="vertical-align:sub" class="material-icons">account_balance_wallet</span>
-                        </i>&nbsp;&nbsp;Wallet                        
+                        </i>&nbsp;&nbsp;Wallet
                     </a>
                 </li>
                 <li>
@@ -85,6 +85,10 @@
                     </a>
                 </li>
             </ul>
+            @{
+                var path = "/images/avatar.jpg";
+                <img src=@path style="margin-top:10px; border:none;" class="shadow rounded">
+            }
         </div>
         <div class="content-container">
             <div class="container-fluid">

@@ -189,8 +189,9 @@ else if (Model.state == 3)
                         </table>
                     </div>
                     <div class="modal-footer">
+                        <span class="badge rounded-pill bg-info">@(ViewBag.Page+1) di @(ViewBag.MaxPage+1)</span>
                         <ul class="pagination">
-                            @if (ViewBag.Page == 0 && ViewBag.MaxPage!=0)
+                            @if (ViewBag.Page == 0 && ViewBag.MaxPage != 0)
                             {
                                 <li class="page-item disabled">
 
@@ -201,7 +202,7 @@ else if (Model.state == 3)
                                     </a>
                                 </li>
                                 <li class="page-item active">
-                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                    <a class="page-link" href="@Url.Action("Transactions",
                                         new
                                         {
                                             page = ViewBag.Page + 1,
@@ -216,10 +217,42 @@ else if (Model.state == 3)
                                         </span>
                                     </a>
                                 </li>
+                                <li class="page-item active">
+                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = ViewBag.MaxPage,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">
+                                        <span class="material-icons" style="line-height: inherit;">
+                                            last_page
+                                        </span>
+                                    </a>
+                                </li>
 
                             }
                             @if (ViewBag.Page > 0 && ViewBag.Page != ViewBag.MaxPage)
                             {
+                                <li class="page-item active">
+                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = 0,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">
+                                        <span class="material-icons" style="line-height: inherit;">
+                                            first_page
+                                        </span>
+                                    </a>
+                                </li>
                                 <li class="page-item active">
                                     <a class="page-link" href="@Url.Action("Transactions",
                                                                     new
@@ -237,7 +270,7 @@ else if (Model.state == 3)
                                     </a>
                                 </li>
                                 <li class="page-item active">
-                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                    <a class="page-link" href="@Url.Action("Transactions",
                                         new
                                         {
                                             page = ViewBag.Page + 1,
@@ -252,9 +285,41 @@ else if (Model.state == 3)
                                         </span>
                                     </a>
                                 </li>
+                                <li class="page-item active">
+                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = ViewBag.MaxPage,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">
+                                        <span class="material-icons" style="line-height: inherit;">
+                                            last_page
+                                        </span>
+                                    </a>
+                                </li>
                             }
-                            @if (ViewBag.Page == ViewBag.MaxPage && ViewBag.Page!=0)
+                            @if (ViewBag.Page == ViewBag.MaxPage && ViewBag.Page != 0)
                             {
+                                <li class="page-item active">
+                                    <a class="page-link" style="background-color: #2574A9" href="@Url.Action("Transactions",
+                                                                    new
+                                                                    {
+                                                                        page = 0,
+                                                                        orderBy = ViewBag.LastChoices[0],
+                                                                        selectedType = ViewBag.LastChoices[1],
+                                                                        selectedCode = ViewBag.LastChoices[2],
+                                                                        selectedMonth = ViewBag.LastChoices[3],
+                                                                        selectedYear = ViewBag.LastChoices[4]
+                                                                    })">
+                                        <span class="material-icons" style="line-height: inherit;">
+                                            first_page
+                                        </span>
+                                    </a>
+                                </li>
                                 <li class="page-item active">
                                     <a class="page-link" href="@Url.Action("Transactions",
                                                                     new
