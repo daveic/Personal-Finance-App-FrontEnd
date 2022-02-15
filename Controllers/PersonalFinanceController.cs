@@ -25,6 +25,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userName = User.FindFirst("name").Value;
+            if (userName.Contains(" ")) { userName = userName.Substring(0, userName.IndexOf(" ")); }
             ViewBag.NAME = userName;
             ViewBag.id = User_OID;
 
