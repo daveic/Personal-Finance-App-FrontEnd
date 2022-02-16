@@ -1,35 +1,66 @@
 ﻿using System;
-using System.Collections;
+
 using System.Collections.Generic;
-using System.Globalization;
+
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
+
 using System.Net.Http;
 using System.Security.Claims;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using PersonalFinanceFrontEnd.Models;
-
-
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
+using Microsoft.Identity.Web;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Client;
+using System.Globalization;
+using TimeZoneConverter;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public class PersonalFinanceController : Controller
     {
-        [Authorize]
+        private readonly ILogger<PersonalFinanceController> _logger;
+
+        private readonly GraphServiceClient _graphServiceClient;
+
+        private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
+
+        private string[] _graphScopes;
+
+        public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
+                            IConfiguration configuration,
+                            GraphServiceClient graphServiceClient,
+                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler)
+        {
+            _logger = logger;
+            _graphServiceClient = graphServiceClient;
+            this._consentHandler = consentHandler;
+
+            // Capture the Scopes for Graph that were used in the original request for an Access token (AT) for MS Graph as
+            // they'd be needed again when requesting a fresh AT for Graph during claims challenge processing
+            _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
+        }
+        //[Authorize]
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
+          
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             var userName = User.FindFirst("name").Value;
             if (userName.Contains(" ")) { userName = userName.Substring(0, userName.IndexOf(" ")); }
             ViewBag.NAME = userName;
             ViewBag.id = User_OID;
-
-
+            //
+            //
+  
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
@@ -215,9 +246,149 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.TotWithDebits = TotWithDebits;
             viewModel.TotNoDebits = TotNoDebits;
             viewModel.Banks = Banks;
-
+            
             return View(viewModel);
         }
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+        public async Task<IActionResult> Profile()
+        {
+            User currentUser = null;
+
+            try
+            {
+                currentUser = await _graphServiceClient.Me.Request().GetAsync();
+            }
+            // Catch CAE exception from Graph SDK
+            catch (ServiceException svcex) when (svcex.Message.Contains("Continuous access evaluation resulted in claims challenge"))
+            {
+                try
+                {
+                    Console.WriteLine($"{svcex}");
+                    string claimChallenge = WwwAuthenticateParameters.GetClaimChallengeFromResponseHeaders(svcex.ResponseHeaders);
+                    _consentHandler.ChallengeUser(_graphScopes, claimChallenge);
+                    return new EmptyResult();
+                }
+                catch (Exception ex2)
+                {
+                    _consentHandler.HandleException(ex2);
+                }
+            }
+
+            try
+            {
+                // Get user photo
+              /*  using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+                {
+                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                }*/
+            }
+            catch (Exception pex)
+            {
+                Console.WriteLine($"{pex.Message}");
+                ViewData["Photo"] = null;
+            }
+
+            ViewData["Me"] = currentUser;
+
+
+            var user =  await _graphServiceClient.Me
+            .Request()
+            .Select(u => new {
+                u.DisplayName,
+                u.MailboxSettings
+            })
+            .GetAsync();
+            var userTimeZone = !string.IsNullOrEmpty(user.MailboxSettings?.TimeZone) ?
+    user.MailboxSettings?.TimeZone : TimeZoneInfo.Local.StandardName;
+            var userDateFormat = !string.IsNullOrEmpty(user.MailboxSettings?.DateFormat) ?
+                user.MailboxSettings?.DateFormat : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+            var userTimeFormat = !string.IsNullOrEmpty(user.MailboxSettings?.TimeFormat) ?
+                user.MailboxSettings?.TimeFormat : CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
+
+
+            // Configure a calendar view for the current week
+            var startOfWeek = GetUtcStartOfWeekInTimeZone(DateTime.Today, $"{userDateFormat} {userTimeFormat}");
+            var endOfWeek = startOfWeek.AddDays(7);
+
+            var viewOptions = new List<QueryOption>
+    {
+        new QueryOption("startDateTime", startOfWeek.ToString("o")),
+        new QueryOption("endDateTime", endOfWeek.ToString("o"))
+    };
+
+         
+                var events = await _graphServiceClient.Me
+                    .CalendarView
+                    .Request(viewOptions)
+                    // Send user time zone in request so date/time in
+                    // response will be in preferred time zone
+                    .Header("Prefer", $"outlook.timezone=\"{userTimeZone}\"")
+                    // Get max 50 per request
+                    .Top(50)
+                    // Only return fields app will use
+                    .Select(e => new
+                    {
+                        e.Subject,
+                        e.Organizer,
+                        e.Start,
+                        e.End
+                    })
+                    // Order results chronologically
+                    .OrderBy("start/dateTime")
+                    .GetAsync();
+
+            var events2 = events.CurrentPage;
+
+            foreach (var calendarEvent in events2)
+            {
+                Console.WriteLine($"Subject: {calendarEvent.Subject}");
+                Console.WriteLine($"  Organizer: {calendarEvent.Organizer.EmailAddress.Name}");
+                Console.WriteLine($"  Start: {FormatDateTimeTimeZone(calendarEvent.Start, $"{userDateFormat} {userTimeFormat}")}");
+                Console.WriteLine($"  End: {FormatDateTimeTimeZone(calendarEvent.End, $"{userDateFormat} {userTimeFormat}")}");
+            }
+            return View();
+        }
+
+        private static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, string timeZoneId)
+        {
+            TimeZoneInfo userTimeZone = TZConvert.GetTimeZoneInfo(timeZoneId);
+            int diff = System.DayOfWeek.Monday - today.DayOfWeek;
+            var unspecifiedStart = DateTime.SpecifyKind(today.AddDays(diff), DateTimeKind.Unspecified);
+            return TimeZoneInfo.ConvertTimeToUtc(unspecifiedStart, userTimeZone);
+        }
+
+        static string FormatDateTimeTimeZone(Microsoft.Graph.DateTimeTimeZone value, string dateTimeFormat)
+        {
+            // Parse the date/time string from Graph into a DateTime
+            var dateTime = DateTime.Parse(value.DateTime);
+
+            return dateTime.ToString(dateTimeFormat);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void GetDonutData(IEnumerable<Transaction> Transactions, int type)
         {
