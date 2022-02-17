@@ -1031,8 +1031,14 @@ namespace PersonalFinanceFrontEnd.Controllers
             
             ViewModel viewModel = new ViewModel();
             viewModel.Expiration = new Expiration();
-
-
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+            viewModel.Expirations = Expirations;
+            List<Expiration> ExpirationList = new List<Expiration>();
+            foreach (var item in Expirations)
+            {
+                ExpirationList.Add(item);
+            }
+            viewModel.ExpirationList = ExpirationList;
             /*
             viewModel.Debits = GetDebits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
@@ -1385,7 +1391,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItem<Expiration>(nameof(Expiration), e);
             if (result == 0)
             {
-                TempData["sendFlagT"] = 3;
+                //TempData["sendFlagT"] = 3;
                 return RedirectToAction(nameof(Expirations));
             }
             return View();

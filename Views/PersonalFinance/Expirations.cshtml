@@ -14,4 +14,29 @@
             </div>
         </div>
     </div>
+    <div class="col-md-8">
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header">CALENDARIO</div>
+            <div class="card-body">
+                <div class="cards">
+                    @for (var i = 1; i < Model.ExpirationList.Count(); i++)
+                    {
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                            <div class="card-header"><h5>@Model.ExpirationList[i].ColorLabel</h5></div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        prova
+                                    </div>
+                                    <div class="col-md-6">
+                                  
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
