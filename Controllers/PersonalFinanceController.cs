@@ -1032,13 +1032,34 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewModel viewModel = new ViewModel();
             viewModel.Expiration = new Expiration();
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
-            viewModel.Expirations = Expirations;
-            List<Expiration> ExpirationList = new List<Expiration>();
-            foreach (var item in Expirations)
+
+
+            /*  var UniqueMonth = Expirations.GroupBy(x => x.ExpDateTime.Month)
+                                              .OrderBy(x => x.Key)
+                                              .Select(x => new { x.Key })
+                                              .ToList();*/
+
+            var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
+    .Select(group => group.First()).Select(item => item.ExpDateTime.Month).ToList();
+          
+
+            var pippo = UniqueMonth;
+            List<ExpMonth> expMonth = new List<ExpMonth>();
+            foreach (var month in UniqueMonth)
             {
-                ExpirationList.Add(item);
+                var singleMonthExp = Expirations.AsQueryable().Where(x => x.ExpDateTime.Month.ToString() == month.ToString());
+                foreach(var exp in singleMonthExp)
+                {
+                    ExpMonth item = new ExpMonth();
+                    item.Month = month.ToString();
+                    item.ExpItem = exp;
+                    expMonth.Add(item);
+                }
+
+                
             }
-            viewModel.ExpirationList = ExpirationList;
+            ViewBag.UniqueMonth = UniqueMonth;
+            viewModel.ExpirationList = expMonth;
             /*
             viewModel.Debits = GetDebits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);

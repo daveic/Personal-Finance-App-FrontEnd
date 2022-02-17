@@ -31,7 +31,7 @@ namespace PersonalFinanceFrontEnd.Models
         public double TotNoDebits { get; set; }
         public List<Bank> BankList { get; set; }
         public List<Ticket> TicketList { get; set; }
-        public List<Expiration> ExpirationList { get; set; }
+        public List<ExpMonth> ExpirationList { get; set; }
         public Bank Contanti { get; set; }
     }
 }

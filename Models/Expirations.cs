@@ -13,4 +13,10 @@ namespace PersonalFinanceFrontEnd.Models
         public string ExpDescription { get; set; }
         public string ColorLabel { get; set; }
     }
+
+    public class ExpMonth
+    {
+        public string Month { get; set; }
+        public Expiration ExpItem { get; set; }
+    }
 }
