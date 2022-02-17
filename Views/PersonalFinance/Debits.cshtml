@@ -143,7 +143,7 @@ else if (Model.state == 3)
                                         <td>@item.DebCode</td>
                                         <td>@item.DebTitle</td>
                                         <td>@item.CredName</td>
-                                        <td>@item.DebValue.ToString("C")</td>
+                                        <td>@item.DebValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                         <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
                                         <td>@((item.RtNum- item.RtPaid).ToString("0.0"))</td>
                                         <td>@item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>

@@ -21,6 +21,8 @@ namespace PersonalFinanceFrontEnd.Models
         public Credit Credit { get; set; }
         public IEnumerable<Debit> Debits { get; set; }
         public Debit Debit { get; set; }
+        public IEnumerable<Expiration> Expirations { get; set; }
+        public Expiration Expiration { get; set; }
         public int state { get; internal set; }
         public double TransactionSum { get; set; }
         public double CreditSum { get; set; }

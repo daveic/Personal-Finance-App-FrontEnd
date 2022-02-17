@@ -975,6 +975,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.NAME = userName;
             ViewModel viewModel = new ViewModel();
             viewModel.Debits = GetDebits(User_OID);
+            List<SelectListItem> Frequency = new List<SelectListItem>();
+           /* List<string> Codes = {["Settimana", "Mese", "Anno"]};
+           foreach (var item in UniqueCodes)
+            {
+                SelectListItem code = new SelectListItem();
+                code.Value = item.TrsCode;
+                code.Text = item.TrsCode;
+                Codes.Add(code);
+            }*/
             int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
             viewModel.state = sendFlag;
             return View(viewModel);
@@ -1009,6 +1018,25 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.KnownMovement = new KnownMovement();
             int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             viewModel.state = sendFlag;
+            return View(viewModel);
+        }
+        //DEBITS Intermediate view
+        public ActionResult Expirations()
+        {
+            ClaimsPrincipal currentUser = this.User;
+            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userName = User.FindFirst("name").Value;
+            ViewBag.NAME = userName;
+            
+            
+            ViewModel viewModel = new ViewModel();
+            viewModel.Expiration = new Expiration();
+
+
+            /*
+            viewModel.Debits = GetDebits(User_OID);
+            int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
+            viewModel.state = sendFlag;*/
             return View(viewModel);
         }
         //TRANSACTIONS Intermediate view
@@ -1342,7 +1370,26 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
+        public IActionResult Expiration_Add()
+        {
+            Expiration model = new Expiration();
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult Expiration_Add(Expiration e)
+        {
+            e.input_value = e.input_value.Replace(".", ",");
+            e.ExpValue = Convert.ToDouble(e.input_value);
+            ClaimsPrincipal currentUser = this.User;
+            e.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = AddItem<Expiration>(nameof(Expiration), e);
+            if (result == 0)
+            {
+                TempData["sendFlagT"] = 3;
+                return RedirectToAction(nameof(Expirations));
+            }
+            return View();
+        }
 
 
         //FAST UPDATE LOGIC

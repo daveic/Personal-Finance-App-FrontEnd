@@ -1,0 +1,71 @@
+﻿@model PersonalFinanceFrontEnd.Models.Expiration
+
+
+<form asp-action="Expiration_Add" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <label for="recipient-name" class="col-form-label" asp-for="ExpTitle">Titolo</label>
+                <input type="text" class="form-control" asp-for="ExpTitle" style="background-color: #444">
+                <span asp-validation-for="ExpTitle" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <label for="message-text" class="col-form-label" asp-for="ExpDescription">Descrizione</label>
+                <input type="text" class="form-control" id="message-text" asp-for="ExpDescription" style="background-color: #444">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="input_value">Importo</label>
+                <input type="number" step="0.01" class="form-control" asp-for="input_value" style="background-color: #444" value="" placeholder="€">
+                <span asp-validation-for="input_value" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="ExpDateTime">Data scadenza</label>
+                <input type="date" class="form-control" id="theDate" asp-for="ExpDateTime" style="background-color: #444" value="gg/mm/YYY">
+                <span asp-validation-for="ExpDateTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            @{
+                var colorList = new List<string> { "#faeb4b", "#fa5f4b", "#4b8efa" };
+                for (int i = 0; i <= colorList.Count - 1; i++)
+                {
+                        <div class="form-check form-check-inline">
+                            @Html.RadioButtonFor(model => model.ColorLabel, @colorList[i], htmlAttributes: new { @class = "form-check-input", @id = "radio2" })
+                            <span class="dot" style="background-color: @colorList[i]; border-radius: 50%; display: inline-block; height: 25px; width: 25px;"></span>                            
+                        </div>
+                }
+            }
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var date = new Date();
+
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+
+            if (month < 10) month = "0" + month;
+            if (day < 10) day = "0" + day;
+
+            var today = year + "-" + month + "-" + day + "T00:00";
+            $("#theDate").attr("value", today);
+        });
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+        });
+    </script>
+}
