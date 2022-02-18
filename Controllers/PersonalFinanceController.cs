@@ -1041,17 +1041,19 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
     .Select(group => group.First()).Select(item => item.ExpDateTime.Month).ToList();
-          
+            List<string> UniqueMonthNames = new List<string>();
+            
 
-            var pippo = UniqueMonth;
+          
             List<ExpMonth> expMonth = new List<ExpMonth>();
             foreach (var month in UniqueMonth)
             {
+                UniqueMonthNames.Add(MonthConverter(month));
                 var singleMonthExp = Expirations.AsQueryable().Where(x => x.ExpDateTime.Month.ToString() == month.ToString());
                 foreach(var exp in singleMonthExp)
                 {
                     ExpMonth item = new ExpMonth();
-                    item.Month = month.ToString();
+                    item.Month = MonthConverter(month);
                     item.ExpItem = exp;
                     expMonth.Add(item);
                 }
@@ -1059,6 +1061,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 
             }
             ViewBag.UniqueMonth = UniqueMonth;
+            ViewBag.UniqueMonthNames = UniqueMonthNames;
             viewModel.ExpirationList = expMonth;
             /*
             viewModel.Debits = GetDebits(User_OID);

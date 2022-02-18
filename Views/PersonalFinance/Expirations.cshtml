@@ -19,23 +19,45 @@
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">CALENDARIO</div>
             <div class="card-body">
-                <div class="cards">
-                    @foreach (var month in ViewBag.UniqueMonth)
+                <div class="cards" style="padding-top:5px; gap: 9px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                    @foreach (var month in ViewBag.UniqueMonthNames)
                     {
                         <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>@month.ToString()</h5></div>
+                            <div class="card-header"><h5>@month</h5></div>
                             <div class="card-body">
                                 @foreach (var exp in Model.ExpirationList)
                                 {
-                                    if (exp.Month.ToString() == month.ToString())
+                                    if (exp.Month == month)
                                     {
-                                        <div class="row">
-                                            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                                                <div class="card-header"><h5>@exp.Month.ToString()</h5></div>
-                                                <div class="card-body">
-                                                    prova
+                                <div class="row">
+                                    <div class="card shadow p-3 md-3" style="padding-bottom: 2rem;        margin: 0 auto;
+        border-color: @exp.ExpItem.ColorLabel;
+        height: 7rem;
+        background-color: #2d3138
+">
+                                        <div class="card-title">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <small><b>&nbsp;@exp.ExpItem.ExpTitle</b></small>
+</div>
+                                                <div class="col-md-6" style="text-align:right">
+                                                    <span class="material-icons md-24 " style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title=@exp.ExpItem.ExpDescription>info</span>
+                                                    <span class="material-icons md-24 @exp.ExpItem.ColorLabel" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="">delete</span>
+
                                                 </div>
                                             </div>
+                                            
+                                        </div>
+                                        <div class="card-text">
+
+
+                                            <small>Scadenza: @exp.ExpItem.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
+                                            <small>Importo: @exp.ExpItem.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
+                                           
+                                        </div>
+                       
+                                        
+                                </div>
                                         </div>
                                     }
                                 }
@@ -51,3 +73,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+    });
+</script>
