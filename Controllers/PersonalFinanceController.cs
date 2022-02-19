@@ -277,11 +277,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             try
             {
                 // Get user photo
-              /*  using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
                 {
                     byte[] photoByte = ((MemoryStream)photoStream).ToArray();
                     ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                }*/
+                }
             }
             catch (Exception pex)
             {
@@ -292,79 +292,16 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewData["Me"] = currentUser;
 
 
-            var user =  await _graphServiceClient.Me
-            .Request()
-            .Select(u => new {
-                u.DisplayName,
-                u.MailboxSettings
-            })
-            .GetAsync();
-            var userTimeZone = !string.IsNullOrEmpty(user.MailboxSettings?.TimeZone) ?
-    user.MailboxSettings?.TimeZone : TimeZoneInfo.Local.StandardName;
-            var userDateFormat = !string.IsNullOrEmpty(user.MailboxSettings?.DateFormat) ?
-                user.MailboxSettings?.DateFormat : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-            var userTimeFormat = !string.IsNullOrEmpty(user.MailboxSettings?.TimeFormat) ?
-                user.MailboxSettings?.TimeFormat : CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
 
 
-            // Configure a calendar view for the current week
-            var startOfWeek = GetUtcStartOfWeekInTimeZone(DateTime.Today, $"{userDateFormat} {userTimeFormat}");
-            var endOfWeek = startOfWeek.AddDays(7);
-
-            var viewOptions = new List<QueryOption>
-    {
-        new QueryOption("startDateTime", startOfWeek.ToString("o")),
-        new QueryOption("endDateTime", endOfWeek.ToString("o"))
-    };
 
          
-                var events = await _graphServiceClient.Me
-                    .CalendarView
-                    .Request(viewOptions)
-                    // Send user time zone in request so date/time in
-                    // response will be in preferred time zone
-                    .Header("Prefer", $"outlook.timezone=\"{userTimeZone}\"")
-                    // Get max 50 per request
-                    .Top(50)
-                    // Only return fields app will use
-                    .Select(e => new
-                    {
-                        e.Subject,
-                        e.Organizer,
-                        e.Start,
-                        e.End
-                    })
-                    // Order results chronologically
-                    .OrderBy("start/dateTime")
-                    .GetAsync();
 
-            var events2 = events.CurrentPage;
 
-            foreach (var calendarEvent in events2)
-            {
-                Console.WriteLine($"Subject: {calendarEvent.Subject}");
-                Console.WriteLine($"  Organizer: {calendarEvent.Organizer.EmailAddress.Name}");
-                Console.WriteLine($"  Start: {FormatDateTimeTimeZone(calendarEvent.Start, $"{userDateFormat} {userTimeFormat}")}");
-                Console.WriteLine($"  End: {FormatDateTimeTimeZone(calendarEvent.End, $"{userDateFormat} {userTimeFormat}")}");
-            }
             return View();
         }
 
-        private static DateTime GetUtcStartOfWeekInTimeZone(DateTime today, string timeZoneId)
-        {
-            TimeZoneInfo userTimeZone = TZConvert.GetTimeZoneInfo(timeZoneId);
-            int diff = System.DayOfWeek.Monday - today.DayOfWeek;
-            var unspecifiedStart = DateTime.SpecifyKind(today.AddDays(diff), DateTimeKind.Unspecified);
-            return TimeZoneInfo.ConvertTimeToUtc(unspecifiedStart, userTimeZone);
-        }
 
-        static string FormatDateTimeTimeZone(Microsoft.Graph.DateTimeTimeZone value, string dateTimeFormat)
-        {
-            // Parse the date/time string from Graph into a DateTime
-            var dateTime = DateTime.Parse(value.DateTime);
-
-            return dateTime.ToString(dateTimeFormat);
-        }
 
 
 
