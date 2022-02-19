@@ -990,16 +990,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             
             ViewModel viewModel = new ViewModel();
             viewModel.Expiration = new Expiration();
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(item => item.ExpDateTime.Month);
 
 
-            /*  var UniqueMonth = Expirations.GroupBy(x => x.ExpDateTime.Month)
-                                              .OrderBy(x => x.Key)
-                                              .Select(x => new { x.Key })
-                                              .ToList();*/
+
 
             var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
-    .Select(group => group.First()).Select(item => item.ExpDateTime.Month).ToList();
+                                            .Select(group => group.First())
+                                            .Select(item => item.ExpDateTime.Month)
+                                            .ToList();
             List<string> UniqueMonthNames = new List<string>();
             
 
