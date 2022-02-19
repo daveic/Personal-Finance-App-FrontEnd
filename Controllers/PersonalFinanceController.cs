@@ -42,9 +42,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             _logger = logger;
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
-
-            // Capture the Scopes for Graph that were used in the original request for an Access token (AT) for MS Graph as
-            // they'd be needed again when requesting a fresh AT for Graph during claims challenge processing
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
         }
         //[Authorize]
@@ -69,6 +66,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), User_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+
+            ViewBag.Expirations = Expirations.Take(5);
 
             if (Banks.Count() == 0)
             {
@@ -993,7 +993,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(item => item.ExpDateTime.Month);
 
 
-
+            IEnumerable<Expiration> FirstExpirations = Expirations.Take(5);
+            ViewBag.Expirations = FirstExpirations;
 
             var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
                                             .Select(group => group.First())
@@ -1021,10 +1022,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.UniqueMonth = UniqueMonth;
             ViewBag.UniqueMonthNames = UniqueMonthNames;
             viewModel.ExpirationList = expMonth;
-            /*
-            viewModel.Debits = GetDebits(User_OID);
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
-            viewModel.state = sendFlag;*/
+
             return View(viewModel);
         }
         //TRANSACTIONS Intermediate view
