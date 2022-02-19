@@ -608,6 +608,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             t.input_value = t.TrsValue.ToString();
             return PartialView(t);
         }
+        public ActionResult Expiration_Details(int id)
+        {
+            Expiration Expiration = GetItemID<Expiration>(nameof(Expiration), id);
+            Expiration.input_value = Expiration.ExpValue.ToString();
+            return PartialView(Expiration);
+        }
 
         //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
         public ActionResult Credit_Delete(int id)
@@ -718,6 +724,22 @@ namespace PersonalFinanceFrontEnd.Controllers
                 ClaimsPrincipal currentUser = this.User;                
                 Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
                 return RedirectToAction(nameof(Wallet));
+            }
+            return View();
+        }
+        public ActionResult Expiration_Delete(int id)
+        {
+            return Expiration_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Expiration_Delete(Expiration e)
+        {
+            int result = DeleteItem(nameof(Expiration), e.ID);
+            if (result == 0)
+            {
+                TempData["sendFlagT"] = 1;
+                ClaimsPrincipal currentUser = this.User;
+                return RedirectToAction(nameof(Expirations));
             }
             return View();
         }

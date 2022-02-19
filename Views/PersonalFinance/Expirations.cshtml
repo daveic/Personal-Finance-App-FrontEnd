@@ -4,6 +4,30 @@
 <br />
 
 
+<!-- Modal DELETE-->
+<div class="modal fade" id="deleteitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Elimina scadenza</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBodyDivDel">
+                <div class="form-row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (Model.state == 1)
+{
+    <div class="alert alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <p><strong>Completato!</strong> Scadenza rimossa correttamente.</p>
+    </div>
+}
 <!-- Modal ADD-->
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-4">
@@ -29,35 +53,30 @@
                                 {
                                     if (exp.Month == month)
                                     {
-                                <div class="row">
-                                    <div class="card shadow p-3 md-3" style="padding-bottom: 2rem;        margin: 0 auto;
-        border-color: @exp.ExpItem.ColorLabel;
-        height: 7rem;
-        background-color: #2d3138
-">
-                                        <div class="card-title">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <small><b>&nbsp;@exp.ExpItem.ExpTitle</b></small>
-</div>
-                                                <div class="col-md-6" style="text-align:right">
-                                                    <span class="material-icons md-24 " style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title=@exp.ExpItem.ExpDescription>info</span>
-                                                    <span class="material-icons md-24 @exp.ExpItem.ColorLabel" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="">delete</span>
+                                        <div class="cards" style="padding-top: 10px; gap: 9px; display: flex;">
+                                            <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @exp.ExpItem.ColorLabel; background-color: #2d3138">
+                                                <div class="card-title">
+                                                    <div class="row">
+                                                        <div class="col-md-9">
+                                                            <small><b><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title=@exp.ExpItem.ExpDescription>info</span>&nbsp;@exp.ExpItem.ExpTitle</b></small>
+                                                        </div>
+                                                        <div class="col-md-3" style="text-align:right">
+                                                            <span class="material-icons md-24" type="button" onclick="Delete(@exp.ExpItem.ID)" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px">delete</span>
+
+                                                        </div>
+                                                    </div>
 
                                                 </div>
+                                                <div class="card-text">
+
+
+                                                    <small>Scadenza: @exp.ExpItem.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
+                                                    <small>Importo: @exp.ExpItem.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
+
+                                                </div>
+
+
                                             </div>
-                                            
-                                        </div>
-                                        <div class="card-text">
-
-
-                                            <small>Scadenza: @exp.ExpItem.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                            <small>Importo: @exp.ExpItem.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                                           
-                                        </div>
-                       
-                                        
-                                </div>
                                         </div>
                                     }
                                 }
@@ -73,6 +92,20 @@
         </div>
     </div>
 </div>
+
+
+@section scripts {
+    <script>
+        function Delete(ClientID) {
+            var url = "/PersonalFinance/Expiration_Delete/" + ClientID;
+            $("#ModalBodyDivDel").load(url, function () {
+                $("#deleteitem").modal("show");
+            })
+        }
+    </script>
+}
+
+
 
 <script>
     $(document).ready(function () {
