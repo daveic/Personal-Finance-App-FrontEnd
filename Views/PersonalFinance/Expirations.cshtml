@@ -39,58 +39,71 @@
         </div>
     </div>
     <div class="col-md-8">
-
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-header">CALENDARIO</div>
-            <div class="card-body">
-                <div class="cards" style="padding-top:5px; gap: 9px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
-                    @foreach (var month in ViewBag.UniqueMonthNames)
-                    {
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                            <div class="card-header"><h5>@month</h5></div>
-                            <div class="card-body">
-                                @foreach (var exp in Model.ExpirationList)
-                                {
-                                    if (exp.Month == month)
+        @using (Html.BeginForm("Expirations", "PersonalFinance", FormMethod.Get))
+        {
+            <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            CALENDARIO
+                        </div>
+                        <div class="col-sm-1" style="text-align:right;">
+                            <label>ANNO:</label>
+                        </div>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, DateTime.Now.Year.ToString(), new { onchange = "form.submit();", @class = "dropdown-item-inline" })
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="cards" style="padding-top:5px; gap: 9px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                        @foreach (var month in ViewBag.UniqueMonthNames)
+                        {
+                            <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                                <div class="card-header"><h5>@month</h5></div>
+                                <div class="card-body">
+                                    @foreach (var exp in Model.ExpirationList)
                                     {
-                                        <div class="cards" style="padding-top: 10px; gap: 9px; display: flex;">
-                                            <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @exp.ExpItem.ColorLabel; background-color: #2d3138">
-                                                <div class="card-title">
-                                                    <div class="row">
-                                                        <div class="col-md-9">
-                                                            <small><b><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title=@exp.ExpItem.ExpDescription>info</span>&nbsp;@exp.ExpItem.ExpTitle</b></small>
-                                                        </div>
-                                                        <div class="col-md-3" style="text-align:right">
-                                                            <span class="material-icons md-24" type="button" onclick="Delete(@exp.ExpItem.ID)" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px">delete</span>
+                                        if (exp.Month == month)
+                                        {
+                                            <div class="cards" style="padding-top: 10px; gap: 9px; display: flex;">
+                                                <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @exp.ExpItem.ColorLabel; background-color: #2d3138">
+                                                    <div class="card-title">
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <small><b><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title=@exp.ExpItem.ExpDescription>info</span>&nbsp;@exp.ExpItem.ExpTitle</b></small>
+                                                            </div>
+                                                            <div class="col-md-3" style="text-align:right">
+                                                                <span class="material-icons md-24" type="button" onclick="Delete(@exp.ExpItem.ID)" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px">delete</span>
 
+                                                            </div>
                                                         </div>
+
+                                                    </div>
+                                                    <div class="card-text">
+
+
+                                                        <small>Scadenza: @exp.ExpItem.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
+                                                        <small>Importo: @exp.ExpItem.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
+
                                                     </div>
 
-                                                </div>
-                                                <div class="card-text">
-
-
-                                                    <small>Scadenza: @exp.ExpItem.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                                    <small>Importo: @exp.ExpItem.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
 
                                                 </div>
-
-
                                             </div>
-                                        </div>
+                                        }
                                     }
-                                }
 
 
 
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
 
+                    </div>
                 </div>
-            </div>
+            </div>}
         </div>
-    </div>
 </div>
 
 
