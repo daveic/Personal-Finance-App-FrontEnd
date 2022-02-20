@@ -1120,9 +1120,17 @@ namespace PersonalFinanceFrontEnd.Controllers
                 c.CredValue = Convert.ToDouble(c.input_value);                
                 c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
+            Expiration exp = new Expiration();
+            exp.Usr_OID = c.Usr_OID;
+            exp.ExpTitle = c.CredTitle;
+            exp.ExpDescription = "Rientro previsto - " + c.CredTitle;
+            exp.ExpDateTime = c.CredDateTime;
+            exp.ColorLabel = "green";
+            exp.ExpValue = c.CredValue;            
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
             {
+                AddItem<Expiration>("Expiration", exp);
                 TempData["sendFlagCred"] = 3;
                 return RedirectToAction(nameof(Credits));
             }
