@@ -44,24 +44,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             this._consentHandler = consentHandler;
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
         }
-        //[Authorize]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
-          
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //var userName = User.FindFirst("name").Value;
-            //if (userName.Contains(" ")) { userName = userName.Substring(0, userName.IndexOf(" ")); }
-            //ViewBag.NAME = userName;
-            //ViewBag.id = User_OID;
-            //GivenName
-            //UserPrincipalName
-            User LoggedUser = GetUserData().Result;
-            ViewBag.Name = LoggedUser.GivenName;
-            ViewBag.Email = LoggedUser.UserPrincipalName;
-            ViewBag.id = User_OID;
-
+            string User_OID = GetUserData().Result;
 
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
@@ -254,20 +240,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
 
-        public async Task<User> GetUserData()
+        public async Task<string> GetUserData()
         {
             User currentUser = null;
             currentUser = await _graphServiceClient.Me.Request().GetAsync();
-
             // Get user photo
             using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
             {
                 byte[] photoByte = ((MemoryStream)photoStream).ToArray();
                 ViewData["Photo"] = Convert.ToBase64String(photoByte);
-            }
-          
-            ViewData["Me"] = currentUser;
-            return currentUser;
+            }          
+            //ViewData["Me"] = currentUser;
+            ViewBag.Name = currentUser.GivenName;
+            ViewBag.Email = currentUser.UserPrincipalName;
+            ViewBag.id = currentUser;
+            ClaimsPrincipal LoggedUser = this.User;
+            return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
 
@@ -868,12 +856,11 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         //VIEWS
         //CREDITS DEBITS Intermediate view
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Credits_Debits()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetCredits(User_OID);
             viewModel.Credit = new Credit();
@@ -882,12 +869,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //CREDITS Intermediate view
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Credits()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetCredits(User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
@@ -895,12 +881,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //DEBITS Intermediate view
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Debits()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
             viewModel.Debits = GetDebits(User_OID);
             List<SelectListItem> Frequency = new List<SelectListItem>();
@@ -916,13 +901,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.state = sendFlag;
             return View(viewModel);
         }
-        //WALLET Intermediate view        
+        //WALLET Intermediate view
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Wallet()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
             viewModel.Banks = GetBanks(User_OID);
             viewModel.Bank = new Bank();
@@ -934,12 +918,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //KNOWN MOVEMENTS Intermediate view  
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult KnownMovements()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
             ViewModel viewModel = new ViewModel();
             viewModel.KnownMovements = KnownMovements;
@@ -949,20 +932,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
         //DEBITS Intermediate view
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Expirations()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
-            
-            
+            string User_OID = GetUserData().Result; //Fetch User Data
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(item => item.ExpDateTime.Month);
+            ViewBag.Expirations = Expirations.Take(5).ToList(); //Fetch imminent expirations
+
             ViewModel viewModel = new ViewModel();
             viewModel.Expiration = new Expiration();
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(item => item.ExpDateTime.Month);
 
 
-            ViewBag.Expirations = Expirations.Take(5).ToList();
+
+      
             var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
                                             .Select(group => group.First())
                                             .Select(item => item.ExpDateTime.Month)
@@ -995,10 +977,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         //TRANSACTIONS Intermediate view
         public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
             IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
@@ -1145,10 +1126,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         //BUDGET Intermediate view        
         public ActionResult Budget()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            ViewBag.NAME = userName;
+            string User_OID = GetUserData().Result; //Fetch User Data
+            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+
             ViewModel viewModel = new ViewModel();
             viewModel.Banks = GetBanks(User_OID);
             viewModel.Bank = new Bank();
