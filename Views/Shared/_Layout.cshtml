@@ -23,13 +23,32 @@
         <div class="sidebar-logo">
             pfa - wallet
         </div>
+            <div class="row">
+                <div class="col-md-4">
+                    @if (ViewData["photo"] != null)
+                    {
+                    <img style="margin: 10px; width: 80px; margin-left: 10px; border-radius: 50%;" src="data:image/jpeg;base64, @ViewData["photo"]" />
+                    }
+                    else
+                    {
+
+                    <img style="margin: 5px 0; width: 15px" src="images/unknown_user.png" />
+
+
+                    }
+                </div>
+                <div class="col-md-8" style=" padding-top: 25px; padding-bottom: 20px;">
+                    <h6>Bentornato @ViewBag.Name</h6>
+                    <h6>@ViewBag.Email</h6>
+                </div>
+            </div>
+
+
+
+
+
+
         <ul class="sidebar-navigation">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <li class="header">
-                    Benvenuto, @ViewBag.Name
-                </li>
-            }
             <li>
                 <a href="/PersonalFinance/Index">
                     <i aria-hidden="true">
@@ -91,16 +110,6 @@
                     </i>&nbsp;&nbsp;Previsioni - Budget
                 </a>
             </li>
-            <li>
-                <a href="/PersonalFinance/Profile">
-                    <i aria-hidden="true">
-                        <span style="vertical-align:sub" class="material-icons">trending_up</span>
-                    </i>&nbsp;&nbsp;Profile
-                </a>
-            </li>
-            <li>
-
-            </li>
         </ul>
 
     </div>
@@ -129,10 +138,9 @@
 
 
 
-
     <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
         <div class="container">
-            <h5 style="color: white">Scadenze</h5>
+            <h6 style="color: white">Scadenze imminenti</h6>
             <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -217,8 +225,8 @@
             @{
                 var path = "/images/avatar.png";
                         <div class="row">
-                            <img src=@path style="margin-top:40px; height: 150px; width: auto; border:none;">
-                            <img src="/images/speech.png" style="margin-top:50px; height: 42px; width: auto; border:none;">
+                            <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
+                            <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
                         </div>
             }
         </div>

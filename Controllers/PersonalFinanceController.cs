@@ -51,13 +51,18 @@ namespace PersonalFinanceFrontEnd.Controllers
           
             ClaimsPrincipal currentUser = this.User;
             string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var userName = User.FindFirst("name").Value;
-            if (userName.Contains(" ")) { userName = userName.Substring(0, userName.IndexOf(" ")); }
-            ViewBag.NAME = userName;
+            //var userName = User.FindFirst("name").Value;
+            //if (userName.Contains(" ")) { userName = userName.Substring(0, userName.IndexOf(" ")); }
+            //ViewBag.NAME = userName;
+            //ViewBag.id = User_OID;
+            //GivenName
+            //UserPrincipalName
+            User LoggedUser = GetUserData().Result;
+            ViewBag.Name = LoggedUser.GivenName;
+            ViewBag.Email = LoggedUser.UserPrincipalName;
             ViewBag.id = User_OID;
-            //
-            //
-  
+
+
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
@@ -66,9 +71,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), User_OID);
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
-
-            ViewBag.Expirations = Expirations.Take(5);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);           
+            ViewBag.Expirations = Expirations.Take(5).ToList();
 
             if (Banks.Count() == 0)
             {
@@ -249,62 +253,27 @@ namespace PersonalFinanceFrontEnd.Controllers
             
             return View(viewModel);
         }
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public async Task<IActionResult> Profile()
+
+        public async Task<User> GetUserData()
         {
             User currentUser = null;
+            currentUser = await _graphServiceClient.Me.Request().GetAsync();
 
-            try
+            // Get user photo
+            using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
             {
-                currentUser = await _graphServiceClient.Me.Request().GetAsync();
+                byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                ViewData["Photo"] = Convert.ToBase64String(photoByte);
             }
-            // Catch CAE exception from Graph SDK
-            catch (ServiceException svcex) when (svcex.Message.Contains("Continuous access evaluation resulted in claims challenge"))
-            {
-                try
-                {
-                    Console.WriteLine($"{svcex}");
-                    string claimChallenge = WwwAuthenticateParameters.GetClaimChallengeFromResponseHeaders(svcex.ResponseHeaders);
-                    _consentHandler.ChallengeUser(_graphScopes, claimChallenge);
-                    return new EmptyResult();
-                }
-                catch (Exception ex2)
-                {
-                    _consentHandler.HandleException(ex2);
-                }
-            }
-
-            try
-            {
-                // Get user photo
-                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
-                {
-                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                }
-            }
-            catch (Exception pex)
-            {
-                Console.WriteLine($"{pex.Message}");
-                ViewData["Photo"] = null;
-            }
-
+          
             ViewData["Me"] = currentUser;
-
-
-
-
-
-         
-
-
-            return View();
+            return currentUser;
         }
 
 
 
 
-
+     
 
 
 
@@ -993,9 +962,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(item => item.ExpDateTime.Month);
 
 
-            IEnumerable<Expiration> FirstExpirations = Expirations.Take(5);
-            ViewBag.Expirations = FirstExpirations;
-
+            ViewBag.Expirations = Expirations.Take(5).ToList();
             var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
                                             .Select(group => group.First())
                                             .Select(item => item.ExpDateTime.Month)

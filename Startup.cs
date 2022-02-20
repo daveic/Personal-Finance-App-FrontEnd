@@ -34,9 +34,7 @@ namespace PersonalFinanceFrontEnd
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
                 .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                 .AddInMemoryTokenCaches();
-            // services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            //        .AddMicrosoftIdentityWebApp(Configuration);
-            //services.AddControllersWithViews();
+
             services.AddControllersWithViews(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
