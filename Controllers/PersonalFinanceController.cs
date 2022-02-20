@@ -440,34 +440,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
 
-
-        //GET ALL Methods
-        public IEnumerable<Bank> GetBanks(string User_OID)
-        {
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            return Banks;
-        }
-        public IEnumerable<Deposit> GetDeposits(string User_OID)
-        {
-            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
-            return Deposits;
-        }
-        public IEnumerable<Ticket> GetTickets(string User_OID)
-        {
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-            return Tickets;
-        }
-        public IEnumerable<Credit> GetCredits(string User_OID)
-        {
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
-            return Credits;
-        }
-        public IEnumerable<Debit> GetDebits(string User_OID)
-        {
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
-            return Debits;
-        }
-
         //DETAILS: Controller methods for detail action - GET-BY-ID
         public ActionResult Credit_Details(int id)
         {
@@ -862,9 +834,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetCredits(User_OID);
+            viewModel.Credits = GetAllItems<Credit>("Credits", User_OID);
             viewModel.Credit = new Credit();
-            viewModel.Debits = GetDebits(User_OID);
+            viewModel.Debits = GetAllItems<Debit>("Debits", User_OID);
             viewModel.Debit = new Debit();
             return View(viewModel);
         }
@@ -875,7 +847,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetCredits(User_OID);
+            viewModel.Credits = GetAllItems<Credit>("Credits", User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             viewModel.state = sendFlag;
             return View(viewModel);
@@ -887,7 +859,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Debits = GetDebits(User_OID);
+            viewModel.Debits = GetAllItems<Debit>("Debits", User_OID);
             List<SelectListItem> Frequency = new List<SelectListItem>();
            /* List<string> Codes = {["Settimana", "Mese", "Anno"]};
            foreach (var item in UniqueCodes)
@@ -908,11 +880,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetBanks(User_OID);
+            viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
             viewModel.Bank = new Bank();
-            viewModel.Deposits = GetDeposits(User_OID);
+            viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
             viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetTickets(User_OID);
+            viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID); ;
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
             return View(viewModel);
@@ -989,38 +961,32 @@ namespace PersonalFinanceFrontEnd.Controllers
             //FILTRI ANNO E MESE PER GRAFICO SALDO
             //############################################################################################################################
             //Trovo gli anni "unici"
-            var UniqueYear = Transactions.GroupBy(x => x.TrsDateTime.Year)
-                                    .OrderBy(x => x.Key)
-                                    .Select(x => new { Year = x.Key })
-                                    .ToList();
+            var UniqueYear = Transactions.GroupBy(item => item.TrsDateTime.Year)
+                    .Select(group => group.First())
+                    .Select(item => item.TrsDateTime.Year)
+                    .ToList();
             //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
             List<SelectListItem> itemlistYear = new List<SelectListItem>();
-            foreach (var year in UniqueYear)
-            {
-                SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
-                itemlistYear.Add(subitem);
-            }
+            foreach (var year in UniqueYear) itemlistYear.Add(new SelectListItem() { Text = year.ToString(), Value = year.ToString() });
             //Passo alla view la lista
             ViewBag.ItemList = itemlistYear;
             //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
             if (!String.IsNullOrEmpty(selectedYear)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Year.ToString() == selectedYear);
+            //############################################################################################################################
             //Trovo i mesi "unici"
-            var UniqueMonth = Transactions.GroupBy(x => x.TrsDateTime.Month)
-                        .OrderBy(x => x.Key)
-                        .Select(x => new { Month = x.Key })
-                        .ToList();
+            var UniqueMonth = Transactions.GroupBy(item => item.TrsDateTime.Month)
+                                .Select(group => group.First())
+                                .Select(item => item.TrsDateTime.Month)
+                                .ToList();
             //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
             List<SelectListItem> itemlistMonth = new List<SelectListItem>();
-            foreach (var month in UniqueMonth)
-            {
-                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
-                itemlistMonth.Add(subitem);
-            }
+            foreach (var month in UniqueMonth) itemlistMonth.Add(new SelectListItem() { Text = MonthConverter(month), Value = MonthConverter(month) });            
             //Passo alla view la lista
             ViewBag.ItemListMonth = itemlistMonth;
             //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
             if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonth);
             //############################################################################################################################
+
             List<SelectListItem> types = new List<SelectListItem>();
             SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate"};
             types.Add(entrate);
@@ -1049,7 +1015,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             orderByList.Add(type);
 
             ViewBag.OrderBy = orderByList;
-            //Transactions = Transactions.OrderByDescending(x => x.TrsDateTime);
             if (!String.IsNullOrEmpty(orderBy))
             {
                 if (orderBy == "Data crescente") Transactions = Transactions.OrderBy(x => x.TrsDateTime);
@@ -1057,7 +1022,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 else if (orderBy == "Categoria") Transactions = Transactions.OrderBy(x => x.TrsCode);
                 else if (orderBy == "Entrate/Uscite") Transactions = Transactions.OrderByDescending(x => x.TrsValue);
             }
-            //Pagination
             List<string> LastChoices = new List<string>();
             LastChoices.Add(orderBy);
             LastChoices.Add(selectedType);
@@ -1065,13 +1029,13 @@ namespace PersonalFinanceFrontEnd.Controllers
             LastChoices.Add(selectedMonth);
             LastChoices.Add(selectedYear);
 
+            //Pagination
             ViewBag.LastChoices = LastChoices;
             const int PageSize = 20;
             var count = Transactions.Count();
             var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
             this.ViewBag.Page = page;
-
 
             viewModel.Transactions = data;
             int sendFlag = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
@@ -1095,13 +1059,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (credit.CredCode == item.Value) isPresent = true;
                 }
-                if (isPresent is true)
-                {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = credit.CredCode;
-                    code.Text = credit.CredCode;
-                    Codes.Add(code);
-                }
+                if (isPresent is false) Codes.Add(new SelectListItem() { Text = credit.CredCode, Value = credit.CredCode });                
                 isPresent = false;
             }
             foreach (var debit in Debits)
@@ -1110,13 +1068,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (debit.DebCode == item.Value) isPresent = true;
                 }
-                if (isPresent is false)
-                {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = debit.DebCode;
-                    code.Text = debit.DebCode;
-                    Codes.Add(code);
-                }
+                if (isPresent is false) Codes.Add(new SelectListItem() {Text = debit.DebCode, Value = debit.DebCode});                
                 isPresent = false;
             }
             TempData["Codes"] = Codes;
@@ -1130,11 +1082,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
 
             ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetBanks(User_OID);
+            viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
             viewModel.Bank = new Bank();
-            viewModel.Deposits = GetDeposits(User_OID);
+            viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
             viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetTickets(User_OID);
+            viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
             return View(viewModel);
@@ -1143,8 +1095,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //ADD NEW Methods
         public IActionResult Credit_Add()
         {
-            Credit model = new Credit();
-            return View(model);
+            return View(new Credit());
         }
         [HttpPost]
         public ActionResult Credit_Add(Credit c, int i)
@@ -1152,9 +1103,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (i != 1)
             {
                 c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
-                ClaimsPrincipal currentUser = this.User;
-                c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                c.CredValue = Convert.ToDouble(c.input_value);                
+                c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
@@ -1166,8 +1116,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Debit_Add()
         {
-            Debit model = new Debit();
-            return View(model);
+            return View(new Debit());
         }
         [HttpPost]
         public ActionResult Debit_Add(Debit d, int i)
@@ -1178,8 +1127,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 d.RemainToPay = Convert.ToDouble(d.input_value_remain);
                 d.input_value = d.input_value.Replace(".", ",");
                 d.DebValue = Convert.ToDouble(d.input_value);
-                ClaimsPrincipal currentUser = this.User;
-                d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
             int result = AddItem<Debit>(nameof(Debit), d);
             if (result == 0)
@@ -1191,8 +1139,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Transaction_Add()
         {
-            Transaction model = new Transaction();
-            return View(model);
+            return View(new Transaction());
         }
         [HttpPost]
         public ActionResult Transaction_Add(Transaction t)
@@ -1201,8 +1148,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             t.TrsValue = Convert.ToDouble(t.input_value);
             if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            ClaimsPrincipal currentUser = this.User;
-            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            t.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
@@ -1220,17 +1166,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
         public IActionResult KnownMovement_Add()
-        {
-            KnownMovement model = new KnownMovement();            
-            return View(model);
+        {      
+            return View(new KnownMovement());
         }
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
             k.input_value = k.input_value.Replace(".", ",");
             k.KMValue = Convert.ToDouble(k.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
             int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
@@ -1242,16 +1186,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Bank_Add()
         {
-            Bank model = new Bank();
-            return View(model);
+            return View(new Bank());
         }
         [HttpPost]
         public ActionResult Bank_Add(Bank b)
         {
             b.input_value = b.input_value.Replace(".", ",");
             b.BankValue = Convert.ToDouble(b.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            b.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Bank>(nameof(Bank), b);
             if (result == 0)
             {
@@ -1263,16 +1205,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Deposit_Add()
         {
-            Deposit model = new Deposit();
-            return View(model);
+            return View(new Deposit());
         }
         [HttpPost]
         public ActionResult Deposit_Add(Deposit d)
         {
             d.input_value = d.input_value.Replace(".", ",");
             d.DepValue = Convert.ToDouble(d.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Deposit>(nameof(Deposit), d);
             if (result == 0)
             {
@@ -1283,16 +1223,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Ticket_Add()
         {
-            Ticket model = new Ticket();
-            return View(model);
+            return View(new Ticket());
         }
         [HttpPost]
         public ActionResult Ticket_Add(Ticket t)
         {
             t.input_value = t.input_value.Replace(".", ",");
             t.TicketValue = Convert.ToDouble(t.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            t.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Ticket>(nameof(Ticket), t);
             if (result == 0)
             {
@@ -1305,16 +1243,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Expiration_Add()
         {
-            Expiration model = new Expiration();
-            return View(model);
+            return View(new Expiration());
         }
         [HttpPost]
         public ActionResult Expiration_Add(Expiration e)
         {
             e.input_value = e.input_value.Replace(".", ",");
             e.ExpValue = Convert.ToDouble(e.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            e.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            e.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int result = AddItem<Expiration>(nameof(Expiration), e);
             if (result == 0)
             {
@@ -1329,8 +1265,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
         public ActionResult Fast_Update()
         {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel model = new ViewModel();
             model.Banks = GetAllItems<Bank>("Banks", User_OID);
             model.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
@@ -1353,9 +1288,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Fast_Update(ViewModel model)
         {
-
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<Bank> BankList = model.BankList;
             IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
             List<Ticket> TicketList = model.TicketList;
@@ -1384,7 +1317,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
             }
             Balance_Update(User_OID);
-
             return RedirectToAction(nameof(Index));
         }
         public int Balance_Update(string User_OID)
@@ -1420,8 +1352,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 var result = postTask.Result;
             }
             b.ActBalance = tot;
-
-
 
             AddItem<Balance>(nameof(Balance), b);
             return 1;
@@ -1477,8 +1407,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                     model.CredValue = t.TrsValue;
                     model.CredTitle = "Prestito/Anticipo";
                     model.CredNote = "";
-
-
                     Credit_Add(model, 1);
                 }
 
@@ -1512,18 +1440,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                     model.RemainToPay = -t.TrsValue;
                     model.RtPaid = 0;
                     model.RtNum = 1;
-
                     Debit_Add(model, 1);
                 }
-            }
-            
+            }            
             return 1;
         }
-
-
-
-
-
-
     }
 }

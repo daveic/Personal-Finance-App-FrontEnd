@@ -14,7 +14,6 @@
 
 
     <ItemGroup>
-        <Folder Include="Graph\" />
         <Folder Include="wwwroot\images\" />
         <Folder Include="wwwroot\css\" />
     </ItemGroup>
