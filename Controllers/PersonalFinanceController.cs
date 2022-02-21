@@ -552,6 +552,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Delete(Credit c)
         {
+            Credit cred = GetItemID<Credit>(nameof(Credit), c.ID);
+            DeleteItem("Expiration", cred.Exp_ID);
             int result = DeleteItem(nameof(Credit), c.ID);
             if (result == 0)
             {
@@ -567,6 +569,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Delete(Debit d)
         {
+            Debit deb = GetItemID<Debit>(nameof(Debit), d.ID);
+            DeleteItem("Expiration", deb.Exp_ID);
             int result = DeleteItem(nameof(Debit), d.ID);
             if (result == 0)
             {

@@ -18,5 +18,6 @@ namespace PersonalFinanceFrontEnd.Models
         public double RemainToPay { get; set; } //Importo da pagare
         public string input_value_remain { get; set; }
         public string DebNote { get; set; }
+        public int Exp_ID { get; set; }
     }
 }
