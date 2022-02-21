@@ -26,15 +26,20 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="DebName">Debitore</label>
                 <input type="text" class="form-control" asp-for="DebName" style="background-color: #444">
                 <span asp-validation-for="DebName" class="text-danger"></span>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="input_value">Importo</label>
                 <input type="text" class="form-control" asp-for="input_value" placeholder="€" style="background-color: #444">
                 <span asp-validation-for="input_value" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="PrevDateTime">Data inserimento</label>
+                <input type="date" class="form-control" asp-for="PrevDateTime" style="background-color: #444">
+                <span asp-validation-for="PrevDateTime" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
@@ -43,6 +48,7 @@
                 <textarea class="form-control" id="message-text" asp-for="CredNote" style="background-color: #444"></textarea>
             </div>
         </div>
+        <input type="hidden" class="form-control" asp-for="Exp_ID" style="background-color: #444">
         <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
             <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>

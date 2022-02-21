@@ -11,8 +11,10 @@ namespace PersonalFinanceFrontEnd.Models
         public string CredTitle { get; set; }
         public string DebName { get; set; }
         public double CredValue { get; set; }
-        public DateTime CredDateTime { get; set; }    
+        public DateTime CredDateTime { get; set; }
+        public DateTime PrevDateTime { get; set; } //Data prevista di rientro credito
         public string CredNote { get; set; }
         public string input_value { get; set; }
+        public int Exp_ID { get; set; }
     }
 }

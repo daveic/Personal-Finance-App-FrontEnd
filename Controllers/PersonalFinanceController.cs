@@ -685,12 +685,33 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 c.input_value = c.input_value.Replace(".", ",");
                 c.CredValue = Convert.ToDouble(c.input_value);
-                ClaimsPrincipal currentUser = this.User;
-                c.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+                
             }
+            c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
+                foreach(var exp in Expirations)
+                {
+                    if (c.Exp_ID == exp.ID)
+                    {
+                        DeleteItem("Expiration", exp.ID);
+                        Expiration e = new Expiration();
+                        e.Usr_OID = c.Usr_OID;
+                        e.ExpTitle = c.CredTitle;
+                        e.ExpDescription = "Rientro previsto - " + c.CredTitle;
+                        e.ExpDateTime = c.PrevDateTime;
+                        e.ColorLabel = "green";
+                        e.ExpValue = c.CredValue;
+                        AddItem<Expiration>("Expiration", e);
+                        c.Exp_ID = Expirations.Last().ID + 1;
+                        break;
+                    }
+                    
+                }
+            
             int result = EditItemID<Credit>(nameof(Credit), c);
             if (result == 0)
             {
+
                 TempData["sendFlagCred"] = 2;
                 return RedirectToAction(nameof(Credits));
             }
@@ -1124,13 +1145,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             exp.Usr_OID = c.Usr_OID;
             exp.ExpTitle = c.CredTitle;
             exp.ExpDescription = "Rientro previsto - " + c.CredTitle;
-            exp.ExpDateTime = c.CredDateTime;
+            exp.ExpDateTime = c.PrevDateTime;
             exp.ColorLabel = "green";
-            exp.ExpValue = c.CredValue;            
+            exp.ExpValue = c.CredValue;    
+            AddItem<Expiration>("Expiration", exp);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
+            c.Exp_ID = Expirations.Last().ID;
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
             {
-                AddItem<Expiration>("Expiration", exp);
                 TempData["sendFlagCred"] = 3;
                 return RedirectToAction(nameof(Credits));
             }
