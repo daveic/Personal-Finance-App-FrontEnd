@@ -688,34 +688,30 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (i != 1)
             {
                 c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
-                
+                c.CredValue = Convert.ToDouble(c.input_value);                
             }
             c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
-                foreach(var exp in Expirations)
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
+            foreach(var exp in Expirations)
+            {
+                if (c.Exp_ID == exp.ID)
                 {
-                    if (c.Exp_ID == exp.ID)
-                    {
-                        DeleteItem("Expiration", exp.ID);
-                        Expiration e = new Expiration();
-                        e.Usr_OID = c.Usr_OID;
-                        e.ExpTitle = c.CredTitle;
-                        e.ExpDescription = "Rientro previsto - " + c.CredTitle;
-                        e.ExpDateTime = c.PrevDateTime;
-                        e.ColorLabel = "green";
-                        e.ExpValue = c.CredValue;
-                        AddItem<Expiration>("Expiration", e);
-                        c.Exp_ID = Expirations.Last().ID + 1;
-                        break;
-                    }
-                    
-                }
-            
+                    DeleteItem("Expiration", exp.ID);
+                    Expiration e = new Expiration();
+                    e.Usr_OID = c.Usr_OID;
+                    e.ExpTitle = c.CredTitle;
+                    e.ExpDescription = "Rientro previsto - " + c.CredTitle;
+                    e.ExpDateTime = c.PrevDateTime;
+                    e.ColorLabel = "green";
+                    e.ExpValue = c.CredValue;
+                    AddItem<Expiration>("Expiration", e);
+                    c.Exp_ID = Expirations.Last().ID + 1;
+                    break;
+                }                    
+            }            
             int result = EditItemID<Credit>(nameof(Credit), c);
             if (result == 0)
             {
-
                 TempData["sendFlagCred"] = 2;
                 return RedirectToAction(nameof(Credits));
             }
@@ -736,8 +732,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                 d.RemainToPay = Convert.ToDouble(d.input_value_remain);
             }
 
-            ClaimsPrincipal currentUser = this.User;
-            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
