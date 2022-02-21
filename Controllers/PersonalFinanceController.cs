@@ -734,6 +734,23 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+            foreach (var exp in Expirations)
+            {
+                if (d.Exp_ID == exp.ID)
+                {
+                    DeleteItem("Expiration", exp.ID);
+                    Expiration e = new Expiration();
+                    e.Usr_OID = d.Usr_OID;
+                    e.ExpTitle = d.DebTitle;
+                    e.ExpDescription = "Rientro previsto - " + d.DebTitle;
+                    e.ExpDateTime = d.DebDateTime;
+                    e.ColorLabel = "red";
+                    e.ExpValue = (d.RemainToPay)/(d.RtNum - d.RtPaid);
+                    AddItem<Expiration>("Expiration", e);
+                    d.Exp_ID = Expirations.Last().ID + 1;
+                    break;
+                }
+            }
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
@@ -1172,12 +1189,28 @@ namespace PersonalFinanceFrontEnd.Controllers
                 d.RemainToPay = Convert.ToDouble(d.input_value_remain);
                 d.input_value = d.input_value.Replace(".", ",");
                 d.DebValue = Convert.ToDouble(d.input_value);
-                d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             }
+            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+
+            d.Exp_ID = Expirations.Last().ID;
             int result = AddItem<Debit>(nameof(Debit), d);
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 3;
+                for (int k = 0; k < d.RtNum; k++){
+                    Expiration exp = new Expiration();
+                    exp.Usr_OID = d.Usr_OID;
+                    exp.ExpTitle = d.DebTitle;
+                    exp.ExpDescription = d.DebTitle + "rata: " + (k+1);
+                    if(d.RtFreq == "Mesi")
+                    {
+                        exp.ExpDateTime = d.DebInsDate.AddMonths(k*d.Multiplier);
+                    }
+                    exp.ColorLabel = "red";
+                    exp.ExpValue = d.DebValue/d.RtNum;
+                    AddItem<Expiration>("Expiration", exp);
+                }
                 return RedirectToAction(nameof(Debits));
             }
             return View();

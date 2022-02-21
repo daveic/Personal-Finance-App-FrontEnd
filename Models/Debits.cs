@@ -16,6 +16,8 @@ namespace PersonalFinanceFrontEnd.Models
         public double RtNum { get; set; } //Numero di rate
         public double RtPaid { get; set; } //Rate pagate
         public double RemainToPay { get; set; } //Importo da pagare
+        public int Multiplier { get; set; } //Frequenza rate - Ogni *n*
+        public string RtFreq { get; set; } //Frequenza rate - Possibile: Settimana, Mese, Anno
         public string input_value_remain { get; set; }
         public string DebNote { get; set; }
         public int Exp_ID { get; set; }

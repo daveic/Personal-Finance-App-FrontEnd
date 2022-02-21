@@ -58,6 +58,18 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="Multiplier">Ogni n</label>
+                <input type="number" class="form-control" asp-for="Multiplier" style="background-color: #444">
+                <span asp-validation-for="Multiplier" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="recipient-name" class="col-form-label" asp-for="RtFreq">Frequenza</label>
+                <input type="text" class="form-control" asp-for="RtFreq" style="background-color: #444">
+                <span asp-validation-for="RtFreq" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <label for="message-text" class="col-form-label" asp-for="DebNote">Note:</label>
                 <textarea class="form-control" id="message-text" asp-for="DebNote" style="background-color: #444"></textarea>
