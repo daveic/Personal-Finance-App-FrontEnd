@@ -141,20 +141,29 @@
     <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
         <div class="container">
             <h6 style="color: white">Scadenze imminenti</h6>
-            
-        </div>
-            <div class="container">
-                @{
-                    var path = "/images/avatar.png";
-                    <div class="row">
-                        <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
-                        <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach (var item in ViewBag.Expirations)
+                    {
+                    <div class="carousel-item active">
+                        <p>prova</p>
                     </div>
-                }
-            </div>
-            <div class="container" style="margin-top:20px;">
-                &copy; 2022 - Personal Finance App
-            </div>
+                    }
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    @{
+                        var path = "/images/avatar.png";
+                        <div class="row">
+                            <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
+                            <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
+                        </div>
+                    }
+                </div>
+                <div class="container" style="margin-top:20px;">
+                    &copy; 2022 - Personal Finance App
+                </div>
 </footer>
 </body>
 </html>
