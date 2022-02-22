@@ -141,99 +141,21 @@
     <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
         <div class="container">
             <h6 style="color: white">Scadenze imminenti</h6>
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @ViewBag.Expirations[0].ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@ViewBag.Expirations[0].ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @ViewBag.Expirations[0].ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @ViewBag.Expirations[0].ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
+            
+        </div>
+            <div class="container">
+                @{
+                    var path = "/images/avatar.png";
+                    <div class="row">
+                        <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
+                        <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
                     </div>
-                    <div class="carousel-item">
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @ViewBag.Expirations[1].ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@ViewBag.Expirations[1].ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @ViewBag.Expirations[1].ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @ViewBag.Expirations[1].ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @ViewBag.Expirations[2].ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@ViewBag.Expirations[2].ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @ViewBag.Expirations[2].ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @ViewBag.Expirations[2].ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @ViewBag.Expirations[3].ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@ViewBag.Expirations[3].ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @ViewBag.Expirations[3].ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @ViewBag.Expirations[3].ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @ViewBag.Expirations[4].ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@ViewBag.Expirations[4].ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @ViewBag.Expirations[4].ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @ViewBag.Expirations[4].ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
-        </div>
-        <div class="container">
-            @{
-                var path = "/images/avatar.png";
-                        <div class="row">
-                            <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
-                            <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
-                        </div>
-            }
-        </div>
-        <div class="container" style="margin-top:20px;">
-            &copy; 2022 - Personal Finance App
-        </div>
-    </footer>
+            <div class="container" style="margin-top:20px;">
+                &copy; 2022 - Personal Finance App
+            </div>
+</footer>
 </body>
 </html>
 

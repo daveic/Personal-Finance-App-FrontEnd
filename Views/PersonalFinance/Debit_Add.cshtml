@@ -31,12 +31,13 @@
         <div class="row">
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
-                <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444">
-                <span asp-validation-for="DebDateTime" class="text-danger"></span>
+                <input type="hidden" class="form-control" asp-for="DebDateTime" style="background-color: #444" value="@DateTime.MinValue">
+                <input type="date" class="form-control" asp-for="input_DateTime" style="background-color: #444" value="@DateTime.MinValue">
+
             </div>
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebInsDate">Data inserimento</label>
-                <input type="date" class="form-control" asp-for="DebInsDate" style="background-color: #444">
+                <input type="date" class="form-control" asp-for="DebInsDate" style="background-color: #444" >
                 <span asp-validation-for="DebInsDate" class="text-danger"></span>
             </div>
         </div>

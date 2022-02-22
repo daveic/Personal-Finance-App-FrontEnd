@@ -12,6 +12,7 @@ namespace PersonalFinanceFrontEnd.Models
         public double DebValue { get; set; }
         public string input_value { get; set; }
         public DateTime DebDateTime { get; set; } //Scadenza debito
+        public DateTime input_DateTime { get; set; } //Input Scadenza debito
         public DateTime DebInsDate { get; set; }
         public double RtNum { get; set; } //Numero di rate
         public double RtPaid { get; set; } //Rate pagate

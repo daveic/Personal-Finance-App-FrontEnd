@@ -570,7 +570,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Debit_Delete(Debit d)
         {
             Debit deb = GetItemID<Debit>(nameof(Debit), d.ID);
-            DeleteItem("Expiration", deb.Exp_ID);
+            for(int i=0; i <= (deb.RtNum - deb.RtPaid); i++)
+            {
+                int res = DeleteItem("Expiration", (deb.Exp_ID + i));
+            }
             int result = DeleteItem(nameof(Debit), d.ID);
             if (result == 0)
             {
@@ -734,7 +737,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
-            foreach (var exp in Expirations)
+            /*foreach (var exp in Expirations)
             {
                 if (d.Exp_ID == exp.ID)
                 {
@@ -750,7 +753,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     d.Exp_ID = Expirations.Last().ID + 1;
                     break;
                 }
-            }
+            }*/
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
@@ -1178,7 +1181,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Debit_Add()
         {
-            return View(new Debit());
+            Debit model = new Debit();
+            model.DebDateTime = DateTime.MinValue;
+            return View(model);
         }
         [HttpPost]
         public ActionResult Debit_Add(Debit d, int i)
@@ -1191,14 +1196,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                 d.DebValue = Convert.ToDouble(d.input_value);
             }
             d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
-
-            d.Exp_ID = Expirations.Last().ID;
-            int result = AddItem<Debit>(nameof(Debit), d);
-            if (result == 0)
+            if(d.DebDateTime == DateTime.MinValue)
             {
-                TempData["sendFlagDeb"] = 3;
-                for (int k = 0; k < d.RtNum; k++){
+                d.DebDateTime = d.DebInsDate.AddMonths(Convert.ToInt32((d.RtNum * d.Multiplier)));
+            }
+
+            for (int k = 0; k < d.RtNum; k++){
                     Expiration exp = new Expiration();
                     exp.Usr_OID = d.Usr_OID;
                     exp.ExpTitle = d.DebTitle;
@@ -1211,6 +1214,13 @@ namespace PersonalFinanceFrontEnd.Controllers
                     exp.ExpValue = d.DebValue/d.RtNum;
                     AddItem<Expiration>("Expiration", exp);
                 }
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+            d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
+            int result = AddItem<Debit>(nameof(Debit), d);
+            if (result == 0)
+            {
+                TempData["sendFlagDeb"] = 3;
+                
                 return RedirectToAction(nameof(Debits));
             }
             return View();
