@@ -23,25 +23,25 @@
         <div class="sidebar-logo">
             pfa - wallet
         </div>
-            <div class="row">
-                <div class="col-md-4">
-                    @if (ViewData["photo"] != null)
-                    {
+        <div class="row">
+            <div class="col-md-4">
+                @if (ViewData["photo"] != null)
+                {
                     <img style="margin: 10px; width: 80px; margin-left: 10px; border-radius: 50%;" src="data:image/jpeg;base64, @ViewData["photo"]" />
-                    }
-                    else
-                    {
+                }
+                else
+                {
 
                     <img style="margin: 5px 0; width: 15px" src="images/unknown_user.png" />
 
 
-                    }
-                </div>
-                <div class="col-md-8" style=" padding-top: 25px; padding-bottom: 20px;">
-                    <h6>Bentornato, @ViewBag.Name</h6>
-                    <h6>@ViewBag.Email</h6>
-                </div>
+                }
             </div>
+            <div class="col-md-8" style=" padding-top: 25px; padding-bottom: 20px;">
+                <h6>Bentornato, @ViewBag.Name</h6>
+                <h6>@ViewBag.Email</h6>
+            </div>
+        </div>
 
 
 
@@ -123,6 +123,63 @@
 
 
 
+
+
+
+
+    <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
+        <div class="container">
+            <h6 style="color: white">Scadenze imminenti</h6>
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    @{int i = 0; }
+                    @foreach (var item in ViewBag.Expirations)
+                    {
+                        i++;
+                        var active = i == 1 ? "active" : "";
+                    <div class="carousel-item @active">
+
+                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @item.ColorLabel; background-color: #2d3138">
+                            <div class="card-title">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <b style="color: white">@item.ExpTitle</b>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-text">
+                                <small>Scadenza: @item.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
+                                <small>Importo: @item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="container">
+            @{
+                var path = "/images/avatar.png";
+                <div class="row">
+                    <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
+                    <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
+                </div>
+            }
+        </div>
+        <div class="container" style="margin-top:20px;">
+            &copy; 2022 - Personal Finance App
+        </div>
+    </footer>
+
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
@@ -135,36 +192,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/jsindex.js" asp-append-version="true"></script>
-
-
-
-    <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
-        <div class="container">
-            <h6 style="color: white">Scadenze imminenti</h6>
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @foreach (var item in ViewBag.Expirations)
-                    {
-                    <div class="carousel-item active">
-                        <p>prova</p>
-                    </div>
-                    }
-                        </div>
-                    </div>
-                </div>
-                <div class="container">
-                    @{
-                        var path = "/images/avatar.png";
-                        <div class="row">
-                            <img src=@path style="margin-top:50px; height: 150px; width: auto; border:none;">
-                            <img src="/images/speech.png" style="margin-top:60px; height: 42px; width: auto; border:none;">
-                        </div>
-                    }
-                </div>
-                <div class="container" style="margin-top:20px;">
-                    &copy; 2022 - Personal Finance App
-                </div>
-</footer>
 </body>
 </html>
 
+<script>
+    $(function () {
+        $('.carousel').carousel()
+    });
+</script>
