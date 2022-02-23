@@ -18,9 +18,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Identity.Client;
-using System.Globalization;
-using TimeZoneConverter;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -736,24 +733,27 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
 
             d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
-            /*foreach (var exp in Expirations)
+            Debit oldDebit = GetItemID<Debit>("Debit", d.ID);
+            for (int k = 0; k <= (oldDebit.RtNum - oldDebit.RtPaid); k++)
             {
-                if (d.Exp_ID == exp.ID)
+                int res = DeleteItem("Expiration", (oldDebit.Exp_ID + k));
+            }
+            for (int j = 0; j < d.RtNum; j++)
+            {
+                Expiration exp = new Expiration();
+                exp.Usr_OID = d.Usr_OID;
+                exp.ExpTitle = d.DebTitle;
+                exp.ExpDescription = d.DebTitle + "rata: " + (j + 1);
+                if (d.RtFreq == "Mesi")
                 {
-                    DeleteItem("Expiration", exp.ID);
-                    Expiration e = new Expiration();
-                    e.Usr_OID = d.Usr_OID;
-                    e.ExpTitle = d.DebTitle;
-                    e.ExpDescription = "Rientro previsto - " + d.DebTitle;
-                    e.ExpDateTime = d.DebDateTime;
-                    e.ColorLabel = "red";
-                    e.ExpValue = (d.RemainToPay)/(d.RtNum - d.RtPaid);
-                    AddItem<Expiration>("Expiration", e);
-                    d.Exp_ID = Expirations.Last().ID + 1;
-                    break;
+                    exp.ExpDateTime = d.DebInsDate.AddMonths(j * d.Multiplier);
                 }
-            }*/
+                exp.ColorLabel = "red";
+                exp.ExpValue = d.DebValue / d.RtNum;
+                AddItem<Expiration>("Expiration", exp);
+            }
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+            d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
