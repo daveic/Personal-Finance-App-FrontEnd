@@ -722,7 +722,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Debit_Details(id);
         }
         [HttpPost]
-        public ActionResult Debit_Edit(Debit d, int i)
+        public ActionResult Debit_Edit(Debit d, int i, bool fromTransaction)
         {
             if (i!=1)
             {
@@ -733,27 +733,31 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
 
             d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            Debit oldDebit = GetItemID<Debit>("Debit", d.ID);
-            for (int k = 0; k <= (oldDebit.RtNum - oldDebit.RtPaid); k++)
+            if(fromTransaction is false)
             {
-                int res = DeleteItem("Expiration", (oldDebit.Exp_ID + k));
-            }
-            for (int j = 0; j < d.RtNum; j++)
-            {
-                Expiration exp = new Expiration();
-                exp.Usr_OID = d.Usr_OID;
-                exp.ExpTitle = d.DebTitle;
-                exp.ExpDescription = d.DebTitle + "rata: " + (j + 1);
-                if (d.RtFreq == "Mesi")
+                Debit oldDebit = GetItemID<Debit>("Debit", d.ID);
+                for (int k = 0; k <= (oldDebit.RtNum - oldDebit.RtPaid); k++)
                 {
-                    exp.ExpDateTime = d.DebInsDate.AddMonths(j * d.Multiplier);
+                    int res = DeleteItem("Expiration", (oldDebit.Exp_ID + k));
                 }
-                exp.ColorLabel = "red";
-                exp.ExpValue = d.DebValue / d.RtNum;
-                AddItem<Expiration>("Expiration", exp);
+                for (int j = 0; j < d.RtNum; j++)
+                {
+                    Expiration exp = new Expiration();
+                    exp.Usr_OID = d.Usr_OID;
+                    exp.ExpTitle = d.DebTitle;
+                    exp.ExpDescription = d.DebTitle + " - rata: " + (j + 1);
+                    if (d.RtFreq == "Mesi")
+                    {
+                        exp.ExpDateTime = d.DebInsDate.AddMonths(j * d.Multiplier);
+                    }
+                    exp.ColorLabel = "red";
+                    exp.ExpValue = d.DebValue / d.RtNum;
+                    AddItem<Expiration>("Expiration", exp);
+                }
+                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+                d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
             }
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
-            d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
+            
             int result = EditItemID<Debit>(nameof(Debit), d);
             if (result == 0)
             {
@@ -1473,7 +1477,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                     if(t.TrsCode == debit.DebCode)
                     {
                         debit.RemainToPay += t.TrsValue;
-                        debit.RtPaid = debit.RtPaid + (-t.TrsValue * 1) / (debit.DebValue / debit.RtNum);
+                        debit.RtPaid = debit.RtPaid + (-t.TrsValue) / (debit.DebValue / debit.RtNum);
+                        DeleteItem(nameof(Expiration), (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)));
                         
                         if(debit.RemainToPay <= 0)
                         {
@@ -1481,7 +1486,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         }
                         else
                         {
-                            Debit_Edit(debit, 1);
+                            Debit_Edit(debit, 1, true);
                         }
                     }
 
