@@ -1206,15 +1206,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
 
             for (int k = 0; k < d.RtNum; k++){
-                    Expiration exp = new Expiration();
-                    exp.Usr_OID = d.Usr_OID;
-                    exp.ExpTitle = d.DebTitle;
-                    exp.ExpDescription = d.DebTitle + "rata: " + (k+1);
-                    if(d.RtFreq == "Mesi")
-                    {
-                        exp.ExpDateTime = d.DebInsDate.AddMonths(k*d.Multiplier);
-                    }
-                    exp.ColorLabel = "red";
+                Expiration exp = new Expiration();
+                exp.Usr_OID = d.Usr_OID;
+                exp.ExpTitle = d.DebTitle;
+                exp.ExpDescription = d.DebTitle + "rata: " + (k+1);
+                if(d.RtFreq == "Mesi")
+                {
+                    exp.ExpDateTime = d.DebInsDate.AddMonths(k*d.Multiplier);
+                }
+                if (d.RtFreq == "Anni")
+                {
+                    exp.ExpDateTime = d.DebInsDate.AddYears(k * d.Multiplier);
+                }
+                exp.ColorLabel = "red";
                     exp.ExpValue = d.DebValue/d.RtNum;
                     AddItem<Expiration>("Expiration", exp);
                 }
