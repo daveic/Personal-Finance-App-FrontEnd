@@ -33,5 +33,6 @@ namespace PersonalFinanceFrontEnd.Models
         public List<Ticket> TicketList { get; set; }
         public List<ExpMonth> ExpirationList { get; set; }
         public Bank Contanti { get; set; }
+        public KnownMovement_Exp knownMovement_Exp { get; set; }
     }
 }

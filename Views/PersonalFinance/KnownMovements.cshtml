@@ -80,7 +80,15 @@ else if (Model.state == 3)
 }
 
 <div class="row" style="margin: 0 auto;">
-    <div class="col-md-9">
+    <div class="col-md-3">
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header">INSERIMENTO SCADENZE</div>
+            <div class="card-body">
+                <partial name="KnownMovement_Exp_Update" model="Model.knownMovement_Exp" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-7">
         <div class="card shadow p-3 border-warning mb-3" style="margin: 0 auto;">
             <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi movimento</button></div>
             <div class="card-body">
@@ -99,11 +107,13 @@ else if (Model.state == 3)
                         <tbody>
                             @foreach (var item in Model.KnownMovements)
                             {
-                                
+
                                 <tr>
-                                    <td>@if (item.KMType == "Entrata")
-                                    {<span class="badge rounded-pill bg-success">Entrata</span>} @if (item.KMType == "Uscita")
-                                    {<span class="badge rounded-pill bg-danger">Uscita</span>}</td>
+                                    <td>
+                                        @if (item.KMType == "Entrata")
+                                        {<span class="badge rounded-pill bg-success">Entrata</span>} @if (item.KMType == "Uscita")
+                                        {<span class="badge rounded-pill bg-danger">Uscita</span>}
+                                    </td>
                                     <td>@item.KMTitle</td>
                                     <td>@item.KMValue.ToString("c", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td>
@@ -126,12 +136,12 @@ else if (Model.state == 3)
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
             <div class="card-header">In/Out Fissi</div>
             <div class="card-body">
                 <h4 class="card-title">PREVISIONI MOVIMENTI</h4>
-                <p class="card-text">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br />La somma verrà utilizzata nella sezione dedicata alle previsioni per stimare un andamento futuro del proprio wallet.</p>
+                <p class="card-text" style="text-align:justify">Nella tabella a lato vengono riportate le entrate/uscite fisse mensili.<br />La somma verrà utilizzata nella sezione dedicata alle previsioni per stimare un andamento futuro del proprio wallet.</p>
             </div>
         </div>
     </div>

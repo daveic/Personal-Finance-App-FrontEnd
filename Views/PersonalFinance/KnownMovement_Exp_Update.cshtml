@@ -1,0 +1,17 @@
+﻿@model KnownMovement_Exp
+
+<form asp-action="KnownMovement_Exp_Update" style="margin: 0 auto;">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="modal-body"> 
+        <div class="row">
+            <p class="card-text" style="text-align:justify">Inserisci per quanti mesi vuoi replicare il movimento fisso tra le scadenze.</p>
+            <div class="col-md-6">
+                <input type="number" class="form-control" asp-for="Month_Num" style="background-color: #444">
+                <span asp-validation-for="Month_Num" class="text-danger"></span>
+            </div>
+            <div class="col-md-6" style="text-align:right">
+                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
+            </div>
+        </div>
+    </div>
+</form>

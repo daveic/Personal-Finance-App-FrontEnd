@@ -946,6 +946,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.KnownMovement = new KnownMovement();
             int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             viewModel.state = sendFlag;
+            ViewBag.ID = User_OID;
             return View(viewModel);
         }
         //DEBITS Intermediate view
@@ -1272,6 +1273,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             k.KMValue = Convert.ToDouble(k.input_value);
             k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
+            if (k.On_Exp) k.Exp_ID = -1;
             int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {
@@ -1355,7 +1357,64 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
+        public IActionResult KnownMovement_Exp_Update()
+        {
+            return View(new KnownMovement_Exp());
+        }
+        [HttpPost]
+        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
+        {
+            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int maxExp = GetAllItems<Expiration>("Expirations", User_OID).Last().ID;
+            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
 
+            foreach (var item in KnownMovements)
+            {
+                if(item.Exp_ID != 0)
+                {
+                    if(item.Exp_ID != -1)
+                    {
+                        bool is_equal = true;
+                        int i = 0;
+                        while (is_equal)
+                        {
+                            Expiration e = GetItemID<Expiration>(nameof(Expiration), item.Exp_ID + i);
+                            if (e != null && e.ExpTitle == item.KMTitle)
+                            {
+                                DeleteItem("Expiration", e.ID);
+
+                            }
+                            else if (e != null && e.ExpTitle != item.KMType)
+                            {
+                                is_equal = false;
+                            }
+                            else if (item.Exp_ID + i >= maxExp)
+                            {
+                                is_equal = false;
+                            }
+                            i++;
+                        }
+                    }
+                    for (int k = 0; k < KM_Exp.Month_Num; k++)
+                    {
+                        Expiration exp = new Expiration();
+                        exp.Usr_OID = item.Usr_OID;
+                        exp.ExpTitle = item.KMTitle;
+                        exp.ExpDescription = item.KMTitle;
+                        exp.ExpDateTime = DateTime.Today.AddMonths(k);
+                        exp.ColorLabel = "orange";
+                        exp.ExpValue = item.KMValue;
+                        AddItem<Expiration>("Expiration", exp);
+                    }
+                    IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+                    item.Exp_ID = Expirations.Last().ID - KM_Exp.Month_Num + 1;
+                    int result = EditItemID<KnownMovement>(nameof(KnownMovement), item);
+
+
+                }
+            }
+            return RedirectToAction(nameof(KnownMovements));
+        }
 
         //FAST UPDATE LOGIC
         //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
