@@ -3,36 +3,7 @@
 <h2>Previsioni e Budget - WIP</h2>
 <br />
 <!-- Modal ADD-->
-<div class="modal fade" id="newbank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nuovo conto</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="form-row">
-                <partial name="Bank_Add" model="Model.Bank" />
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="newdeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nuovo deposito</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="form-row">
-                <partial name="Deposit_Add" model="Model.Deposit" />
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="modal fade" id="newticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -51,38 +22,7 @@
 <br />
 <br />
 <!-- Modal EDIT-->
-<div class="modal fade" id="editbank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifica conto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body" id="ModalBodyDivbe">
-                <div class="form-row">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="editdeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modifica deposito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body" id="ModalBodyDivde">
-                <div class="form-row">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="modal fade" id="editticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -100,38 +40,6 @@
     </div>
 </div>
 <!-- Modal DELETE-->
-<div class="modal fade" id="deletebank" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Rimuovi conto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body" id="ModalBodyDivbd">
-                <div class="form-row">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="deletedeposit" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Rimuovi deposito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="modal-body" id="ModalBodyDivdd">
-                <div class="form-row">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="deleteticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -148,121 +56,69 @@
         </div>
     </div>
 </div>
+<h3>Movimenti del mese</h3>
 <div class="row">
-    <div class="col-sm-10">
-        <h3>Conti correnti e carte</h3>
-    </div>
-</div>
-<div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-    <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newbank" data-whatever="getbootstrap">Aggiungi conto</button></div>
-    <div class="card-body">
-        <div class="table-responsive-xl">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Banca</th>
-                        <th scope="col">IBAN</th>
-                        <th scope="col">Saldo attuale (in €)</th>
-                        <th scope="col">Note</th>
-                        <th scope="col">Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@Model.Contanti.BankName&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="La voce Contanti è presente di default e non è eliminabile. Aggiorna periodicamente questo importo col totale dei contanti in tuo possesso.">info</span></td>
-                        <td>@Model.Contanti.Iban</td>
-                        <td type="number">@Model.Contanti.BankValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                        <td>
-                            @Model.Contanti.BankNote
-                        </td>
-                        <td style='white-space: nowrap'>
-                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@Model.Contanti.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                        </td>
-                    </tr>
-                    @foreach (var item in Model.Banks.Skip(1))
-                    {
-                        <tr>
-                            <td>@item.BankName</td>
-                            <td>@item.Iban</td>
-                            <td type="number">@item.BankValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                            <td>
-                                @if (@item.BankNote != null && @item.BankNote.Length > 30)
-                                {
-                                    @(item.BankNote.Substring(0, 30) + " ...")
-                                }
-                                else
-                                {@item.BankNote}
-                            </td>
-                            <td style='white-space: nowrap'>
-                                <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteBank(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<br />
-<div class="row">
-    <div class="col-md-6">
-        <div class="row">
-            <div class="col-sm-10">
-                <h3>Depositi</h3>
-            </div>
-        </div>
+    <div class="col-sm-7">
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newdeposit" data-whatever="getbootstrap">Aggiungi deposito</button></div>
             <div class="card-body">
-                <div class="table-responsive-xl">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Banca</th>
-                                <th scope="col">Data inizio</th>
-                                <th scope="col">Data fine</th>
-                                <th scope="col">Valore</th>
-                                <th scope="col">% rendita</th>
-                                <th scope="col">Note</th>
-                                <th scope="col">Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Deposits)
-                            {
-                                <tr>
-                                    <td>@item.BankName</td>
-                                    <td>@item.InitDate.ToString("dd/MM/yyyy")</td>
-                                    <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
-                                    <td type="number">@item.DepValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                    <td>@item.PercGrow %</td>
-                                    <td>
-                                        @if (@item.BankNote != null && @item.BankNote.Length > 10)
-                                        {
-                                            @(item.BankNote.Substring(0, 10) + " ...")
-                                        }
-                                        else
-                                        {@item.BankNote}
-                                    </td>
-                                    <td style='white-space: nowrap'>
-                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteDeposit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                <div class="row">
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                        <div class="card-header">Entrate</div>
+                        <div class="card-body">
+                            <div class="table-responsive-xl">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Importo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>tit</td>
+                                            <td type="number">137€</td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                        <div class="card-header">Uscite</div>
+                        <div class="card-body">
+                            <div class="table-responsive-xl">
+                                <table class="table table-striped table-hover">
+
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Importo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>tit</td>
+
+                                            <td type="number">456</td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="form-group col-md-6">
-        <div class="row">
-            <div class="col-sm-10">
+    <div class="col-md-5">
+
                 <h3>Ticket</h3>
-            </div>
-        </div>
+   
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newticket" data-whatever="getbootstrap">Aggiungi ticket</button></div>
             <div class="card-body">
@@ -308,50 +164,57 @@
     </div>
 </div>
 
+            <br />
+            <div class="row">
+               
+              
+                
+            </div>
 
 
-@section scripts {
-    <script>
-        function EditBank(ClientID) {
-            var url = "/PersonalFinance/Bank_Edit/" + ClientID;
-            $("#ModalBodyDivbe").load(url, function () {
-                $("#editbank").modal("show");
-            })
-        }
-        function DeleteBank(ClientID) {
-            var url = "/PersonalFinance/Bank_Delete/" + ClientID;
-            $("#ModalBodyDivbd").load(url, function () {
-                $("#deletebank").modal("show");
-            })
-        }
 
-        function EditDeposit(ClientID) {
-            var url = "/PersonalFinance/Deposit_Edit/" + ClientID;
-            $("#ModalBodyDivde").load(url, function () {
-                $("#editdeposit").modal("show");
-            })
-        }
-        function DeleteDeposit(ClientID) {
-            var url = "/PersonalFinance/Deposit_Delete/" + ClientID;
-            $("#ModalBodyDivdd").load(url, function () {
-                $("#deletedeposit").modal("show");
-            })
-        }
+            @section scripts {
+                <script>
+                    function EditBank(ClientID) {
+                        var url = "/PersonalFinance/Bank_Edit/" + ClientID;
+                        $("#ModalBodyDivbe").load(url, function () {
+                            $("#editbank").modal("show");
+                        })
+                    }
+                    function DeleteBank(ClientID) {
+                        var url = "/PersonalFinance/Bank_Delete/" + ClientID;
+                        $("#ModalBodyDivbd").load(url, function () {
+                            $("#deletebank").modal("show");
+                        })
+                    }
 
-        function EditTicket(ClientID) {
-            var url = "/PersonalFinance/Ticket_Edit/" + ClientID;
-            $("#ModalBodyDivte").load(url, function () {
-                $("#editticket").modal("show");
-            })
-        }
-        function DeleteTicket(ClientID) {
-            var url = "/PersonalFinance/Ticket_Delete/" + ClientID;
-            $("#ModalBodyDivtd").load(url, function () {
-                $("#deleteticket").modal("show");
-            })
-        }
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
-        });
-    </script>
-}
+                    function EditDeposit(ClientID) {
+                        var url = "/PersonalFinance/Deposit_Edit/" + ClientID;
+                        $("#ModalBodyDivde").load(url, function () {
+                            $("#editdeposit").modal("show");
+                        })
+                    }
+                    function DeleteDeposit(ClientID) {
+                        var url = "/PersonalFinance/Deposit_Delete/" + ClientID;
+                        $("#ModalBodyDivdd").load(url, function () {
+                            $("#deletedeposit").modal("show");
+                        })
+                    }
+
+                    function EditTicket(ClientID) {
+                        var url = "/PersonalFinance/Ticket_Edit/" + ClientID;
+                        $("#ModalBodyDivte").load(url, function () {
+                            $("#editticket").modal("show");
+                        })
+                    }
+                    function DeleteTicket(ClientID) {
+                        var url = "/PersonalFinance/Ticket_Delete/" + ClientID;
+                        $("#ModalBodyDivtd").load(url, function () {
+                            $("#deleteticket").modal("show");
+                        })
+                    }
+                    $(document).ready(function () {
+                        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+                    });
+                </script>
+            }
