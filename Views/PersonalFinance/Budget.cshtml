@@ -56,112 +56,119 @@
         </div>
     </div>
 </div>
+
+
 <h3>Movimenti del mese</h3>
 <div class="row">
-    <div class="col-sm-7">
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-body">
-                <div class="row">
-                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                        <div class="card-header">Entrate</div>
-                        <div class="card-body">
-                            <div class="table-responsive-xl">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Titolo</th>
-                                            <th scope="col">Importo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>tit</td>
-                                            <td type="number">137€</td>
+    
+        <div class="col-sm-7">
+      
+                <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+                    <div class="card-body">
+                        <div class="cards">
+                            <div class="row">
+                                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                                    <div class="card-header">Entrate</div>
+                                    <div class="card-body">
+                                        <div class="table-responsive-xl">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Titolo</th>
+                                                        <th scope="col">Importo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>tit</td>
+                                                        <td type="number">137€</td>
 
-                                        </tr>
+                                                    </tr>
 
-                                    </tbody>
-                                </table>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
+                                    <div class="card-header">Uscite</div>
+                                    <div class="card-body">
+                                        <div class="table-responsive-xl">
+                                            <table class="table table-striped table-hover">
+
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Titolo</th>
+                                                        <th scope="col">Importo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>tit</td>
+
+                                                        <td type="number">456</td>
+
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                     </div>
-                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
-                        <div class="card-header">Uscite</div>
-                        <div class="card-body">
-                            <div class="table-responsive-xl">
-                                <table class="table table-striped table-hover">
-
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Titolo</th>
-                                            <th scope="col">Importo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>tit</td>
-
-                                            <td type="number">456</td>
-
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-md-5">
+        <div class="col-md-5">
 
-                <h3>Ticket</h3>
-   
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newticket" data-whatever="getbootstrap">Aggiungi ticket</button></div>
-            <div class="card-body">
-                <div class="table-responsive-xl">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Gestore</th>
-                                <th scope="col">Valore singolo</th>
-                                <th scope="col">Numero</th>
-                                <th scope="col">Valore tot</th>
-                                <th scope="col">Note</th>
-                                <th scope="col">Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Tickets)
-                            {
+            <h3>Ticket</h3>
+
+            <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+                <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newticket" data-whatever="getbootstrap">Aggiungi ticket</button></div>
+                <div class="card-body">
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
                                 <tr>
-                                    <td>@item.TicketName</td>
-                                    <td>@item.TicketValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                    <td type="number">@item.NumTicket</td>
-                                    <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td>
-                                    <td>
-                                        @if (@item.TicketNote != null && @item.TicketNote.Length > 10)
-                                        {
-                                            @(item.TicketNote.Substring(0, 10) + " ...")
-                                        }
-                                        else
-                                        {@item.TicketNote}
-                                    </td>
-                                    <td style='white-space: nowrap'>
-                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                    </td>
+                                    <th scope="col">Gestore</th>
+                                    <th scope="col">Valore singolo</th>
+                                    <th scope="col">Numero</th>
+                                    <th scope="col">Valore tot</th>
+                                    <th scope="col">Note</th>
+                                    <th scope="col">Azioni</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Tickets)
+                                {
+                                    <tr>
+                                        <td>@item.TicketName</td>
+                                        <td>@item.TicketValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                        <td type="number">@item.NumTicket</td>
+                                        <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td>
+                                        <td>
+                                            @if (@item.TicketNote != null && @item.TicketNote.Length > 10)
+                                            {
+                                                @(item.TicketNote.Substring(0, 10) + " ...")
+                                            }
+                                            else
+                                            {@item.TicketNote}
+                                        </td>
+                                        <td style='white-space: nowrap'>
+                                            <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                            <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+ 
 </div>
 
             <br />
