@@ -455,6 +455,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
+            if (KnownMovement.Exp_ID == -1) KnownMovement.On_Exp = true;
             return PartialView(KnownMovement);
         }
         public ActionResult Bank_Details(int id)
@@ -803,6 +804,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             ClaimsPrincipal currentUser = this.User;
             k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
+            if (k.On_Exp is true) k.Exp_ID = -1;
+            if (k.On_Exp is false) k.Exp_ID = 0;
             int result = EditItemID<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {
