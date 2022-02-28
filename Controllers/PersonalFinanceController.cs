@@ -1142,9 +1142,27 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Budget()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            List<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
+            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID).ToList();
+            bool found = false;
+            foreach (var km in KnownMovements)
+            {
+                foreach (var exp in Expirations)
+                {
+                    if(km.KMTitle == exp.ExpTitle && km.KMValue == exp.ExpValue)
+                    {
+                        found = true;
+                    }
+                }
+                if (found is false) Expirations.Add(new Expiration() { ExpTitle = km.KMTitle , ExpValue = km.KMValue});
+                found = false;
+            }
 
-            ViewModel viewModel = new ViewModel();
+            ViewBag.In = Expirations.Where(x => x.ExpValue >= 0);
+            ViewBag.Out = Expirations.Where(x => x.ExpValue < 0);
+            
+             ViewModel viewModel = new ViewModel();
             viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
             viewModel.Bank = new Bank();
             viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
