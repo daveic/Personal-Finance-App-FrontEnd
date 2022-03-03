@@ -34,5 +34,6 @@ namespace PersonalFinanceFrontEnd.Models
         public List<ExpMonth> ExpirationList { get; set; }
         public Bank Contanti { get; set; }
         public KnownMovement_Exp knownMovement_Exp { get; set; }
+        public Budget_Calc Budget_Calc { get; set; }
     }
 }

@@ -1170,9 +1170,28 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
+            viewModel.Budget_Calc = new Budget_Calc();
             return View(viewModel);
         }
-
+        public IActionResult Budget_Calc()
+        {
+            return View(new Budget_Calc());
+        }
+        [HttpPost]
+        public ActionResult Budget_Calc(Budget_Calc bc)
+        {
+            int result = 0;
+            //e.input_value = e.input_value.Replace(".", ",");
+            //e.ExpValue = Convert.ToDouble(e.input_value);
+            //e.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //int result = AddItem<Expiration>(nameof(Expiration), e);
+            if (result == 0)
+            {
+                //TempData["sendFlagT"] = 3;
+                return RedirectToAction(nameof(Budget));
+            }
+            return View();
+        }
         //ADD NEW Methods
         public IActionResult Credit_Add()
         {

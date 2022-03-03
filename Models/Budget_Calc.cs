@@ -3,14 +3,13 @@ using System;
 
 namespace PersonalFinanceFrontEnd.Models
 {
-    public class Ticket
+    public class Budget_Calc
     {
-        public string Usr_OID { get; set; }
-        public int ID { get; set; }
-        public string TicketName { get; set; }
-        public string NumTicket { get; set; }
-        public double TicketValue { get; set; }
-        public string TicketNote { get; set; }
-        public string input_value { get; set; }
+        public DateTime Future_Date { get; set; }
+        public int Corrective_Item_0 { get; set; }
+        public int Corrective_Item_1 { get; set; }
+        public int Corrective_Item_2 { get; set; }
+        public int Corrective_Item_3 { get; set; }
+
     }
 }

@@ -44,79 +44,80 @@
 
 
 <div class="row">
-    <div class="col-sm-7">
-        <h3>Movimenti del mese</h3>
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-body">
-                <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
-        
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
-                            <div class="card-header">Entrate</div>
-                            <div class="card-body">
-                                <div class="table-responsive-xl">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Titolo</th>
-                                                <th scope="col">Importo</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in ViewBag.In)
-                                            {
-                                                <tr>
-                                                    <td>@item.ExpTitle</td>
-                                                    <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>                                                    
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
-                            <div class="card-header">Uscite</div>
-                            <div class="card-body">
-                                <div class="table-responsive-xl">
-                                    <table class="table table-striped table-hover">
-
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Titolo</th>
-                                                <th scope="col">Importo</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var item in ViewBag.Out)
-                                            {
-                                                <tr>
-                                                    <td>@item.ExpTitle</td>
-                                                    <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                                </tr>
-                                            }
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
         <h3>Budget</h3>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">Previsione del saldo nel futuro</div>
             <div class="card-body">
-                
+                <partial name="Budget_Calc" model="Model.Budget_Calc" />
             </div>
         </div>
-
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header">Saldo ipotizzato al ...</div>
+            <div class="card-body">
+                testo
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <h3>Movimenti previsti in questo mese</h3>
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-body">
+                <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                        <div class="card-header">Entrate</div>
+                        <div class="card-body">
+                            <div class="table-responsive-xl">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Importo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.In)
+                                        {
+                                            <tr>
+                                                <td>@item.ExpTitle</td>
+                                                <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                        <div class="card-header">Uscite</div>
+                        <div class="card-body">
+                            <div class="table-responsive-xl">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Titolo</th>
+                                            <th scope="col">Importo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.Out)
+                                        {
+                                            <tr>
+                                                <td>@item.ExpTitle</td>
+                                                <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 
    
 
