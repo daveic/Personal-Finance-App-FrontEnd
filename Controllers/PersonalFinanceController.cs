@@ -1180,17 +1180,39 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Budget_Calc(Budget_Calc bc)
         {
-            int result = 0;
+   
+
+
+
+
+            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), GetUserData().Result);
+            double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
+
+            List<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+            foreach(var item in Expirations)
+            {
+                if (item.ColorLabel == "orange") Expirations.Remove(item);
+            }
+            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), GetUserData().Result).ToList();
+            //contare mesi tra date
+            //Se >15 del mese aggiungi uno altrimenti togli
+            //cicla per n volte quanti sono i mesi
+            foreach (var km in KnownMovements)
+            {
+                Expirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+              
+            }
+            foreach(var item in Expirations)
+            {
+                stimated_total += item.ExpValue;
+            }
+
             //e.input_value = e.input_value.Replace(".", ",");
             //e.ExpValue = Convert.ToDouble(e.input_value);
-            //e.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //int result = AddItem<Expiration>(nameof(Expiration), e);
-            if (result == 0)
-            {
-                //TempData["sendFlagT"] = 3;
-                return RedirectToAction(nameof(Budget));
-            }
-            return View();
+   
+
+            return RedirectToAction(nameof(Budget));
+           
         }
         //ADD NEW Methods
         public IActionResult Credit_Add()
