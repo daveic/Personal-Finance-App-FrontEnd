@@ -1,26 +1,10 @@
 ﻿@model ViewModel
 
-<h2>Previsioni e Budget - WIP</h2>
+<h2>Previsioni e Budget</h2>
 <br />
 <!-- Modal ADD-->
 
-<div class="modal fade" id="newticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nuovo ticket</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="form-row">
-                <partial name="Ticket_Add" model="Model.Ticket" />
-            </div>
-        </div>
-    </div>
-</div>
-<br />
-<br />
+
 <!-- Modal EDIT-->
 
 <div class="modal fade" id="editticket" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
@@ -85,12 +69,6 @@
                                                     <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>                                                    
                                                 </tr>
                                             }
-                                            <tr>
-                                                <td>tit</td>
-                                                <td type="number">137€</td>
-
-                                            </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -109,12 +87,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>tit</td>
-
-                                                <td type="number">456</td>
-
-                                            </tr>
+                                            @foreach (var item in ViewBag.Out)
+                                            {
+                                                <tr>
+                                                    <td>@item.ExpTitle</td>
+                                                    <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                                </tr>
+                                            }
 
                                         </tbody>
                                     </table>
@@ -128,47 +107,11 @@
         </div>
     </div>
     <div class="col-md-5">
-        <h3>Ticket</h3>
+        <h3>Budget</h3>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-header"><button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newticket" data-whatever="getbootstrap">Aggiungi ticket</button></div>
+            <div class="card-header">Previsione del saldo nel futuro</div>
             <div class="card-body">
-                <div class="table-responsive-xl">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">Gestore</th>
-                                <th scope="col">Valore singolo</th>
-                                <th scope="col">Numero</th>
-                                <th scope="col">Valore tot</th>
-                                <th scope="col">Note</th>
-                                <th scope="col">Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Tickets)
-                            {
-                                <tr>
-                                    <td>@item.TicketName</td>
-                                    <td>@item.TicketValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
-                                    <td type="number">@item.NumTicket</td>
-                                    <td type="number">@((item.TicketValue*Convert.ToInt32(item.NumTicket)).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td>
-                                    <td>
-                                        @if (@item.TicketNote != null && @item.TicketNote.Length > 10)
-                                        {
-                                            @(item.TicketNote.Substring(0, 10) + " ...")
-                                        }
-                                        else
-                                        {@item.TicketNote}
-                                    </td>
-                                    <td style='white-space: nowrap'>
-                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="EditTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
-                                        <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="DeleteTicket(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                
             </div>
         </div>
 
