@@ -10,5 +10,6 @@ namespace PersonalFinanceFrontEnd.Models
         public int Corrective_Item_1 { get; set; }
         public int Corrective_Item_2 { get; set; }
         public int Corrective_Item_3 { get; set; }
+
     }
 }
