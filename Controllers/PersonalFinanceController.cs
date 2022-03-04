@@ -1351,11 +1351,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
-            k.input_value = k.input_value.Replace(".", ",");
-            k.KMValue = Convert.ToDouble(k.input_value);
+            //k.input_value = k.input_value.Replace(".", ",");
+            //k.KMValue = Convert.ToDouble(k.input_value);
             k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            if (k.On_Exp) k.Exp_ID = -1;
+            //if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
+            //if (k.On_Exp) k.Exp_ID = -1;
             int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
             if (result == 0)
             {
