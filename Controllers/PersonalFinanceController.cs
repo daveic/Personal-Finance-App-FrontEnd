@@ -47,14 +47,14 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result;
 
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>(nameof(Deposits), User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
-            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), User_OID);
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);           
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
+            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
+            IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), User_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);           
             ViewBag.Expirations = Expirations.Take(5).ToList();
 
             if (Banks.Count() == 0)
@@ -356,17 +356,33 @@ namespace PersonalFinanceFrontEnd.Controllers
             return ConvertedMonth;
         }
 
-        private IEnumerable<T> GetAllItems<T>(string type, string User_OID)
+        private IEnumerable<T> GetAllItems<T>(string controller, string type, string User_OID)
         {
             IEnumerable<T> detections = null;
-            string path = "GetAll" + type + "?User_OID=" + User_OID;
+            string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
                 var responseTask = client.GetAsync(path);
                 responseTask.Wait();
                 var result = responseTask.Result;
                 var readTask = result.Content.ReadAsAsync<List<T>>();
+                readTask.Wait();
+                detections = readTask.Result;
+            }
+            return (detections);
+        }
+        private T GetAllItemsN<T>(string controller, string type, string User_OID)
+        {
+            T detections = default(T);
+            string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<T>();
                 readTask.Wait();
                 detections = readTask.Result;
             }
@@ -483,9 +499,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Transaction_Details_Edit(int id, string User_OID)
         {
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
             Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                                           .Select(x => x.First())
@@ -692,7 +708,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 c.CredValue = Convert.ToDouble(c.input_value);                
             }
             c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
             foreach(var exp in Expirations)
             {
                 if (c.Exp_ID == exp.ID)
@@ -755,7 +771,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     exp.ExpValue = d.DebValue / d.RtNum;
                     AddItem<Expiration>("Expiration", exp);
                 }
-                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
                 d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
             }
             
@@ -880,11 +896,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credits_Debits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetAllItems<Credit>("Credits", User_OID);
+            viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
             viewModel.Credit = new Credit();
-            viewModel.Debits = GetAllItems<Debit>("Debits", User_OID);
+            viewModel.Debits = GetAllItems<Debit>("PersonalFinanceAPI", "Debits", User_OID);
             viewModel.Debit = new Debit();
             return View(viewModel);
         }
@@ -893,9 +909,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Credits = GetAllItems<Credit>("Credits", User_OID);
+            viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
             int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             viewModel.state = sendFlag;
             return View(viewModel);
@@ -905,9 +921,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Debits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Debits = GetAllItems<Debit>("Debits", User_OID);
+            viewModel.Debits = GetAllItems<Debit>("PersonalFinanceAPI", "Debits", User_OID);
             List<SelectListItem> Frequency = new List<SelectListItem>();
            /* List<string> Codes = {["Settimana", "Mese", "Anno"]};
            foreach (var item in UniqueCodes)
@@ -926,13 +942,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Wallet()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
+            viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             viewModel.Bank = new Bank();
-            viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
+            viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);
             viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID); ;
+            viewModel.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID); ;
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
             return View(viewModel);
@@ -941,23 +957,27 @@ namespace PersonalFinanceFrontEnd.Controllers
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult KnownMovements()
         {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
-            ViewModel viewModel = new ViewModel();
-            viewModel.KnownMovements = KnownMovements;
-            viewModel.KnownMovement = new KnownMovement();
+            string User_OID = GetUserData().Result; //Fetch User Data 
+            //ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            //IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
+            //ViewModel viewModel = new ViewModel();
+            //viewModel.KnownMovements = KnownMovements;
+            //viewModel.KnownMovement = new KnownMovement();
+
+            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
+
+            ViewBag.Expirations = KnownMovementsMain.Expirations.ToList();
             int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-            viewModel.state = sendFlag;
+            ViewBag.state = sendFlag;
             ViewBag.ID = User_OID;
-            return View(viewModel);
+            return View(KnownMovementsMain);
         }
         //DEBITS Intermediate view
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Expirations(string selectedYear)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
             ViewBag.Expirations = Expirations.Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             //Trovo gli anni "unici"
             var UniqueYear = Expirations.GroupBy(item => item.ExpDateTime.Year)
@@ -1013,11 +1033,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
 
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
             ViewModel viewModel = new ViewModel();
 
             //############################################################################################################################
@@ -1142,9 +1162,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Budget()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            List<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
-            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID).ToList();
+            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            List<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
+            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), User_OID).ToList();
             bool found = false;
             foreach (var km in KnownMovements)
             {
@@ -1163,11 +1183,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.Out = Expirations.Where(x => x.ExpValue < 0);
             
              ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
+            viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             viewModel.Bank = new Bank();
-            viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
+            viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);
             viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
+            viewModel.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
             viewModel.Budget_Calc = new Budget_Calc();
@@ -1185,15 +1205,15 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-            IEnumerable<Balance> Balances = GetAllItems<Balance>(nameof(Balances), GetUserData().Result);
+            IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), GetUserData().Result);
             double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
 
-            List<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+            List<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
             foreach(var item in Expirations)
             {
                 if (item.ColorLabel == "orange") Expirations.Remove(item);
             }
-            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), GetUserData().Result).ToList();
+            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), GetUserData().Result).ToList();
             //contare mesi tra date
             //Se >15 del mese aggiungi uno altrimenti togli
             //cicla per n volte quanti sono i mesi
@@ -1236,7 +1256,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             exp.ColorLabel = "green";
             exp.ExpValue = c.CredValue;    
             AddItem<Expiration>("Expiration", exp);
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), c.Usr_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
             c.Exp_ID = Expirations.Last().ID;
             int result = AddItem<Credit>(nameof(Credit), c);
             if (result == 0)
@@ -1285,7 +1305,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     exp.ExpValue = d.DebValue/d.RtNum;
                     AddItem<Expiration>("Expiration", exp);
                 }
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), d.Usr_OID);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
             d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
             int result = AddItem<Debit>(nameof(Debit), d);
             if (result == 0)
@@ -1427,8 +1447,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
         {
             string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int maxExp = GetAllItems<Expiration>("Expirations", User_OID).Last().ID;
-            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
+            int maxExp = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID).Last().ID;
+            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), User_OID);
 
             foreach (var item in KnownMovements)
             {
@@ -1468,7 +1488,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         exp.ExpValue = item.KMValue;
                         AddItem<Expiration>("Expiration", exp);
                     }
-                    IEnumerable<Expiration> Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID);
+                    IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
                     item.Exp_ID = Expirations.Last().ID - KM_Exp.Month_Num + 1;
                     int result = EditItemID<KnownMovement>(nameof(KnownMovement), item);
 
@@ -1484,8 +1504,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             ViewModel model = new ViewModel();
-            model.Banks = GetAllItems<Bank>("Banks", User_OID);
-            model.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
+            model.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
+            model.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
             List<Bank> BankList = new List<Bank>();
             List<Ticket> TicketList = new List<Ticket>();
             foreach (var item in model.Banks)
@@ -1507,9 +1527,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             List<Bank> BankList = model.BankList;
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
             List<Ticket> TicketList = model.TicketList;
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
             foreach (var item in BankList)
             {
                 foreach (var bank in Banks)
@@ -1541,9 +1561,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             Balance b = new Balance();
             b.Usr_OID = User_OID;
             b.BalDateTime = DateTime.UtcNow;
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
-            IEnumerable<Bank> Banks = GetAllItems<Bank>(nameof(Banks), User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>(nameof(Tickets), User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
             double tot = 0;
             double totTransaction = 0;
 
@@ -1578,7 +1598,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             Balance b = new Balance();
             b.Usr_OID = User_OID;
             b.BalDateTime = DateTime.UtcNow;
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>(nameof(Transactions), User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
 
             double totTransaction = 0;
             foreach (var item in Transactions)
@@ -1592,8 +1612,8 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         public int Transaction_Credit_Debit_Update(Transaction t)
         {
-            IEnumerable<Credit> Credits = GetAllItems<Credit>(nameof(Credits), t.Usr_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>(nameof(Debits), t.Usr_OID);
+            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), t.Usr_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), t.Usr_OID);
 
             if (t.TrsValue < 0)
             {
