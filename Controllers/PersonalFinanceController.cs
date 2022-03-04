@@ -40,6 +40,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
+
+        
         }
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
@@ -426,6 +428,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var postTask = client.PostAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
+        private int AddItemN<T>(string controller, string type, T obj) where T : new()
+        {
+            string path = "api/" + controller + "/Add" + type;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
                 var postTask = client.PostAsJsonAsync<T>(path, obj);
                 postTask.Wait();
                 var result = postTask.Result;
@@ -1356,7 +1374,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             //if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
             //if (k.On_Exp) k.Exp_ID = -1;
-            int result = AddItem<KnownMovement>(nameof(KnownMovement), k);
+            int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
             if (result == 0)
             {
                 TempData["sendFlagKM"] = 3;
@@ -1448,9 +1466,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             int maxExp = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID).Last().ID;
-            IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), User_OID);
+           // IEnumerable<KnownMovement> KnownMovements = GetAllItemsN<KnownMovement>("KnownMovements", "KnownMovementsMain", User_OID);
 
-            foreach (var item in KnownMovements)
+            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
+
+            foreach (var item in KnownMovementsMain.KnownMovements)
             {
                 if(item.Exp_ID != 0)
                 {

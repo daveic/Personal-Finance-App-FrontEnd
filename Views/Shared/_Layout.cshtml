@@ -128,40 +128,10 @@
 
 
     <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
-        <div class="container">
-            <h6 style="color: white">Scadenze imminenti</h6>
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner" role="listbox">
-                    @{int i = 0; }
-                    @foreach (var item in ViewBag.Expirations)
-                    {
-                        i++;
-                        var active = i == 1 ? "active" : "";
-                    <div class="carousel-item @active">
 
-                        <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @item.ColorLabel; background-color: #2d3138">
-                            <div class="card-title">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <b style="color: white">@item.ExpTitle</b>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-text">
-                                <small>Scadenza: @item.ExpDateTime.ToString("dd/MM/yyyy")</small><br />
-                                <small>Importo: @item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</small>
-                            </div>
-                        </div>
-
-
-
-                    </div>
-
-                    }
-                </div>
-            </div>
+        <div>
+            @await Component.InvokeAsync("PriorityList", new { User_OID = "AAAAAAAAAAAAAAAAAAAAANgDJxkCf2VKqG87lDnSoGg" })
         </div>
-
 
 
 
