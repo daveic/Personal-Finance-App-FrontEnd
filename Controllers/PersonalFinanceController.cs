@@ -422,6 +422,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
+        private int EditItemIDN<T>(string controller, string type, T obj) where T : new()
+        {
+            string path = "api/" + controller + "/Update" + type;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
         private int AddItem<T>(string type, T obj) where T : new()
         {
             string path = "Add" + type;
@@ -470,7 +486,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
-
+        private int DeleteItemN(string controller, string type, int id)
+        {
+            string path = "api/" + controller + "/Delete" + type + "?id=" + id;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var postTask = client.DeleteAsync(path);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
         //DETAILS: Controller methods for detail action - GET-BY-ID
         public ActionResult Credit_Details(int id)
         {
@@ -489,7 +520,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
-            if (KnownMovement.Exp_ID == -1) KnownMovement.On_Exp = true;
+            if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
             return PartialView(KnownMovement);
         }
         public ActionResult Bank_Details(int id)
@@ -826,28 +857,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult KnownMovement_Edit(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Edit(KnownMovement k)
-        {
-            k.input_value = k.input_value.Replace(".", ",");
-            k.KMValue = Convert.ToDouble(k.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            k.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            if (k.On_Exp is true) k.Exp_ID = -1;
-            if (k.On_Exp is false) k.Exp_ID = 0;
-            int result = EditItemID<KnownMovement>(nameof(KnownMovement), k);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 2;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
+        
         public ActionResult Bank_Edit(int id)
         {
             return Bank_Details(id);
@@ -971,25 +981,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.Contanti = viewModel.Banks.First();
             return View(viewModel);
         }
-        //KNOWN MOVEMENTS Intermediate view  
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult KnownMovements()
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data 
-            //ViewBag.Expirations = GetAllItems<Expiration>(nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            //IEnumerable<KnownMovement> KnownMovements = GetAllItems<KnownMovement>(nameof(KnownMovements), User_OID);
-            //ViewModel viewModel = new ViewModel();
-            //viewModel.KnownMovements = KnownMovements;
-            //viewModel.KnownMovement = new KnownMovement();
 
-            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
-
-            ViewBag.Expirations = KnownMovementsMain.Expirations.ToList();
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-            ViewBag.state = sendFlag;
-            ViewBag.ID = User_OID;
-            return View(KnownMovementsMain);
-        }
         //DEBITS Intermediate view
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Expirations(string selectedYear)
@@ -1362,26 +1354,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }            
             return View();
         }
-        public IActionResult KnownMovement_Add()
-        {      
-            return View(new KnownMovement());
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Add(KnownMovement k)
-        {
-            //k.input_value = k.input_value.Replace(".", ",");
-            //k.KMValue = Convert.ToDouble(k.input_value);
-            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            //if (k.On_Exp) k.Exp_ID = -1;
-            int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 3;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
+
         public IActionResult Bank_Add()
         {
             return View(new Bank());
@@ -1457,66 +1430,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public IActionResult KnownMovement_Exp_Update()
-        {
-            return View(new KnownMovement_Exp());
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
-        {
-            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int maxExp = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID).Last().ID;
-           // IEnumerable<KnownMovement> KnownMovements = GetAllItemsN<KnownMovement>("KnownMovements", "KnownMovementsMain", User_OID);
 
-            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
-
-            foreach (var item in KnownMovementsMain.KnownMovements)
-            {
-                if(item.Exp_ID != 0)
-                {
-                    if(item.Exp_ID != -1)
-                    {
-                        bool is_equal = true;
-                        int i = 0;
-                        while (is_equal)
-                        {
-                            Expiration e = GetItemID<Expiration>(nameof(Expiration), item.Exp_ID + i);
-                            if (e != null && e.ExpTitle == item.KMTitle)
-                            {
-                                DeleteItem("Expiration", e.ID);
-
-                            }
-                            else if (e != null && e.ExpTitle != item.KMType)
-                            {
-                                is_equal = false;
-                            }
-                            else if (item.Exp_ID + i >= maxExp)
-                            {
-                                is_equal = false;
-                            }
-                            i++;
-                        }
-                    }
-                    for (int k = 0; k < KM_Exp.Month_Num; k++)
-                    {
-                        Expiration exp = new Expiration();
-                        exp.Usr_OID = item.Usr_OID;
-                        exp.ExpTitle = item.KMTitle;
-                        exp.ExpDescription = item.KMTitle;
-                        exp.ExpDateTime = DateTime.Today.AddMonths(k);
-                        exp.ColorLabel = "orange";
-                        exp.ExpValue = item.KMValue;
-                        AddItem<Expiration>("Expiration", exp);
-                    }
-                    IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
-                    item.Exp_ID = Expirations.Last().ID - KM_Exp.Month_Num + 1;
-                    int result = EditItemID<KnownMovement>(nameof(KnownMovement), item);
-
-
-                }
-            }
-            return RedirectToAction(nameof(KnownMovements));
-        }
 
         //FAST UPDATE LOGIC
         //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
@@ -1703,5 +1617,103 @@ namespace PersonalFinanceFrontEnd.Controllers
             }            
             return 1;
         }
+
+
+
+
+
+
+
+        public IActionResult KnownMovement_Exp_Update()
+        {
+            return View(new KnownMovement_Exp());
+        }
+
+        [HttpPost]
+        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
+        {
+            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            string path = "UpdateExpOnKnownMovement";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/KnownMovements/");
+                var postTask = client.PutAsJsonAsync<KnownMovement_Exp>(path, KM_Exp);
+                postTask.Wait();
+                var result = postTask.Result;
+            }
+
+
+
+
+            return RedirectToAction(nameof(KnownMovements));
+        }
+
+
+        //REFACTORED
+
+        //KNOWN MOVEMENTS Intermediate view  
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+        public ActionResult KnownMovements()
+        {
+            string User_OID = GetUserData().Result; //Fetch User Data 
+            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
+            ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
+            ViewBag.ID = User_OID;
+            return View(KnownMovementsMain);
+        }
+        public IActionResult KnownMovement_Add()
+        {
+            return View(new KnownMovement());
+        }
+        [HttpPost]
+        public ActionResult KnownMovement_Add(KnownMovement k)
+        {
+            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
+            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
+            if (k.On_Exp) k.Exp_ID = -1;
+
+            int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
+            if (result == 0)
+            {
+                TempData["sendFlagKM"] = 3;
+                return RedirectToAction(nameof(KnownMovements));
+            }
+            return View();
+        }
+
+        public ActionResult KnownMovement_Edit(int id)
+        {
+            return KnownMovement_Details(id);
+        }
+        [HttpPost]
+        public ActionResult KnownMovement_Edit(KnownMovement k)
+        {            
+            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
+            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            int result = EditItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
+            if (result == 0)
+            {
+                TempData["sendFlagKM"] = 2;
+                return RedirectToAction(nameof(KnownMovements));
+            }
+            return View();
+        }
+
+
+
     }
+
+
+
+
+
+
+
+
 }
+
+
+
+
+

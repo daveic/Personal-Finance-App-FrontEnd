@@ -17,7 +17,17 @@ namespace PersonalFinanceFrontEnd.Models
 
     public class KnownMovement_Exp
     {
+        public string Usr_OID { get; set; }
         public int Month_Num { get; set; }
     }
+
+    public class KnownMovements_API
+    {
+        public KnownMovement KnownMovement { get; set; }
+        public IEnumerable<KnownMovement> KnownMovements { get; set; }
+        public KnownMovement_Exp KnownMovement_Exp { get; set; }
+    }
+
+
 
 }
