@@ -657,21 +657,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult KnownMovement_Delete(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Delete(KnownMovement k)
-        {
-            int result = DeleteItem(nameof(KnownMovement), k.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 1;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
+
         public ActionResult Bank_Delete(int id)
         {
             return Bank_Details(id);
@@ -1619,28 +1605,25 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-        public IActionResult KnownMovement_Exp_Update()
+        //public IActionResult KnownMovement_Exp_Update()
+        //{
+        // return View(new KnownMovement_Exp());
+        //}//
+
+        public ActionResult KnownMovement_Delete(int id)
         {
-            return View(new KnownMovement_Exp());
+            return KnownMovement_Details(id);
         }
-
         [HttpPost]
-        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
+        public ActionResult KnownMovement_Delete(KnownMovement k)
         {
-            KM_Exp.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            string path = "UpdateExpOnKnownMovement";
-            using (var client = new HttpClient())
+            int result = DeleteItem(nameof(KnownMovement), k.ID);
+            if (result == 0)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/KnownMovements/");
-                var postTask = client.PutAsJsonAsync<KnownMovement_Exp>(path, KM_Exp);
-                postTask.Wait();
-                var result = postTask.Result;
+                TempData["sendFlagKM"] = 1;
+                return RedirectToAction(nameof(KnownMovements));
             }
-
-
-
-
-            return RedirectToAction(nameof(KnownMovements));
+            return View();
         }
 
 
@@ -1663,10 +1646,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
-            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            k.Usr_OID = GetUserData().Result;
             k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
-            if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            if (k.On_Exp is true) k.Exp_ID = -1;
+            //if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
+            //if (k.On_Exp is true) k.Exp_ID = -1;
 
             int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
             if (result == 0)
@@ -1685,7 +1668,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovement_Edit(KnownMovement k)
         {            
             k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
-            k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            k.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
             if (result == 0)
             {
@@ -1695,6 +1678,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
+        {
+            KM_Exp.Usr_OID = GetUserData().Result;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/KnownMovements/");
+                var postTask = client.PutAsJsonAsync<KnownMovement_Exp>("UpdateExpOnKnownMovement", KM_Exp);
+                postTask.Wait();
+                var result = postTask.Result;
+            }
+            return RedirectToAction(nameof(KnownMovements));
+        }
 
 
     }
