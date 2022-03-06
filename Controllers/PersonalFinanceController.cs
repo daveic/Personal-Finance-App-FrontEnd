@@ -511,13 +511,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             Debit.input_value_remain = Debit.RemainToPay.ToString();
             return PartialView(Debit);
         }
-        public ActionResult KnownMovement_Details(int id)
-        {
-            KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
-            KnownMovement.input_value = KnownMovement.KMValue.ToString();
-            if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
-            return PartialView(KnownMovement);
-        }
+
         public ActionResult Bank_Details(int id)
         {
             Bank Bank = GetItemID<Bank>(nameof(Bank), id);
@@ -1609,7 +1603,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         //{
         // return View(new KnownMovement_Exp());
         //}//
-
+        public ActionResult KnownMovement_Details(int id)
+        {
+            KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
+            KnownMovement.input_value = KnownMovement.KMValue.ToString();
+            if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
+            return PartialView(KnownMovement);
+        }
         public ActionResult KnownMovement_Delete(int id)
         {
             return KnownMovement_Details(id);
