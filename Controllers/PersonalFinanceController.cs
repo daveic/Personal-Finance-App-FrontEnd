@@ -1,14 +1,9 @@
 ﻿using System;
-
 using System.Collections.Generic;
-
 using System.IO;
 using System.Linq;
-
 using System.Net.Http;
 using System.Security.Claims;
-
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -1632,7 +1627,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
         {
-            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            KM_Exp.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             string path = "UpdateExpOnKnownMovement";
             using (var client = new HttpClient())
             {
@@ -1671,7 +1666,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             k.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
             if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            if (k.On_Exp) k.Exp_ID = -1;
+            if (k.On_Exp is true) k.Exp_ID = -1;
 
             int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
             if (result == 0)
