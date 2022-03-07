@@ -401,6 +401,23 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (detection);
         }
+        private T GetItemIDN<T>(string controller, string type, int id) where T : new()
+        {
+            T detection = new T();
+            string path = "api/" + controller + "Get" + type + "Id?id=" + id;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<T>();
+                readTask.Wait();
+                detection = readTask.Result;
+            }
+            return (detection);
+        }
+ 
         private int EditItemID<T>(string type, T obj) where T : new()
         {
             string path = "Update" + type;
@@ -1602,12 +1619,12 @@ namespace PersonalFinanceFrontEnd.Controllers
         //public IActionResult KnownMovement_Exp_Update()
         //{
         // return View(new KnownMovement_Exp());
-        //}//
+        //}//EditItemIDN<T>(string controller, string type, T obj)
         public ActionResult KnownMovement_Details(int id)
         {
-            KnownMovement KnownMovement = GetItemID<KnownMovement>(nameof(KnownMovement), id);
+            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), id);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
-            if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
+            //if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
             return PartialView(KnownMovement);
         }
         public ActionResult KnownMovement_Delete(int id)
