@@ -404,10 +404,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         private T GetItemIDN<T>(string controller, string type, int id) where T : new()
         {
             T detection = new T();
-            string path = "api/" + controller + "Get" + type + "Id?id=" + id;
+            string path = "api/" + controller + "/Get" + type + "Id?id=" + id;
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
                 var responseTask = client.GetAsync(path);
                 responseTask.Wait();
                 var result = responseTask.Result;
@@ -1615,35 +1615,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-        //public IActionResult KnownMovement_Exp_Update()
-        //{
-        // return View(new KnownMovement_Exp());
-        //}//EditItemIDN<T>(string controller, string type, T obj)
-        public ActionResult KnownMovement_Details(int id)
-        {
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), id);
-            KnownMovement.input_value = KnownMovement.KMValue.ToString();
-            //if (KnownMovement.Exp_ID != 0) KnownMovement.On_Exp = true;
-            return PartialView(KnownMovement);
-        }
-        public ActionResult KnownMovement_Delete(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Delete(KnownMovement k)
-        {
-            int result = DeleteItem(nameof(KnownMovement), k.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 1;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
-
-
         //REFACTORED
 
         //KNOWN MOVEMENTS Intermediate view  
@@ -1665,9 +1636,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             k.Usr_OID = GetUserData().Result;
             k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
-            //if (k.KMValue < 0) k.KMType = "Uscita"; else if (k.KMValue >= 0) k.KMType = "Entrata";
-            //if (k.On_Exp is true) k.Exp_ID = -1;
-
             int result = AddItemN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
             if (result == 0)
             {
@@ -1707,6 +1675,28 @@ namespace PersonalFinanceFrontEnd.Controllers
                 var result = postTask.Result;
             }
             return RedirectToAction(nameof(KnownMovements));
+        }
+
+        public ActionResult KnownMovement_Details(int id)
+        {
+            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), id);
+            KnownMovement.input_value = KnownMovement.KMValue.ToString();
+            return PartialView(KnownMovement);
+        }
+        public ActionResult KnownMovement_Delete(int id)
+        {
+            return KnownMovement_Details(id);
+        }
+        [HttpPost]
+        public ActionResult KnownMovement_Delete(KnownMovement k)
+        {
+            int result = DeleteItemN("KnownMovements", nameof(KnownMovement), k.ID);
+            if (result == 0)
+            {
+                TempData["sendFlagKM"] = 1;
+                return RedirectToAction(nameof(KnownMovements));
+            }
+            return View();
         }
 
 
