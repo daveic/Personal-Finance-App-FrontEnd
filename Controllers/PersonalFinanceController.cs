@@ -369,22 +369,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (detections);
         }
-        private T GetAllItemsN<T>(string controller, string type, string User_OID)
-        {
-            T detections = default(T);
-            string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<T>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-            return (detections);
-        }
+
         private T GetItemID<T>(string type, int id) where T : new()
         {
             T detection = new T();
@@ -401,22 +386,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (detection);
         }
-        private T GetItemIDN<T>(string controller, string type, int id) where T : new()
-        {
-            T detection = new T();
-            string path = "api/" + controller + "/Get" + type + "Id?id=" + id;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<T>();
-                readTask.Wait();
-                detection = readTask.Result;
-            }
-            return (detection);
-        }
+
  
         private int EditItemID<T>(string type, T obj) where T : new()
         {
@@ -515,12 +485,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
         //DETAILS: Controller methods for detail action - GET-BY-ID
-        public ActionResult Credit_Details(int id)
-        {
-            Credit Credit = GetItemID<Credit>(nameof(Credit), id);
-            Credit.input_value = Credit.CredValue.ToString();
-            return PartialView(Credit);
-        }
+
         public ActionResult Debit_Details(int id)
         {
             Debit Debit = GetItemID<Debit>(nameof(Debit), id);
@@ -1611,9 +1576,46 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
+        private IEnumerable<T> GetAllItemsN<T>(string controller, string type, string User_OID)
+        {
+            IEnumerable<T> detections = null;
+            string path = "api/" + controller + "/" + type + "?User_OID=" + User_OID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<List<T>>();
+                readTask.Wait();
+                detections = readTask.Result;
+            }
+            return (detections);
+        }
+        private T GetItemIDN<T>(string controller, string type, int id, string User_OID) where T : new()
+        {
+            T detection = new T();
+            string path = "api/" + controller + "/" + type + "?id=" + id + "?User_OID=" + User_OID;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var responseTask = client.GetAsync(path);
+                responseTask.Wait();
+                var result = responseTask.Result;
+                var readTask = result.Content.ReadAsAsync<T>();
+                readTask.Wait();
+                detection = readTask.Result;
+            }
+            return (detection);
+        }
+        public ActionResult Credit_Details(int id)
+        {
+            string User_OID = GetUserData().Result;
 
-
-
+            Credit Credit = GetItemIDN<Credit>("Credits", "Details", id, User_OID);
+            Credit.input_value = Credit.CredValue.ToString();
+            return PartialView(Credit);
+        }
 
         //REFACTORED
 
@@ -1622,10 +1624,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovements()
         {
             string User_OID = GetUserData().Result; //Fetch User Data 
-            KnownMovements_API KnownMovementsMain = (KnownMovements_API)GetAllItemsN<KnownMovements_API>("KnownMovements", "KnownMovementsMain", User_OID);
+            IEnumerable<KnownMovement> KnownMovements = GetAllItemsN<KnownMovement>("KnownMovements", "Main", User_OID);
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             ViewBag.ID = User_OID;
-            return View(KnownMovementsMain);
+            return View(KnownMovements);
         }
         public IActionResult KnownMovement_Add()
         {
@@ -1679,7 +1681,8 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         public ActionResult KnownMovement_Details(int id)
         {
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), id);
+            string User_OID = GetUserData().Result;
+            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", "Details", id, User_OID);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }
