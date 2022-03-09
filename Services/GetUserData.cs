@@ -18,30 +18,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public class GetUserDataController : Controller
     {
-        //private IEnumerable<T> GetAllItems<T>(string controller, string type, string User_OID)
-        //{
-        //    IEnumerable<T> detections = null;
-        //    string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
-        //    using (var client = new HttpClient())
-        //    {
-        //        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-        //        var responseTask = client.GetAsync(path);
-        //        responseTask.Wait();
-        //        var result = responseTask.Result;
-        //        var readTask = result.Content.ReadAsAsync<List<T>>();
-        //        readTask.Wait();
-        //        detections = readTask.Result.ToList();
-        //    }
-        //    return (detections);
-        //}
-
-        //public async Task<IViewComponentResult> InvokeAsync(string User_OID)
-        //{
-        //    IEnumerable<Expiration> items = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID);
-        //        items= items.OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-
-        //    return await Task.FromResult((IViewComponentResult)View(items));
-        //}
+        
         private readonly ILogger<GetUserDataController> _logger;
 
         private readonly GraphServiceClient _graphServiceClient;
@@ -50,10 +27,12 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private string[] _graphScopes;
 
+
+
         public GetUserDataController(ILogger<GetUserDataController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
-                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler)
+                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) 
         {
             _logger = logger;
             _graphServiceClient = graphServiceClient;

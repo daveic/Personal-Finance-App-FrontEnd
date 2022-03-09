@@ -72,6 +72,7 @@ namespace PersonalFinanceFrontEnd
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=PersonalFinance}/{action=Index}/{id?}");
+
             });
         }
     }

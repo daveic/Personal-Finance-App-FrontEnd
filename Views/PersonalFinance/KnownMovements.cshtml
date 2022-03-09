@@ -1,4 +1,4 @@
-﻿@model PersonalFinanceFrontEnd.Models.KnownMovements_API
+﻿@model PersonalFinanceFrontEnd.Models.KnownMovements
 
 <h2>Movimenti ricorrenti e noti</h2>
 <br />
@@ -105,7 +105,7 @@ else if (ViewBag.state == 3)
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.KnownMovements)
+                            @foreach (var item in Model.KnownMovementList)
                             {
 
                                 <tr>

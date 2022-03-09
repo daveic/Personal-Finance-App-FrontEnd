@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace PersonalFinanceFrontEnd.Models
 {
@@ -16,5 +17,11 @@ namespace PersonalFinanceFrontEnd.Models
         public string CredNote { get; set; }
         public string input_value { get; set; }
         public int Exp_ID { get; set; }
+    }
+    public class Credits
+    {
+        public Credit Credit { get; set; }
+        public IEnumerable<Credit> CreditList { get; set; }
+
     }
 }
