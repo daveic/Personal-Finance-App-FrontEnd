@@ -49,7 +49,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", "Main", User_OID);
+            IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
             IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
             IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
@@ -1572,7 +1572,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 c.input_value = c.input_value.Replace(".", ",");
                 c.CredValue = Convert.ToDouble(c.input_value);
             }
-            c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            c.Usr_OID = GetUserData().Result;
             //IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
             //foreach (var exp in Expirations)
             //{
@@ -1627,7 +1627,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 c.input_value = c.input_value.Replace(".", ",");
                 c.CredValue = Convert.ToDouble(c.input_value);
-                c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                c.Usr_OID = GetUserData().Result;
             }
             int result = AddItemN<Credit>("Credits", c);
             if (result == 0)
