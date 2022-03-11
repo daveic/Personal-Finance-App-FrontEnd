@@ -408,22 +408,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
-        public int EditItemIDN<T>(string controller, string type, T obj) where T : new()
-        {
-            string path = "api/" + controller + "/Update" + type;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var postTask = client.PutAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
+
         private int AddItem<T>(string type, T obj) where T : new()
         {
             string path = "Add" + type;
@@ -717,41 +702,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //{
         //    return Credit_Details(id);
         //}
-        [HttpPost]
-        public ActionResult Credit_Edit(Credit c, int i)
-        {
-            if (i != 1)
-            {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);                
-            }
-            c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
-            foreach(var exp in Expirations)
-            {
-                if (c.Exp_ID == exp.ID)
-                {
-                    DeleteItem("Expiration", exp.ID);
-                    Expiration e = new Expiration();
-                    e.Usr_OID = c.Usr_OID;
-                    e.ExpTitle = c.CredTitle;
-                    e.ExpDescription = "Rientro previsto - " + c.CredTitle;
-                    e.ExpDateTime = c.PrevDateTime;
-                    e.ColorLabel = "green";
-                    e.ExpValue = c.CredValue;
-                    AddItem<Expiration>("Expiration", e);
-                    c.Exp_ID = Expirations.Last().ID + 1;
-                    break;
-                }                    
-            }            
-            int result = EditItemID<Credit>(nameof(Credit), c);
-            if (result == 0)
-            {
-                TempData["sendFlagCred"] = 2;
-                return RedirectToAction(nameof(Credits));
-            }
-            return View();
-        }
+       
         public ActionResult Debit_Edit(int id)
         {
             return Debit_Details(id);
@@ -1547,10 +1498,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
-        public IEnumerable<T> GetAllItemsN<T>(string controller, string type, string User_OID)
+        public IEnumerable<T> GetAllItemsN<T>(string controller, string User_OID)
         {
             IEnumerable<T> detections = null;
-            string path = "api/" + controller + "/" + type + "?User_OID=" + User_OID;
+            string path = "api/" + controller + "/All" + "?User_OID=" + User_OID;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
@@ -1563,10 +1514,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (detections);
         }
-        public T GetItemIDN<T>(string controller, string type, int id, string User_OID) where T : new()
+        public T GetItemIDN<T>(string controller, int id, string User_OID) where T : new()
         {
             T detection = new T();
-            string path = "api/" + controller + "/" + type + "?id=" + id + "&User_OID=" + User_OID;
+            string path = "api/" + controller + "/Details" + "?id=" + id + "&User_OID=" + User_OID;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
@@ -1595,6 +1546,76 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
+        public int EditItemIDN<T>(string controller, T obj) where T : new()
+        {
+            string path = "api/" + controller + "/Update";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
+            }
+            return (1);
+        }
+
+
+        [HttpPost]
+        public ActionResult Credit_Edit(Credit c, int i)
+        {
+            if (i != 1)
+            {
+                c.input_value = c.input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.input_value);
+            }
+            c.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
+            //foreach (var exp in Expirations)
+            //{
+            //    if (c.Exp_ID == exp.ID)
+            //    {
+            //        DeleteItem("Expiration", exp.ID);
+            //        Expiration e = new Expiration();
+            //        e.Usr_OID = c.Usr_OID;
+            //        e.ExpTitle = c.CredTitle;
+            //        e.ExpDescription = "Rientro previsto - " + c.CredTitle;
+            //        e.ExpDateTime = c.PrevDateTime;
+            //        e.ColorLabel = "green";
+            //        e.ExpValue = c.CredValue;
+            //        AddItem<Expiration>("Expiration", e);
+            //        c.Exp_ID = Expirations.Last().ID + 1;
+            //        break;
+            //    }
+            //}
+            int result = EditItemIDN<Credit>("Credits", c);
+            if (result == 0)
+            {
+                TempData["sendFlagCred"] = 2;
+                return RedirectToAction(nameof(Credits));
+            }
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public IActionResult Credit_Add()
         {
             return View(new Credit());
@@ -1620,7 +1641,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result;
 
-            Credit Credit = GetItemIDN<Credit>("Credits", "Details", id, User_OID);
+            Credit Credit = GetItemIDN<Credit>("Credits", id, User_OID);
             Credit.input_value = Credit.CredValue.ToString();
             return PartialView(Credit);
         }
@@ -1631,7 +1652,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             Credits Credits = new Credits();
-            Credits.CreditList = GetAllItemsN<Credit>("Credits", "Main", User_OID);
+            Credits.CreditList = GetAllItemsN<Credit>("Credits", User_OID);
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             //ViewModel viewModel = new ViewModel();
             //viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
@@ -1649,7 +1670,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result; //Fetch User Data 
             KnownMovements knownMovements = new KnownMovements();
-            knownMovements.KnownMovementList = GetAllItemsN<KnownMovement>("KnownMovements", "Main", User_OID);
+            knownMovements.KnownMovementList = GetAllItemsN<KnownMovement>("KnownMovements", User_OID);
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             ViewBag.ID = User_OID;
             return View(knownMovements);
@@ -1682,7 +1703,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
             k.Usr_OID = GetUserData().Result;
-            int result = EditItemIDN<KnownMovement>("KnownMovements", nameof(KnownMovement), k);
+            int result = EditItemIDN<KnownMovement>("KnownMovements", k);
             if (result == 0)
             {
                 TempData["sendFlagKM"] = 2;
@@ -1708,7 +1729,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovement_Details(int id)
         {
             string User_OID = GetUserData().Result;
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", "Details", id, User_OID);
+            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, User_OID);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }
