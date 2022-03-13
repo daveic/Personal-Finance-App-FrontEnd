@@ -24,7 +24,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
 
-        private string[] _graphScopes;
+        private readonly string[] _graphScopes;
 
 
 
@@ -43,8 +43,7 @@ namespace PersonalFinanceFrontEnd.Controllers
   
         public async Task<string> GetUserData()
         {
-            User currentUser = null;
-            currentUser = await _graphServiceClient.Me.Request().GetAsync();
+            User currentUser = await _graphServiceClient.Me.Request().GetAsync();
             // Get user photo
             using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
             {

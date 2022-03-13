@@ -13,6 +13,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
 using PersonalFinanceFrontEnd.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -36,9 +37,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         //    this._consentHandler = consentHandler;
         //    _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
-        
-        //}
 
+        //}
+        [Authorize]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
@@ -57,7 +58,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);
             ViewBag.Expirations = Expirations.Take(5).ToList();
 
-            if (Banks.Count() == 0)
+            if (!Banks.Any())
             {
                 Bank b = new Bank { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
                 int result = AddItem<Bank>(nameof(Bank), b);
@@ -315,7 +316,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
         }
 
-        private string MonthConverter(int monthNum)
+        private static string MonthConverter(int monthNum)
         {
             string ConvertedMonth = "";
             switch (monthNum)
@@ -379,7 +380,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private T GetItemID<T>(string type, int id) where T : new()
         {
-            T detection = new T();
+            T detection = new();
             string path = "Get" + type + "Id?id=" + id;
             using (var client = new HttpClient())
             {
@@ -1216,7 +1217,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Fast_Update()
         {
             string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ViewModel model = new ViewModel();
+            ViewModel model = new();
             model.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             model.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
             List<Bank> BankList = new List<Bank>();
@@ -1381,7 +1382,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (t.TrsCode.StartsWith("DEB"))
                 {
-                    Debit model = new Debit();
+                    Debit model = new();
                     model.Usr_OID = t.Usr_OID;
                     model.DebCode = t.TrsCode;
                     model.DebInsDate = DateTime.UtcNow;
@@ -1479,80 +1480,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
 
-        //DEBITS Intermediate view
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Expirations(string selectedYear)
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
-            ViewBag.Expirations = Expirations.Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            //Trovo gli anni "unici"
-            var UniqueYear = Expirations.GroupBy(item => item.ExpDateTime.Year)
-                    .Select(group => group.First())
-                    .Select(item => item.ExpDateTime.Year)
-                    .ToList();
-            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYear = new List<SelectListItem>();
-            foreach (var year in UniqueYear.Skip(1)) itemlistYear.Add(new SelectListItem() { Text = year.ToString(), Value = year.ToString() });
-            //Passo alla view la lista
-            ViewBag.ItemList = itemlistYear;
-            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
-            if (!String.IsNullOrEmpty(selectedYear)) Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == selectedYear).OrderBy(item => item.ExpDateTime.Month);
-            else Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month);
-
-
-            ViewModel viewModel = new ViewModel();
-            viewModel.Expiration = new Expiration();
-
-
-
-
-            var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
-                                            .Select(group => group.First())
-                                            .Select(item => item.ExpDateTime.Month)
-                                            .ToList();
-            List<string> UniqueMonthNames = new List<string>();
-
-
-
-            List<ExpMonth> expMonth = new List<ExpMonth>();
-            foreach (var month in UniqueMonth)
-            {
-                UniqueMonthNames.Add(MonthConverter(month));
-                var singleMonthExp = Expirations.AsQueryable().Where(x => x.ExpDateTime.Month.ToString() == month.ToString());
-                foreach (var exp in singleMonthExp)
-                {
-                    ExpMonth item = new ExpMonth();
-                    item.Month = MonthConverter(month);
-                    item.ExpItem = exp;
-                    expMonth.Add(item);
-                }
-
-
-            }
-            ViewBag.UniqueMonth = UniqueMonth;
-            ViewBag.UniqueMonthNames = UniqueMonthNames;
-            viewModel.ExpirationList = expMonth;
-
-            return View(viewModel);
-        }
-        public IActionResult Expiration_Add()
-        {
-            return View(new Expiration());
-        }
-        [HttpPost]
-        public ActionResult Expiration_Add(Expiration e)
-        {
-            e.input_value = e.input_value.Replace(".", ",");
-            e.ExpValue = Convert.ToDouble(e.input_value);
-            e.Usr_OID = GetUserData().Result;
-            int result = AddItemN<Expiration>("Expirations", e);
-            if (result == 0)
-            {
-                return RedirectToAction(nameof(Expirations));
-            }
-            return View();
-        }
 
 
 

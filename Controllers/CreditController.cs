@@ -100,8 +100,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            Credits Credits = new Credits();
-            Credits.CreditList = GetAllItemsN<Credit>("Credits", User_OID);
+            Credits Credits = new()
+            {
+                CreditList = GetAllItemsN<Credit>("Credits", User_OID)
+            };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             //ViewModel viewModel = new ViewModel();
             //viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
