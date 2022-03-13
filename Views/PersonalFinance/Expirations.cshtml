@@ -1,4 +1,4 @@
-﻿@model ViewModel
+﻿@model Expirations
 
 <h2>Scadenze</h2>
 <br />
@@ -21,13 +21,6 @@
         </div>
     </div>
 </div>
-@if (Model.state == 1)
-{
-    <div class="alert alert-dismissible fade show" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <p><strong>Completato!</strong> Scadenza rimossa correttamente.</p>
-    </div>
-}
 <!-- Modal ADD-->
 <div class="row" style="margin: 0 auto;">
     <div class="col-md-4">
@@ -51,7 +44,7 @@
                             <label>ANNO:</label>
                         </div>
                         <div class="col-sm-2">
-                            @Html.DropDownList("selectedYear", (List<SelectListItem>)ViewBag.ItemList, DateTime.Now.Year.ToString(), new { onchange = "form.submit();", @class = "dropdown-item-inline" })
+                            @Html.DropDownList("selectedYear", (List<SelectListItem>)Model.ItemlistYear, DateTime.Now.Year.ToString(), new { onchange = "form.submit();", @class = "dropdown-item-inline" })
                         </div>
                     </div>
                 </div>
@@ -62,7 +55,7 @@
                             <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto;">
                                 <div class="card-header"><h5>@month</h5></div>
                                 <div class="card-body">
-                                    @foreach (var exp in Model.ExpirationList)
+                                    @foreach (var exp in Model.ExpMonth)
                                     {
                                         if (exp.Month == month)
                                         {

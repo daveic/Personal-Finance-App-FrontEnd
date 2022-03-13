@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
 
 namespace PersonalFinanceFrontEnd.Models
 {
@@ -18,5 +20,13 @@ namespace PersonalFinanceFrontEnd.Models
     {
         public string Month { get; set; }
         public Expiration ExpItem { get; set; }
+    }
+    public class Expirations
+    {
+        public Expiration Expiration { get; set; }
+        public IEnumerable<Expiration> ExpirationList { get; set; }
+        public List<SelectListItem> ItemlistYear { get; set; }
+        public List<int> UniqueMonth { get; set; }
+        public List<ExpMonth> ExpMonth { get; set; }
     }
 }
