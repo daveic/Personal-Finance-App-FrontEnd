@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalFinanceFrontEnd.Controllers;
-using PersonalFinanceFrontEnd.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.Net.Http;
+using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.ViewComponents
 {

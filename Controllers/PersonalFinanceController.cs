@@ -7,45 +7,44 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using PersonalFinanceFrontEnd.Models;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
+using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-    public class PersonalFinanceController : GetUserDataController
+    public partial class PersonalFinanceController : Controller //: GetUserDataController 
     {
-        private readonly ILogger<PersonalFinanceController> _logger;
+        //private readonly ILogger<PersonalFinanceController> _logger;
 
-        private readonly GraphServiceClient _graphServiceClient;
+        //private readonly GraphServiceClient _graphServiceClient;
 
-        private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
+        //private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
 
-        private string[] _graphScopes;
+        //private string[] _graphScopes;
 
-        public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
-                            IConfiguration configuration,
-                            GraphServiceClient graphServiceClient,
-                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) : base(logger, configuration, graphServiceClient, consentHandler)
-        {
-            _logger = logger;
-            _graphServiceClient = graphServiceClient;
-            this._consentHandler = consentHandler;
-            _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
+        //public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
+        //                    IConfiguration configuration,
+        //                    GraphServiceClient graphServiceClient,
+        //                    MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) : base(logger, configuration, graphServiceClient, consentHandler)
+        //{
+        //    _logger = logger;
+        //    _graphServiceClient = graphServiceClient;
+        //    this._consentHandler = consentHandler;
+        //    _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
         
-        }
-
-
+        //}
 
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
+
             string User_OID = GetUserData().Result;
-       //     var tst = new GetUserDataController(_logger, _graphScopes, _graphServiceClient, _consentHandler).GetUserID().Result;
+            //     var tst = new GetUserDataController(_logger, _graphScopes, _graphServiceClient, _consentHandler).GetUserID().Result;
 
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
@@ -55,7 +54,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), User_OID);
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);           
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);
             ViewBag.Expirations = Expirations.Take(5).ToList();
 
             if (Banks.Count() == 0)
@@ -234,27 +233,31 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.TotWithDebits = TotWithDebits;
             viewModel.TotNoDebits = TotNoDebits;
             viewModel.Banks = Banks;
-            
+
             return View(viewModel);
         }
 
-        public async Task<string> GetUserData()
-        {
-            User currentUser = null;
-            currentUser = await _graphServiceClient.Me.Request().GetAsync();
-            // Get user photo
-            using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
-            {
-                byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                ViewData["Photo"] = Convert.ToBase64String(photoByte);
-            }          
-            //ViewData["Me"] = currentUser;
-            ViewBag.Name = currentUser.GivenName;
-            ViewBag.Email = currentUser.UserPrincipalName;
-            ViewBag.id = currentUser;
-            ClaimsPrincipal LoggedUser = this.User;
-            return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-        }
+
+
+
+
+        //public async Task<string> GetUserData()
+        //{
+        //    User currentUser = null;
+        //    currentUser = await _graphServiceClient.Me.Request().GetAsync();
+        //    // Get user photo
+        //    using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+        //    {
+        //        byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+        //        ViewData["Photo"] = Convert.ToBase64String(photoByte);
+        //    }          
+        //    //ViewData["Me"] = currentUser;
+        //    ViewBag.Name = currentUser.GivenName;
+        //    ViewBag.Email = currentUser.UserPrincipalName;
+        //    ViewBag.id = currentUser;
+        //    ClaimsPrincipal LoggedUser = this.User;
+        //    return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+        //}
 
 
 
@@ -442,22 +445,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
-        public int DeleteItemN(string controller, string type, int id)
-        {
-            string path = "api/" + controller + "/Delete" + type + "?id=" + id;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var postTask = client.DeleteAsync(path);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
+
         //DETAILS: Controller methods for detail action - GET-BY-ID
 
         public ActionResult Debit_Details(int id)
@@ -557,19 +545,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //{
         //    return Credit_Details(id);
         //}
-        [HttpPost]
-        public ActionResult Credit_Delete(Credit c)
-        {
-            Credit cred = GetItemID<Credit>(nameof(Credit), c.ID);
-            DeleteItem("Expiration", cred.Exp_ID);
-            int result = DeleteItem(nameof(Credit), c.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagCred"] = 1;
-                return RedirectToAction(nameof(Credits));
-            }
-            return View();
-        }
+
         public ActionResult Debit_Delete(int id)
         {
             return Debit_Details(id);
@@ -698,10 +674,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //    //return View(Credits);
         //}
         //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-        //public ActionResult Credit_Edit(int id)
-        //{
-        //    return Credit_Details(id);
-        //}
+
        
         public ActionResult Debit_Edit(int id)
         {
@@ -891,63 +864,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
 
-        //DEBITS Intermediate view
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Expirations(string selectedYear)
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
-            ViewBag.Expirations = Expirations.Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            //Trovo gli anni "unici"
-            var UniqueYear = Expirations.GroupBy(item => item.ExpDateTime.Year)
-                    .Select(group => group.First())
-                    .Select(item => item.ExpDateTime.Year)
-                    .ToList();
-            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYear = new List<SelectListItem>();
-            foreach (var year in UniqueYear.Skip(1)) itemlistYear.Add(new SelectListItem() { Text = year.ToString(), Value = year.ToString() });
-            //Passo alla view la lista
-            ViewBag.ItemList = itemlistYear;
-            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
-            if (!String.IsNullOrEmpty(selectedYear)) Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == selectedYear).OrderBy(item => item.ExpDateTime.Month);
-            else Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month);
-
-
-            ViewModel viewModel = new ViewModel();
-            viewModel.Expiration = new Expiration();
-
-
-
-      
-            var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
-                                            .Select(group => group.First())
-                                            .Select(item => item.ExpDateTime.Month)
-                                            .ToList();
-            List<string> UniqueMonthNames = new List<string>();
-            
-
-          
-            List<ExpMonth> expMonth = new List<ExpMonth>();
-            foreach (var month in UniqueMonth)
-            {
-                UniqueMonthNames.Add(MonthConverter(month));
-                var singleMonthExp = Expirations.AsQueryable().Where(x => x.ExpDateTime.Month.ToString() == month.ToString());
-                foreach(var exp in singleMonthExp)
-                {
-                    ExpMonth item = new ExpMonth();
-                    item.Month = MonthConverter(month);
-                    item.ExpItem = exp;
-                    expMonth.Add(item);
-                }
-
-                
-            }
-            ViewBag.UniqueMonth = UniqueMonth;
-            ViewBag.UniqueMonthNames = UniqueMonthNames;
-            viewModel.ExpirationList = expMonth;
-
-            return View(viewModel);
-        }
+        
         //TRANSACTIONS Intermediate view
         public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
@@ -1291,24 +1208,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public IActionResult Expiration_Add()
-        {
-            return View(new Expiration());
-        }
-        [HttpPost]
-        public ActionResult Expiration_Add(Expiration e)
-        {
-            e.input_value = e.input_value.Replace(".", ",");
-            e.ExpValue = Convert.ToDouble(e.input_value);
-            e.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = AddItem<Expiration>(nameof(Expiration), e);
-            if (result == 0)
-            {
-                //TempData["sendFlagT"] = 3;
-                return RedirectToAction(nameof(Expirations));
-            }
-            return View();
-        }
+
 
 
         //FAST UPDATE LOGIC
@@ -1562,192 +1462,112 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return (1);
         }
-
-
-        [HttpPost]
-        public ActionResult Credit_Edit(Credit c, int i)
+        public int DeleteItemN(string controller, int id, string User_OID)
         {
-            if (i != 1)
+            string path = "api/" + controller + "/Delete" + "?id=" + id + "&User_OID=" + User_OID;
+            using (var client = new HttpClient())
             {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                var postTask = client.DeleteAsync(path);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
             }
-            c.Usr_OID = GetUserData().Result;
-            //IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), c.Usr_OID);
-            //foreach (var exp in Expirations)
-            //{
-            //    if (c.Exp_ID == exp.ID)
-            //    {
-            //        DeleteItem("Expiration", exp.ID);
-            //        Expiration e = new Expiration();
-            //        e.Usr_OID = c.Usr_OID;
-            //        e.ExpTitle = c.CredTitle;
-            //        e.ExpDescription = "Rientro previsto - " + c.CredTitle;
-            //        e.ExpDateTime = c.PrevDateTime;
-            //        e.ColorLabel = "green";
-            //        e.ExpValue = c.CredValue;
-            //        AddItem<Expiration>("Expiration", e);
-            //        c.Exp_ID = Expirations.Last().ID + 1;
-            //        break;
-            //    }
-            //}
-            int result = EditItemIDN<Credit>("Credits", c);
-            if (result == 0)
-            {
-                TempData["sendFlagCred"] = 2;
-                return RedirectToAction(nameof(Credits));
-            }
-            return View();
+            return (1);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public IActionResult Credit_Add()
-        {
-            return View(new Credit());
-        }
-        [HttpPost]
-        public ActionResult Credit_Add(Credit c, int i)
-        {
-            if (i != 1)
-            {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
-                c.Usr_OID = GetUserData().Result;
-            }
-            int result = AddItemN<Credit>("Credits", c);
-            if (result == 0)
-            {
-                TempData["sendFlagCred"] = 3;
-                return RedirectToAction(nameof(Credits));
-            }
-            return View();
-        }
-        public ActionResult Credit_Details(int id)
-        {
-            string User_OID = GetUserData().Result;
-
-            Credit Credit = GetItemIDN<Credit>("Credits", id, User_OID);
-            Credit.input_value = Credit.CredValue.ToString();
-            return PartialView(Credit);
-        }
-        //CREDITS Intermediate view
-        [Route("PersonalFinance/Credits")]
+        //DEBITS Intermediate view
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Credits()
+        public ActionResult Expirations(string selectedYear)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            Credits Credits = new Credits();
-            Credits.CreditList = GetAllItemsN<Credit>("Credits", User_OID);
-            ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-            //ViewModel viewModel = new ViewModel();
-            //viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
-            //int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
-            //viewModel.state = sendFlag;
-            return View(Credits);
+            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID);
+            ViewBag.Expirations = Expirations.Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
+            //Trovo gli anni "unici"
+            var UniqueYear = Expirations.GroupBy(item => item.ExpDateTime.Year)
+                    .Select(group => group.First())
+                    .Select(item => item.ExpDateTime.Year)
+                    .ToList();
+            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
+            List<SelectListItem> itemlistYear = new List<SelectListItem>();
+            foreach (var year in UniqueYear.Skip(1)) itemlistYear.Add(new SelectListItem() { Text = year.ToString(), Value = year.ToString() });
+            //Passo alla view la lista
+            ViewBag.ItemList = itemlistYear;
+            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
+            if (!String.IsNullOrEmpty(selectedYear)) Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == selectedYear).OrderBy(item => item.ExpDateTime.Month);
+            else Expirations = Expirations.AsQueryable().Where(x => x.ExpDateTime.Year.ToString() == DateTime.Now.Year.ToString()).OrderBy(item => item.ExpDateTime.Month);
+
+
+            ViewModel viewModel = new ViewModel();
+            viewModel.Expiration = new Expiration();
+
+
+
+
+            var UniqueMonth = Expirations.GroupBy(item => item.ExpDateTime.Month)
+                                            .Select(group => group.First())
+                                            .Select(item => item.ExpDateTime.Month)
+                                            .ToList();
+            List<string> UniqueMonthNames = new List<string>();
+
+
+
+            List<ExpMonth> expMonth = new List<ExpMonth>();
+            foreach (var month in UniqueMonth)
+            {
+                UniqueMonthNames.Add(MonthConverter(month));
+                var singleMonthExp = Expirations.AsQueryable().Where(x => x.ExpDateTime.Month.ToString() == month.ToString());
+                foreach (var exp in singleMonthExp)
+                {
+                    ExpMonth item = new ExpMonth();
+                    item.Month = MonthConverter(month);
+                    item.ExpItem = exp;
+                    expMonth.Add(item);
+                }
+
+
+            }
+            ViewBag.UniqueMonth = UniqueMonth;
+            ViewBag.UniqueMonthNames = UniqueMonthNames;
+            viewModel.ExpirationList = expMonth;
+
+            return View(viewModel);
         }
+        public IActionResult Expiration_Add()
+        {
+            return View(new Expiration());
+        }
+        [HttpPost]
+        public ActionResult Expiration_Add(Expiration e)
+        {
+            e.input_value = e.input_value.Replace(".", ",");
+            e.ExpValue = Convert.ToDouble(e.input_value);
+            e.Usr_OID = GetUserData().Result;
+            int result = AddItemN<Expiration>("Expirations", e);
+            if (result == 0)
+            {
+                return RedirectToAction(nameof(Expirations));
+            }
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
         //REFACTORED
 
-        //KNOWN MOVEMENTS Intermediate view  
-        //[Route("PersonalFinance/KnownMovements")]
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult KnownMovements()
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data 
-            KnownMovements knownMovements = new KnownMovements();
-            knownMovements.KnownMovementList = GetAllItemsN<KnownMovement>("KnownMovements", User_OID);
-            ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-            ViewBag.ID = User_OID;
-            return View(knownMovements);
-        }
-        public IActionResult KnownMovement_Add()
-        {
-            return View(new KnownMovement());
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Add(KnownMovement k)
-        {
-            k.Usr_OID = GetUserData().Result;
-            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
-            int result = AddItemN<KnownMovement>("KnownMovements", k);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 3;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
- 
-        public ActionResult KnownMovement_Edit(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-
-        [HttpPost]
-        public ActionResult KnownMovement_Edit(KnownMovement k)
-        {
-            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
-            k.Usr_OID = GetUserData().Result;
-            int result = EditItemIDN<KnownMovement>("KnownMovements", k);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 2;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
-        {
-            KM_Exp.Usr_OID = GetUserData().Result;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/KnownMovements/");
-                var postTask = client.PutAsJsonAsync<KnownMovement_Exp>("UpdateExpOnKnownMovement", KM_Exp);
-                postTask.Wait();
-                var result = postTask.Result;
-            }
-            return RedirectToAction(nameof(KnownMovements));
-        }
-        //[Route("PersonalFinance/KnownMovement_Details/{id}")]
-        public ActionResult KnownMovement_Details(int id)
-        {
-            string User_OID = GetUserData().Result;
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, User_OID);
-            KnownMovement.input_value = KnownMovement.KMValue.ToString();
-            return PartialView(KnownMovement);
-        }
-        public ActionResult KnownMovement_Delete(int id)
-        {
-            return KnownMovement_Details(id);
-        }
-        [HttpPost]
-        public ActionResult KnownMovement_Delete(KnownMovement k)
-        {
-            int result = DeleteItemN("KnownMovements", nameof(KnownMovement), k.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagKM"] = 1;
-                return RedirectToAction(nameof(KnownMovements));
-            }
-            return View();
-        }
 
 
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalFinanceFrontEnd.Controllers;
-using PersonalFinanceFrontEnd.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +15,10 @@ using System.Security.Claims;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-    public class GetUserDataController : Controller
+    public partial class PersonalFinanceController
     {
         
-        private readonly ILogger<GetUserDataController> _logger;
+        private readonly ILogger<PersonalFinanceController> _logger;
 
         private readonly GraphServiceClient _graphServiceClient;
 
@@ -29,7 +28,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-        public GetUserDataController(ILogger<GetUserDataController> logger,
+        public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
                             MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) 
@@ -42,7 +41,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         }
   
-        public async Task<string> GetUserID()
+        public async Task<string> GetUserData()
         {
             User currentUser = null;
             currentUser = await _graphServiceClient.Me.Request().GetAsync();
