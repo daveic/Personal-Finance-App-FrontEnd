@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using System;
 using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Mvc;
+using PersonalFinanceFrontEnd.Controllers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -50,6 +52,12 @@ namespace PersonalFinanceFrontEnd
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
+
+
+            //Test
+
+            //Add this line.
+            services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents());
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
