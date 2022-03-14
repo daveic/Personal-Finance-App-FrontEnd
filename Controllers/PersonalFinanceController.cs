@@ -55,8 +55,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), User_OID);
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);
-            ViewBag.Expirations = Expirations.Take(5).ToList();
+           // IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);
+           // ViewBag.Expirations = Expirations.Take(5).ToList();
 
             if (!Banks.Any())
             {
@@ -492,7 +492,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> Codes = new List<SelectListItem>();
             foreach (var item in UniqueCodes)
             {
-                SelectListItem code = new SelectListItem();
+                SelectListItem code = new();
                 code.Value = item.TrsCode;
                 code.Text = item.TrsCode;
                 Codes.Add(code);
@@ -506,9 +506,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (isPresent is true)
                 {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = credit.CredCode;
-                    code.Text = credit.CredCode;
+                    SelectListItem code = new SelectListItem
+                    {
+                        Value = credit.CredCode,
+                        Text = credit.CredCode
+                    };
                     Codes.Add(code);
                 }
                 isPresent = false;
@@ -521,9 +523,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (isPresent is false)
                 {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = debit.DebCode;
-                    code.Text = debit.DebCode;
+                    SelectListItem code = new SelectListItem
+                    {
+                        Value = debit.DebCode,
+                        Text = debit.DebCode
+                    };
                     Codes.Add(code);
                 }
                 isPresent = false;
@@ -1221,7 +1225,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             model.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             model.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
             List<Bank> BankList = new List<Bank>();
-            List<Ticket> TicketList = new List<Ticket>();
+            List<Ticket> TicketList = new();
             foreach (var item in model.Banks)
             {
                 item.input_value = item.BankValue.ToString();
@@ -1417,7 +1421,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public T GetItemIDN<T>(string controller, int id, string User_OID) where T : new()
         {
-            T detection = new T();
+            T detection = new();
             string path = "api/" + controller + "/Details" + "?id=" + id + "&User_OID=" + User_OID;
             using (var client = new HttpClient())
             {

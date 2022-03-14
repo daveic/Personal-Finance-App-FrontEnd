@@ -12,10 +12,10 @@ namespace PersonalFinanceFrontEnd.ViewComponents
 {
     public class PriorityListViewComponent : ViewComponent
     {
-        private IEnumerable<T> GetAllItems<T>(string controller, string type, string User_OID)
+        public IEnumerable<T> GetFirst<T>(string controller, string User_OID)
         {
             IEnumerable<T> detections = null;
-            string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
+            string path = "api/" + controller + "/GetFirst" + "?User_OID=" + User_OID;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
@@ -24,18 +24,14 @@ namespace PersonalFinanceFrontEnd.ViewComponents
                 var result = responseTask.Result;
                 var readTask = result.Content.ReadAsAsync<List<T>>();
                 readTask.Wait();
-                detections = readTask.Result.ToList();
+                detections = readTask.Result;
             }
             return (detections);
         }
 
         public async Task<IViewComponentResult> InvokeAsync(string User_OID)
         {
-            IEnumerable<Expiration> items = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID);
-                items= items.OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-
-            return await Task.FromResult((IViewComponentResult)View(items));
+            return await Task.FromResult((IViewComponentResult)View(GetFirst<Expiration>("Expirations", User_OID)));
         }
-
     }
 }
