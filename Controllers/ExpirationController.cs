@@ -103,7 +103,27 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
+        public ActionResult Expiration_Details(int id)
+        {
+            Expiration Expiration = GetItemIDN<Expiration>("Expirations", id, GetUserData().Result);
+            Expiration.input_value = Expiration.ExpValue.ToString();
+            return PartialView(Expiration);
+        }
+        public ActionResult Expiration_Delete(int id)
+        {
+            return Expiration_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Expiration_Delete(Expiration e)
+        {
+            int result = DeleteItemN("Expirations", e.ID, GetUserData().Result);
+            if (result == 0)
+            {
+                TempData["sendFlagT"] = 1;
+                return RedirectToAction(nameof(Expirations));
+            }
+            return View();
+        }
 
     }
 }

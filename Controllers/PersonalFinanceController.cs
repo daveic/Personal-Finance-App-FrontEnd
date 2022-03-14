@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -17,35 +16,16 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-    public partial class PersonalFinanceController : Controller //: GetUserDataController 
+    public partial class PersonalFinanceController : Controller
     {
-        //private readonly ILogger<PersonalFinanceController> _logger;
 
-        //private readonly GraphServiceClient _graphServiceClient;
-
-        //private readonly MicrosoftIdentityConsentAndConditionalAccessHandler _consentHandler;
-
-        //private string[] _graphScopes;
-
-        //public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
-        //                    IConfiguration configuration,
-        //                    GraphServiceClient graphServiceClient,
-        //                    MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) : base(logger, configuration, graphServiceClient, consentHandler)
-        //{
-        //    _logger = logger;
-        //    _graphServiceClient = graphServiceClient;
-        //    this._consentHandler = consentHandler;
-        //    _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
-
-
-        //}
         [Authorize]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
 
             string User_OID = GetUserData().Result;
-            //     var tst = new GetUserDataController(_logger, _graphScopes, _graphServiceClient, _consentHandler).GetUserID().Result;
+          
 
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
@@ -538,12 +518,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             t.input_value = t.TrsValue.ToString();
             return PartialView(t);
         }
-        public ActionResult Expiration_Details(int id)
-        {
-            Expiration Expiration = GetItemID<Expiration>(nameof(Expiration), id);
-            Expiration.input_value = Expiration.ExpValue.ToString();
-            return PartialView(Expiration);
-        }
+
 
         //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
         //public ActionResult Credit_Delete(int id)
@@ -638,46 +613,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult Expiration_Delete(int id)
-        {
-            return Expiration_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Expiration_Delete(Expiration e)
-        {
-            int result = DeleteItem(nameof(Expiration), e.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagT"] = 1;
-                ClaimsPrincipal currentUser = this.User;
-                return RedirectToAction(nameof(Expirations));
-            }
-            return View();
-        }
-        //public ActionResult Credit_Details(int id)
-        //{
-        //    string User_OID = GetUserData().Result;
 
-        //    Credit Credit = 
-        //        GetItemIDN<Credit>("Credits", "Details", id, User_OID);
-        //    Credit.input_value = Credit.CredValue.ToString();
-        //    return PartialView(Credit);
-        //}
-        //CREDITS Intermediate view
-        //[AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        //public ActionResult Credits()
-        //{
-       
-        //    //string User_OID = GetUserData().Result; //Fetch User Data
-        //    //Credits Credits = new Credits();
-        //    //Credits.CreditList = GetAllItemsN<Credit>("Credits", "Main", User_OID);
-        //    //ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
-        //    ////ViewModel viewModel = new ViewModel();
-        //    ////viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
-        //    ////int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
-        //    ////viewModel.state = sendFlag;
-        //    //return View(Credits);
-        //}
+
         //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
 
        
@@ -852,22 +789,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             viewModel.state = sendFlag;
             return View(viewModel);
         }
-        //WALLET Intermediate view
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Wallet()
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            ViewModel viewModel = new ViewModel();
-            viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
-            viewModel.Bank = new Bank();
-            viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);
-            viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID); ;
-            viewModel.Ticket = new Ticket();
-            viewModel.Contanti = viewModel.Banks.First();
-            return View(viewModel);
-        }
+
 
         
         //TRANSACTIONS Intermediate view
