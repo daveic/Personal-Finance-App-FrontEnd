@@ -30,7 +30,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewModel viewModel = new ViewModel();
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
+            IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", User_OID);
             IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
@@ -431,7 +431,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (isPresent is false)
                 {
-                    SelectListItem code = new SelectListItem
+                    SelectListItem code = new()
                     {
                         Value = debit.DebCode,
                         Text = debit.DebCode
@@ -448,32 +448,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
-        //DELETE: Controller methods for Delete-single-entry action - They send 1 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-        //public ActionResult Credit_Delete(int id)
-        //{
-        //    return Credit_Details(id);
-        //}
 
-        public ActionResult Debit_Delete(int id)
-        {
-            return Debit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Debit_Delete(Debit d)
-        {
-            Debit deb = GetItemID<Debit>(nameof(Debit), d.ID);
-            for(int i=0; i <= (deb.RtNum - deb.RtPaid); i++)
-            {
-                int res = DeleteItem("Expiration", (deb.Exp_ID + i));
-            }
-            int result = DeleteItem(nameof(Debit), d.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagDeb"] = 1;
-                return RedirectToAction(nameof(Debits));
-            }
-            return View();
-        }
+
+
         public ActionResult Transaction_Delete(int id)
         {
             return Transaction_Details(id);
@@ -498,55 +475,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
 
        
-        public ActionResult Debit_Edit(int id)
-        {
-            return Debit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Debit_Edit(Debit d, int i, bool fromTransaction)
-        {
-            if (i!=1)
-            {
-                d.input_value = d.input_value.Replace(".", ",");
-                d.DebValue = Convert.ToDouble(d.input_value);
-                d.input_value_remain = d.input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
-            }
 
-            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if(fromTransaction is false)
-            {
-                Debit oldDebit = GetItemID<Debit>("Debit", d.ID);
-                for (int k = 0; k <= (oldDebit.RtNum - oldDebit.RtPaid); k++)
-                {
-                    int res = DeleteItem("Expiration", (oldDebit.Exp_ID + k));
-                }
-                for (int j = 0; j < d.RtNum; j++)
-                {
-                    Expiration exp = new Expiration();
-                    exp.Usr_OID = d.Usr_OID;
-                    exp.ExpTitle = d.DebTitle;
-                    exp.ExpDescription = d.DebTitle + " - rata: " + (j + 1);
-                    if (d.RtFreq == "Mesi")
-                    {
-                        exp.ExpDateTime = d.DebInsDate.AddMonths(j * d.Multiplier);
-                    }
-                    exp.ColorLabel = "red";
-                    exp.ExpValue = d.DebValue / d.RtNum;
-                    AddItem<Expiration>("Expiration", exp);
-                }
-                IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
-                d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
-            }
-            
-            int result = EditItemID<Debit>(nameof(Debit), d);
-            if (result == 0)
-            {
-                TempData["sendFlagDeb"] = 2;
-                return RedirectToAction(nameof(Debits));
-            }
-            return View();
-        }
+        
         public ActionResult Transaction_Edit(int id)
         {
             ClaimsPrincipal currentUser = this.User;
@@ -692,7 +622,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                               .Select(x => x.First())
                               .ToList();
-            List<SelectListItem> Codes = new List<SelectListItem>();
+            List<SelectListItem> Codes = new();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new SelectListItem();
@@ -932,9 +862,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public int Transaction_Balance_Update(string User_OID)
         {
-            Balance b = new Balance();
-            b.Usr_OID = User_OID;
-            b.BalDateTime = DateTime.UtcNow;
+            Balance b = new()
+            {
+                Usr_OID = User_OID,
+                BalDateTime = DateTime.UtcNow
+            };
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
 
             double totTransaction = 0;
@@ -959,7 +891,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     if(t.TrsCode == debit.DebCode)
                     {
                         debit.RemainToPay += t.TrsValue;
-                        debit.RtPaid = debit.RtPaid + (-t.TrsValue) / (debit.DebValue / debit.RtNum);
+                        debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
                         DeleteItem(nameof(Expiration), (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)));
                         
                         if(debit.RemainToPay <= 0)

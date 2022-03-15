@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
+using System.Net.Http.Json;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -24,18 +25,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             Debits debits = new()
             {
                 DebitList = GetAllItemsN<Debit>("Debits", GetUserData().Result)
-            };
-            //viewModel.Debits = 
-            //List<SelectListItem> Frequency = new List<SelectListItem>();
-            /* List<string> Codes = {["Settimana", "Mese", "Anno"]};
-            foreach (var item in UniqueCodes)
-             {
-                 SelectListItem code = new SelectListItem();
-                 code.Value = item.TrsCode;
-                 code.Text = item.TrsCode;
-                 Codes.Add(code);
-             }*/
-            
+            };            
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
             return View(debits);
         }
@@ -48,8 +38,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Debit_Add()
         {
-            Debit model = new Debit();
-            model.DebDateTime = DateTime.MinValue;
+            Debit model = new()
+            {
+                DebDateTime = DateTime.MinValue
+            };
             return View(model);
         }
         [HttpPost]
@@ -88,7 +80,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             //}
             //IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
             //d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
-            int result = AddItemN<Debit>("Debits", d);
+            int result = AddItemN<Debit>("Debits", d); //????
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 3;
@@ -97,5 +89,66 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
+        public ActionResult Debit_Edit(int id)
+        {
+            return Debit_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Debit_Edit(Debit d, int i, bool fromTransaction)
+        {
+            if (i != 1)
+            {
+                d.input_value = d.input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.input_value);
+                d.input_value_remain = d.input_value_remain.Replace(".", ",");
+                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+            }
+            d.Usr_OID = GetUserData().Result;
+            int result = EditItemID<Debit>(nameof(Debit), d);
+            if (result == 0)
+            {
+                TempData["sendFlagDeb"] = 2;
+                return RedirectToAction(nameof(Debits));
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Debit_Exp_Update(Debit d, bool fromTransaction)
+        {
+            Debit_Exp dexp = new()
+            {
+                Debit = d,
+                FromTransaction = fromTransaction
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Debits/");
+                var postTask = client.PutAsJsonAsync<Debit_Exp>("UpdateExpOnDebit", dexp);
+                postTask.Wait();
+                var result = postTask.Result;
+            }
+            return RedirectToAction(nameof(KnownMovements));
+        }
+        public ActionResult Debit_Delete(int id)
+        {
+            return Debit_Details(id);
+        }
+        [HttpPost]
+        public ActionResult Debit_Delete(Debit d)
+        {
+            Debit deb = GetItemIDN<Debit>("Debits", d.ID, GetUserData().Result);
+            for (int i = 0; i <= (deb.RtNum - deb.RtPaid); i++)
+            {
+                int res = DeleteItemN("Expirations", (deb.Exp_ID + i), GetUserData().Result);
+            }
+            int result = DeleteItemN("Debits", d.ID, GetUserData().Result);
+            if (result == 0)
+            {
+                TempData["sendFlagDeb"] = 1;
+                return RedirectToAction(nameof(Debits));
+            }
+            return View();
+        }
+
     }
 }

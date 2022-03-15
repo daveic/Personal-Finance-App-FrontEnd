@@ -29,4 +29,9 @@ namespace PersonalFinanceFrontEnd.Models
         public Debit Debit { get; set; }
         public IEnumerable<Debit> DebitList { get; set; }
     }
+    public class Debit_Exp
+    {
+        public Debit Debit { get; set; }
+        public bool FromTransaction { get; set; }
+    }
 }
