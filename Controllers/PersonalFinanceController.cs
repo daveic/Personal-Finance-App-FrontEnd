@@ -444,19 +444,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-        [HttpPost]
-        public ActionResult Transaction_Delete(Transaction t)
-        {
-            int result = DeleteItem(nameof(Transaction), t.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagTr"] = 1;
-                ClaimsPrincipal currentUser = this.User;
-                Transaction_Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-                return RedirectToAction(nameof(Transactions));
-            }
-            return View();
-        }
+
 
 
 
@@ -721,34 +709,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         //ADD NEW Methods
 
         
-        public IActionResult Transaction_Add()
-        {
-            return View(new Transaction());
-        }
-        [HttpPost]
-        public ActionResult Transaction_Add(Transaction t)
-        {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.input_value);
-            if (t.Type == false) t.TrsValue = -t.TrsValue;
-            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            t.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", t);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["sendFlagTr"] = 3;
-                    Transaction_Balance_Update(t.Usr_OID);
-                    Transaction_Credit_Debit_Update(t);
-                    return RedirectToAction(nameof(Transactions));
-                }
-            }            
-            return View();
-        }
+
 
         
 
