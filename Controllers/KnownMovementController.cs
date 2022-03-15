@@ -79,11 +79,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return RedirectToAction(nameof(KnownMovements));
         }
-        //[Route("PersonalFinance/KnownMovement_Details/{id}")]
         public ActionResult KnownMovement_Details(int id)
         {
-            string User_OID = GetUserData().Result;
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, User_OID);
+            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, GetUserData().Result);
             KnownMovement.input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }

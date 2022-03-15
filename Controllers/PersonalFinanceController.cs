@@ -160,7 +160,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> Codes = new List<SelectListItem>();
             foreach (var item in UniqueCodes)
             {
-                SelectListItem code = new SelectListItem();
+                SelectListItem code = new();
                 code.Value = item.TrsCode;
                 code.Text = item.TrsCode;
                 Codes.Add(code);
@@ -378,16 +378,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
 
-        //DETAILS: Controller methods for detail action - GET-BY-ID
-
-
-
        
-        public ActionResult Transaction_Details(int id)
-        {
-            Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);
-            return PartialView(Transaction);
-        }
+
         public ActionResult Transaction_Details_Edit(int id, string User_OID)
         {
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
@@ -451,10 +443,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-        public ActionResult Transaction_Delete(int id)
-        {
-            return Transaction_Details(id);
-        }
+
         [HttpPost]
         public ActionResult Transaction_Delete(Transaction t)
         {
@@ -677,7 +666,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.In = Expirations.Where(x => x.ExpValue >= 0);
             ViewBag.Out = Expirations.Where(x => x.ExpValue < 0);
             
-             ViewModel viewModel = new ViewModel();
+             ViewModel viewModel = new();
             viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             viewModel.Bank = new Bank();
             viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);

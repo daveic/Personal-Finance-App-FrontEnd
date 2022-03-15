@@ -25,23 +25,13 @@ namespace PersonalFinanceFrontEnd.Controllers
                 readTask.Wait();
                 detections = readTask.Result;
             }
-
             return (detections);
         }
         //WALLET Intermediate view
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Wallet()
         {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            var wallet = GetWallet<Wallet>("Wallet", User_OID);
-            //ViewModel viewModel = new ViewModel();
-            //viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
-            //viewModel.Bank = new Bank();
-            //viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);
-            //viewModel.Deposit = new Deposit();
-            //viewModel.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID); ;
-            //viewModel.Ticket = new Ticket();
-            //viewModel.Contanti = viewModel.Banks.First();
+            var wallet = GetWallet<Wallet>("Wallet", GetUserData().Result);
             return View(wallet);
         }
         public ActionResult Bank_Details(int id)
