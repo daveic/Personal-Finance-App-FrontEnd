@@ -28,17 +28,17 @@ namespace PersonalFinanceFrontEnd.Controllers
           
 
             ViewModel viewModel = new ViewModel();
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
             IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
             IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", User_OID);
             IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
-            IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
-            IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), User_OID);
+            IEnumerable<Deposit> Deposits = GetAllItemsN<Deposit>("Deposits", User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
+            IEnumerable<Balance> Balances = GetAllItemsN<Balance>("Balances", User_OID);
 
             if (!Banks.Any())
             {
-                Bank b = new Bank { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
+                Bank b = new() { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
                 int result = AddItem<Bank>(nameof(Bank), b);
             }
             double TransactionSum = 0;
@@ -380,64 +380,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
        
 
-        public ActionResult Transaction_Details_Edit(int id, string User_OID)
-        {
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
-            Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
-            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                                          .Select(x => x.First())
-                                          .ToList();
-            List<SelectListItem> Codes = new List<SelectListItem>();
-            foreach (var item in UniqueCodes)
-            {
-                SelectListItem code = new();
-                code.Value = item.TrsCode;
-                code.Text = item.TrsCode;
-                Codes.Add(code);
-            }
-            bool isPresent = false;
-            foreach (var credit in Credits)
-            {
-                foreach (var item in Codes)
-                {
-                    if (credit.CredCode == item.Value) isPresent = true;
-                }
-                if (isPresent is true)
-                {
-                    SelectListItem code = new SelectListItem
-                    {
-                        Value = credit.CredCode,
-                        Text = credit.CredCode
-                    };
-                    Codes.Add(code);
-                }
-                isPresent = false;
-            }
-            foreach (var debit in Debits)
-            {
-                foreach (var item in Codes)
-                {
-                    if (debit.DebCode == item.Value) isPresent = true;
-                }
-                if (isPresent is false)
-                {
-                    SelectListItem code = new()
-                    {
-                        Value = debit.DebCode,
-                        Text = debit.DebCode
-                    };
-                    Codes.Add(code);
-                }
-                isPresent = false;
-            }
-            TempData["Codes"] = Codes;            
-          
-            if (t.TrsValue < 0) t.Type = false; else t.Type = true;
-            t.input_value = t.TrsValue.ToString();
-            return PartialView(t);
-        }
 
 
 
@@ -447,38 +389,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-
-        //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
-
-       
-
-        
-        public ActionResult Transaction_Edit(int id)
-        {
-            ClaimsPrincipal currentUser = this.User;
-            string User_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;            
-            return Transaction_Details_Edit(id, User_OID);
-        }
-        [HttpPost]
-        public ActionResult Transaction_Edit(Transaction t)
-        {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.input_value);
-            if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
-            if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
-            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            ClaimsPrincipal currentUser = this.User;
-            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Transaction>(nameof(Transaction), t);
-            if (result == 0)
-            {
-                TempData["sendFlagTr"] = 2;
-                Transaction_Balance_Update(t.Usr_OID);
-                return RedirectToAction(nameof(Transactions));
-            }
-            return View();
-        }
         
 
 
@@ -488,7 +398,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credits_Debits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
             ViewModel viewModel = new ViewModel();
             viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
             viewModel.Credit = new Credit();
@@ -502,134 +411,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         
         //TRANSACTIONS Intermediate view
-        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
-            ViewModel viewModel = new ViewModel();
-
-            //############################################################################################################################
-            //FILTRI ANNO E MESE PER GRAFICO SALDO
-            //############################################################################################################################
-            //Trovo gli anni "unici"
-            var UniqueYear = Transactions.GroupBy(item => item.TrsDateTime.Year)
-                    .Select(group => group.First())
-                    .Select(item => item.TrsDateTime.Year)
-                    .ToList();
-            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYear = new List<SelectListItem>();
-            foreach (var year in UniqueYear) itemlistYear.Add(new SelectListItem() { Text = year.ToString(), Value = year.ToString() });
-            //Passo alla view la lista
-            ViewBag.ItemList = itemlistYear;
-            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
-            if (!String.IsNullOrEmpty(selectedYear)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Year.ToString() == selectedYear);
-            //############################################################################################################################
-            //Trovo i mesi "unici"
-            var UniqueMonth = Transactions.GroupBy(item => item.TrsDateTime.Month)
-                                .Select(group => group.First())
-                                .Select(item => item.TrsDateTime.Month)
-                                .ToList();
-            //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistMonth = new List<SelectListItem>();
-            foreach (var month in UniqueMonth) itemlistMonth.Add(new SelectListItem() { Text = MonthConverter(month), Value = MonthConverter(month) });            
-            //Passo alla view la lista
-            ViewBag.ItemListMonth = itemlistMonth;
-            //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonth)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonth);
-            //############################################################################################################################
-
-            List<SelectListItem> types = new List<SelectListItem>();
-            SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate"};
-            types.Add(entrate);
-            SelectListItem uscite = new SelectListItem() { Text = "Uscite", Value = "Uscite" };
-            types.Add(uscite);
-            ViewBag.Type = types;
-            
-            if (!String.IsNullOrEmpty(selectedCode)) Transactions = Transactions.AsQueryable().Where(x => x.TrsCode == selectedCode);
-            if (!String.IsNullOrEmpty(selectedType)) { 
-                if(selectedType=="Entrate") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue >= 0);
-                else if (selectedType == "Uscite") Transactions = Transactions.AsQueryable().Where(x => x.TrsValue < 0);
-            }
-            //############################################################################################################################
-            //############################################################################################################################
-
-            Transactions = Transactions.Reverse();
-            //## ORDINAMENTO #############################################################################################################
-            List<SelectListItem> orderByList = new List<SelectListItem>();
-            SelectListItem datetimeAsc = new SelectListItem() { Text = "Data crescente", Value = "Data crescente" };
-            SelectListItem datetimeDesc = new SelectListItem() { Text = "Data decrescente", Value = "Data decrescente" };
-            SelectListItem categ = new SelectListItem() { Text = "Categoria", Value = "Categoria" };
-            SelectListItem type = new SelectListItem() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
-            orderByList.Add(datetimeAsc);
-            orderByList.Add(datetimeDesc);
-            orderByList.Add(categ);
-            orderByList.Add(type);
-
-            ViewBag.OrderBy = orderByList;
-            if (!String.IsNullOrEmpty(orderBy))
-            {
-                if (orderBy == "Data crescente") Transactions = Transactions.OrderBy(x => x.TrsDateTime);
-                else if (orderBy == "Data decrescente") Transactions = Transactions.OrderByDescending(x => x.TrsDateTime);
-                else if (orderBy == "Categoria") Transactions = Transactions.OrderBy(x => x.TrsCode);
-                else if (orderBy == "Entrate/Uscite") Transactions = Transactions.OrderByDescending(x => x.TrsValue);
-            }
-            List<string> LastChoices = new List<string>();
-            LastChoices.Add(orderBy);
-            LastChoices.Add(selectedType);
-            LastChoices.Add(selectedCode);
-            LastChoices.Add(selectedMonth);
-            LastChoices.Add(selectedYear);
-
-            //Pagination
-            ViewBag.LastChoices = LastChoices;
-            const int PageSize = 20;
-            var count = Transactions.Count();
-            var data = Transactions.Skip(page * PageSize).Take(PageSize).ToList();
-            this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
-            this.ViewBag.Page = page;
-
-            viewModel.Transactions = data;
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
-            viewModel.state = sendFlag;
-
-            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                              .Select(x => x.First())
-                              .ToList();
-            List<SelectListItem> Codes = new();
-            foreach (var item in UniqueCodes)
-            {
-                SelectListItem code = new SelectListItem();
-                code.Value = item.TrsCode;
-                code.Text = item.TrsCode;
-                Codes.Add(code);
-            }
-            bool isPresent = false;
-            foreach (var credit in Credits)
-            {
-                foreach(var item in Codes)
-                {
-                    if (credit.CredCode == item.Value) isPresent = true;
-                }
-                if (isPresent is false) Codes.Add(new SelectListItem() { Text = credit.CredCode, Value = credit.CredCode });                
-                isPresent = false;
-            }
-            foreach (var debit in Debits)
-            {
-                foreach (var item in Codes)
-                {
-                    if (debit.DebCode == item.Value) isPresent = true;
-                }
-                if (isPresent is false) Codes.Add(new SelectListItem() {Text = debit.DebCode, Value = debit.DebCode});                
-                isPresent = false;
-            }
-            TempData["Codes"] = Codes;
-            viewModel.Transaction = new Transaction();
-            return View(viewModel);
-        }
+       
         //BUDGET Intermediate view        
         public ActionResult Budget()
         {
@@ -988,34 +770,9 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-        //REFACTORED
-
-
-
     }
 
 
 
 
-
-
-
-
 }
-
-
-
-
-
