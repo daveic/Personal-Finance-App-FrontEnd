@@ -219,53 +219,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
 
 
-
-
-
-        //public async Task<string> GetUserData()
-        //{
-        //    User currentUser = null;
-        //    currentUser = await _graphServiceClient.Me.Request().GetAsync();
-        //    // Get user photo
-        //    using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
-        //    {
-        //        byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-        //        ViewData["Photo"] = Convert.ToBase64String(photoByte);
-        //    }          
-        //    //ViewData["Me"] = currentUser;
-        //    ViewBag.Name = currentUser.GivenName;
-        //    ViewBag.Email = currentUser.UserPrincipalName;
-        //    ViewBag.id = currentUser;
-        //    ClaimsPrincipal LoggedUser = this.User;
-        //    return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-        //}
-
-
-
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         private void GetDonutData(IEnumerable<Transaction> Transactions, int type)
         {
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
@@ -437,24 +390,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return PartialView(Debit);
         }
 
-        public ActionResult Bank_Details(int id)
-        {
-            Bank Bank = GetItemID<Bank>(nameof(Bank), id);
-            Bank.input_value = Bank.BankValue.ToString();
-            return PartialView(Bank);
-        }
-        public ActionResult Deposit_Details(int id)
-        {
-            Deposit Deposit = GetItemID<Deposit>(nameof(Deposit), id);
-            Deposit.input_value = Deposit.DepValue.ToString();
-            return PartialView(Deposit);
-        }
-        public ActionResult Ticket_Details(int id)
-        {
-            Ticket Ticket = GetItemID<Ticket>(nameof(Ticket), id);
-            Ticket.input_value = Ticket.TicketValue.ToString();
-            return PartialView(Ticket);
-        }
+       
         public ActionResult Transaction_Details(int id)
         {
             Transaction Transaction = GetItemID<Transaction>(nameof(Transaction), id);
@@ -564,55 +500,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
 
-        public ActionResult Bank_Delete(int id)
-        {
-            return Bank_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Bank_Delete(Bank b)
-        {
-            int result = DeleteItem(nameof(Bank), b.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagB"] = 1;
-                ClaimsPrincipal currentUser = this.User;
-                Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public ActionResult Deposit_Delete(int id)
-        {
-            return Deposit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Deposit_Delete(Deposit d)
-        {
-            int result = DeleteItem(nameof(Deposit), d.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagD"] = 1;
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public ActionResult Ticket_Delete(int id)
-        {
-            return Ticket_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Ticket_Delete(Ticket t)
-        {
-            int result = DeleteItem(nameof(Ticket), t.ID);
-            if (result == 0)
-            {
-                TempData["sendFlagT"] = 1;
-                ClaimsPrincipal currentUser = this.User;                
-                Balance_Update(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
+
 
 
         //EDIT: Controller methods for Updating/Editing-single-entry action - They send 2 if succeded to let green confirmation popup appear (TempData["sendFlag.."])
@@ -693,65 +581,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
         
-        public ActionResult Bank_Edit(int id)
-        {
-            return Bank_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Bank_Edit(Bank b)
-        {
-            b.input_value = b.input_value.Replace(".", ",");
-            b.BankValue = Convert.ToDouble(b.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            b.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Bank>(nameof(Bank), b);
-            if (result == 0)
-            {
-                TempData["sendFlagB"] = 2;
-                Balance_Update(b.Usr_OID);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public ActionResult Deposit_Edit(int id)
-        {
-            return Deposit_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Deposit_Edit(Deposit d)
-        {
-            d.input_value = d.input_value.Replace(".", ",");
-            d.DepValue = Convert.ToDouble(d.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            d.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Deposit>(nameof(Deposit), d);
-            if (result == 0)
-            {
-                TempData["sendFlagD"] = 2;
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public ActionResult Ticket_Edit(int id)
-        {
-            return Ticket_Details(id);
-        }
-        [HttpPost]
-        public ActionResult Ticket_Edit(Ticket t)
-        {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TicketValue = Convert.ToDouble(t.input_value);
-            ClaimsPrincipal currentUser = this.User;
-            t.Usr_OID = currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = EditItemID<Ticket>(nameof(Ticket), t);
-            if (result == 0)
-            {
-                TempData["sendFlagT"] = 2;
-                Balance_Update(t.Usr_OID);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
+
 
         //VIEWS
         //CREDITS DEBITS Intermediate view
@@ -1078,63 +908,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View();
         }
 
-        public IActionResult Bank_Add()
-        {
-            return View(new Bank());
-        }
-        [HttpPost]
-        public ActionResult Bank_Add(Bank b)
-        {
-            b.input_value = b.input_value.Replace(".", ",");
-            b.BankValue = Convert.ToDouble(b.input_value);
-            b.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = AddItem<Bank>(nameof(Bank), b);
-            if (result == 0)
-            {
-                TempData["sendFlagB"] = 3;
-                Balance_Update(b.Usr_OID);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public IActionResult Deposit_Add()
-        {
-            return View(new Deposit());
-        }
-        [HttpPost]
-        public ActionResult Deposit_Add(Deposit d)
-        {
-            d.input_value = d.input_value.Replace(".", ",");
-            d.DepValue = Convert.ToDouble(d.input_value);
-            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = AddItem<Deposit>(nameof(Deposit), d);
-            if (result == 0)
-            {
-                TempData["sendFlagD"] = 3;
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
-        public IActionResult Ticket_Add()
-        {
-            return View(new Ticket());
-        }
-        [HttpPost]
-        public ActionResult Ticket_Add(Ticket t)
-        {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TicketValue = Convert.ToDouble(t.input_value);
-            t.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            int result = AddItem<Ticket>(nameof(Ticket), t);
-            if (result == 0)
-            {
-                Balance_Update(t.Usr_OID);
-                TempData["sendFlagT"] = 3;
-                Balance_Update(t.Usr_OID);
-                return RedirectToAction(nameof(Wallet));
-            }
-            return View();
-        }
+        
 
 
 
@@ -1278,13 +1052,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (t.TrsCode.StartsWith("CRE"))
                 {
-                    Credit model = new Credit();
-                    model.Usr_OID = t.Usr_OID;
-                    model.CredCode = t.TrsCode;
-                    model.CredDateTime = DateTime.UtcNow;
-                    model.CredValue = t.TrsValue;
-                    model.CredTitle = "Prestito/Anticipo";
-                    model.CredNote = "";
+                    Credit model = new()
+                    {
+                        Usr_OID = t.Usr_OID,
+                        CredCode = t.TrsCode,
+                        CredDateTime = DateTime.UtcNow,
+                        CredValue = t.TrsValue,
+                        CredTitle = "Prestito/Anticipo",
+                        CredNote = ""
+                    };
                     Credit_Add(model, 1);
                 }
 
