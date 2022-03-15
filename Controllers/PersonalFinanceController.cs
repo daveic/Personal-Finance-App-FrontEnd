@@ -31,12 +31,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
             IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
             IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
-            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
+            IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
             IEnumerable<Deposit> Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", nameof(Deposits), User_OID);
             IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
             IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), User_OID);
-           // IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month);
-           // ViewBag.Expirations = Expirations.Take(5).ToList();
 
             if (!Banks.Any())
             {
@@ -382,13 +380,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         //DETAILS: Controller methods for detail action - GET-BY-ID
 
-        public ActionResult Debit_Details(int id)
-        {
-            Debit Debit = GetItemID<Debit>(nameof(Debit), id);
-            Debit.input_value = Debit.DebValue.ToString();
-            Debit.input_value_remain = Debit.RemainToPay.ToString();
-            return PartialView(Debit);
-        }
+
 
        
         public ActionResult Transaction_Details(int id)
@@ -598,27 +590,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return View(viewModel);
         }
 
-        //DEBITS Intermediate view
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Debits()
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            ViewModel viewModel = new ViewModel();
-            viewModel.Debits = GetAllItems<Debit>("PersonalFinanceAPI", "Debits", User_OID);
-            List<SelectListItem> Frequency = new List<SelectListItem>();
-           /* List<string> Codes = {["Settimana", "Mese", "Anno"]};
-           foreach (var item in UniqueCodes)
-            {
-                SelectListItem code = new SelectListItem();
-                code.Value = item.TrsCode;
-                code.Text = item.TrsCode;
-                Codes.Add(code);
-            }*/
-            int sendFlag = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
-            viewModel.state = sendFlag;
-            return View(viewModel);
-        }
+
 
 
         
@@ -829,56 +801,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         //ADD NEW Methods
 
-        public IActionResult Debit_Add()
-        {
-            Debit model = new Debit();
-            model.DebDateTime = DateTime.MinValue;
-            return View(model);
-        }
-        [HttpPost]
-        public ActionResult Debit_Add(Debit d, int i)
-        {
-            if (i != 1)
-            {
-                d.input_value_remain = d.input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
-                d.input_value = d.input_value.Replace(".", ",");
-                d.DebValue = Convert.ToDouble(d.input_value);
-            }
-            d.Usr_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            if(d.DebDateTime == DateTime.MinValue)
-            {
-                d.DebDateTime = d.DebInsDate.AddMonths(Convert.ToInt32((d.RtNum * d.Multiplier)));
-            }
-
-            for (int k = 0; k < d.RtNum; k++){
-                Expiration exp = new Expiration();
-                exp.Usr_OID = d.Usr_OID;
-                exp.ExpTitle = d.DebTitle;
-                exp.ExpDescription = d.DebTitle + "rata: " + (k+1);
-                if(d.RtFreq == "Mesi")
-                {
-                    exp.ExpDateTime = d.DebInsDate.AddMonths(k*d.Multiplier);
-                }
-                if (d.RtFreq == "Anni")
-                {
-                    exp.ExpDateTime = d.DebInsDate.AddYears(k * d.Multiplier);
-                }
-                exp.ColorLabel = "red";
-                    exp.ExpValue = d.DebValue/d.RtNum;
-                    AddItem<Expiration>("Expiration", exp);
-                }
-            IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
-            d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
-            int result = AddItem<Debit>(nameof(Debit), d);
-            if (result == 0)
-            {
-                TempData["sendFlagDeb"] = 3;
-                
-                return RedirectToAction(nameof(Debits));
-            }
-            return View();
-        }
+        
         public IActionResult Transaction_Add()
         {
             return View(new Transaction());

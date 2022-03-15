@@ -22,6 +22,5 @@ namespace PersonalFinanceFrontEnd.Models
     {
         public Credit Credit { get; set; }
         public IEnumerable<Credit> CreditList { get; set; }
-
     }
 }

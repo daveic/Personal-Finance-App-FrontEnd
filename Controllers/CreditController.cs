@@ -17,6 +17,12 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
+        public ActionResult Credit_Details(int id)
+        {
+            Credit Credit = GetItemIDN<Credit>("Credits", id, GetUserData().Result);
+            Credit.input_value = Credit.CredValue.ToString();
+            return PartialView(Credit);
+        }
         public ActionResult Credit_Edit(int id)
         {
             return Credit_Details(id);
@@ -86,14 +92,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public ActionResult Credit_Details(int id)
-        {
-            string User_OID = GetUserData().Result;
 
-            Credit Credit = GetItemIDN<Credit>("Credits", id, User_OID);
-            Credit.input_value = Credit.CredValue.ToString();
-            return PartialView(Credit);
-        }
         //CREDITS Intermediate view
         [Route("PersonalFinance/Credits")]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]

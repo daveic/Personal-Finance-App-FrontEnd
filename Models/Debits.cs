@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace PersonalFinanceFrontEnd.Models
 {
@@ -22,5 +23,10 @@ namespace PersonalFinanceFrontEnd.Models
         public string input_value_remain { get; set; }
         public string DebNote { get; set; }
         public int Exp_ID { get; set; }
+    }
+    public class Debits
+    {
+        public Debit Debit { get; set; }
+        public IEnumerable<Debit> DebitList { get; set; }
     }
 }

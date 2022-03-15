@@ -1,4 +1,4 @@
-﻿@model ViewModel
+﻿@model Debits
 
 <h3>Debiti</h3>
 <br />
@@ -75,21 +75,21 @@
 </div>
 
 
-@if (Model.state == 1)
+@if (ViewBag.state == 1)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Debito rimosso correttamente.</p>
     </div>
 }
-else if (Model.state == 2)
+else if (ViewBag.state == 2)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Debito modificato correttamente.</p>
     </div>
 }
-else if (Model.state == 3)
+else if (ViewBag.state == 3)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -136,7 +136,7 @@ else if (Model.state == 3)
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Debits)
+                                @foreach (var item in Model.DebitList)
                                 {
                                     <tr>
                                         <td>@item.ID</td>
