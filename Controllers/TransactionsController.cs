@@ -17,22 +17,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-        public IEnumerable<T> GetAllItemsN<T>(string controller, string User_OID)
-        {
-            IEnumerable<T> detections = null;
-            string path = "api/" + controller + "/All" + "?User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<T>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-            return (detections);
-        }
         public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
@@ -84,11 +68,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (!String.IsNullOrEmpty(selectedMonth)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonth);
             ////############################################################################################################################
 
-            List<SelectListItem> types = new List<SelectListItem>();
-            SelectListItem entrate = new SelectListItem() { Text = "Entrate", Value = "Entrate" };
-            types.Add(entrate);
-            SelectListItem uscite = new SelectListItem() { Text = "Uscite", Value = "Uscite" };
-            types.Add(uscite);
+            List<SelectListItem> types = new()
+            {
+                new SelectListItem() { Text = "Entrate", Value = "Entrate" },
+                new SelectListItem() { Text = "Uscite", Value = "Uscite" }
+            };
             ViewBag.Type = types;
 
             if (!String.IsNullOrEmpty(selectedCode)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsCode == selectedCode);
@@ -102,11 +86,11 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             TrsAPI.Trs = TrsAPI.Trs.Reverse();
             //## ORDINAMENTO #############################################################################################################
-            List<SelectListItem> orderByList = new List<SelectListItem>();
-            SelectListItem datetimeAsc = new SelectListItem() { Text = "Data crescente", Value = "Data crescente" };
-            SelectListItem datetimeDesc = new SelectListItem() { Text = "Data decrescente", Value = "Data decrescente" };
-            SelectListItem categ = new SelectListItem() { Text = "Categoria", Value = "Categoria" };
-            SelectListItem type = new SelectListItem() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
+            List<SelectListItem> orderByList = new();
+            SelectListItem datetimeAsc = new() { Text = "Data crescente", Value = "Data crescente" };
+            SelectListItem datetimeDesc = new() { Text = "Data decrescente", Value = "Data decrescente" };
+            SelectListItem categ = new() { Text = "Categoria", Value = "Categoria" };
+            SelectListItem type = new() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
             orderByList.Add(datetimeAsc);
             orderByList.Add(datetimeDesc);
             orderByList.Add(categ);
@@ -120,12 +104,14 @@ namespace PersonalFinanceFrontEnd.Controllers
                 else if (orderBy == "Categoria") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsCode);
                 else if (orderBy == "Entrate/Uscite") TrsAPI.Trs = TrsAPI.Trs.OrderByDescending(x => x.TrsValue);
             }
-            List<string> LastChoices = new List<string>();
-            LastChoices.Add(orderBy);
-            LastChoices.Add(selectedType);
-            LastChoices.Add(selectedCode);
-            LastChoices.Add(selectedMonth);
-            LastChoices.Add(selectedYear);
+            List<string> LastChoices = new()
+            {
+                orderBy,
+                selectedType,
+                selectedCode,
+                selectedMonth,
+                selectedYear
+            };
 
             //Pagination
             ViewBag.LastChoices = LastChoices;

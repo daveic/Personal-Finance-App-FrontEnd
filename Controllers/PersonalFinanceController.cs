@@ -71,7 +71,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                                     .Select(x => new { Year = x.Key })
                                     .ToList();
             //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYear = new List<SelectListItem>();
+            List<SelectListItem> itemlistYear = new();
             foreach (var year in UniqueYear)
             {
                 SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
@@ -125,7 +125,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         .Select(x => new { Month = x.Key })
                         .ToList();
             //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistMonthTr = new List<SelectListItem>();
+            List<SelectListItem> itemlistMonthTr = new();
             foreach (var month in UniqueMonthTr)
             {
                 SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
@@ -505,7 +505,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewModel model = new();
             model.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
             model.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
-            List<Bank> BankList = new List<Bank>();
+            List<Bank> BankList = new();
             List<Ticket> TicketList = new();
             foreach (var item in model.Banks)
             {
@@ -557,7 +557,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public int Balance_Update(string User_OID)
         {
-            Balance b = new Balance();
+            Balance b = new();
             b.Usr_OID = User_OID;
             b.BalDateTime = DateTime.UtcNow;
             IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
@@ -579,7 +579,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 totTransaction += item.TrsValue;
             }
 
-            Transaction tr = new Transaction() { Usr_OID = User_OID, TrsCode = "Fast_Update", TrsTitle = "Allineamento Fast Update", TrsDateTime = DateTime.UtcNow, TrsValue = tot - totTransaction, TrsNote = "Allineamento Fast Update eseguito il " + DateTime.UtcNow };
+            Transaction tr = new() { Usr_OID = User_OID, TrsCode = "Fast_Update", TrsTitle = "Allineamento Fast Update", TrsDateTime = DateTime.UtcNow, TrsValue = tot - totTransaction, TrsNote = "Allineamento Fast Update eseguito il " + DateTime.UtcNow };
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
