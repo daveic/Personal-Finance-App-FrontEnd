@@ -1,4 +1,4 @@
-﻿@model ViewModel
+﻿@model TrsToView
 
 <h2>Archivio Transazioni</h2>
 <br />
@@ -74,21 +74,21 @@
     </div>
 </div>
 
-@if (Model.state == 1)
+@if (ViewBag.state == 1)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
     </div>
 }
-else if (Model.state == 2)
+else if (ViewBag.state == 2)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione modificata correttamente.</p>
     </div>
 }
-else if (Model.state == 3)
+else if (ViewBag.state == 3)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

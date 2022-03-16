@@ -26,9 +26,15 @@ namespace PersonalFinanceFrontEnd.Models
     }
     public class Transactions
     {
-        public KnownMovement KnownMovement { get; set; }
-        public IEnumerable<KnownMovement> KnownMovementList { get; set; }
-        public KnownMovement_Exp KnownMovement_Exp { get; set; }
+        public IEnumerable<Transaction> Trs { get; set; }
+        public List<SelectListItem> ItemListYear { get; set; }
+        public List<SelectListItem> ItemListMonth { get; set; }
+        public List<SelectListItem> Codes { get; set; }
+    }
+    public class TrsToView
+    {
+        public IEnumerable<Transaction> Transactions { get; set; }
+        public Transaction Transaction { get; set; }
     }
 }
     
