@@ -175,8 +175,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Transaction_Add(Transaction t)
         {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.input_value);
+            t.Input_value = t.Input_value.Replace(".", ",");
+            t.TrsValue = Convert.ToDouble(t.Input_value);
             if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
             t.Usr_OID = GetUserData().Result;
@@ -202,7 +202,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Transaction_Details_Edit(int id, string User_OID)
         {
-            Transaction t = GetItemID<Transaction>(nameof(Transaction), id);
+            Transaction t = GetItemIDN<Transaction>("Transactions", id, User_OID);
             //IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
             //IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
             //IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
@@ -266,15 +266,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
             }
             if (t.TrsValue < 0) t.Type = false; else t.Type = true;
-            t.input_value = t.TrsValue.ToString();
+            t.Input_value = t.TrsValue.ToString();
             return PartialView(t);
         }
 
         [HttpPost]
         public ActionResult Transaction_Edit(Transaction t)
         {
-            t.input_value = t.input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.input_value);
+            t.Input_value = t.Input_value.Replace(".", ",");
+            t.TrsValue = Convert.ToDouble(t.Input_value);
             if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
             if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
@@ -287,6 +287,81 @@ namespace PersonalFinanceFrontEnd.Controllers
                 return RedirectToAction(nameof(Transactions));
             }
             return View();
+        }
+        public int Transaction_Credit_Debit_Update(Transaction t)
+        {
+            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), t.Usr_OID);
+            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), t.Usr_OID);
+
+            if (t.TrsValue < 0)
+            {
+                foreach (var debit in Debits)
+                {
+                    if (t.TrsCode == debit.DebCode)
+                    {
+                        debit.RemainToPay += t.TrsValue;
+                        debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
+                        DeleteItemN("Expirations", (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)), debit.Usr_OID);
+
+                        if (debit.RemainToPay <= 0)
+                        {
+                            Debit_Delete(debit);
+                        }
+                        else
+                        {
+                            Debit_Edit(debit, 1, true);
+                        }
+                    }
+
+                }
+                if (t.TrsCode.StartsWith("CRE"))
+                {
+                    Credit model = new()
+                    {
+                        Usr_OID = t.Usr_OID,
+                        CredCode = t.TrsCode,
+                        CredDateTime = DateTime.UtcNow,
+                        CredValue = t.TrsValue,
+                        CredTitle = "Prestito/Anticipo",
+                        CredNote = ""
+                    };
+                    Credit_Add(model, 1);
+                }
+
+            }
+            if (t.TrsValue > 0)
+            {
+                foreach (var credit in Credits)
+                {
+                    if (t.TrsCode == credit.CredCode)
+                    {
+                        credit.CredValue -= t.TrsValue;
+                        if (credit.CredValue <= 0)
+                        {
+                            Credit_Delete(credit);
+                        }
+                        else
+                        {
+                            Credit_Edit(credit, 1);
+                        }
+                    }
+                }
+                if (t.TrsCode.StartsWith("DEB"))
+                {
+                    Debit model = new();
+                    model.Usr_OID = t.Usr_OID;
+                    model.DebCode = t.TrsCode;
+                    model.DebInsDate = DateTime.UtcNow;
+                    model.DebValue = -t.TrsValue;
+                    model.DebTitle = "Prestito/Anticipo";
+                    model.DebNote = "";
+                    model.RemainToPay = -t.TrsValue;
+                    model.RtPaid = 0;
+                    model.RtNum = 1;
+                    Debit_Add(model, 1);
+                }
+            }
+            return 1;
         }
         public ActionResult Transaction_Delete(int id)
         {

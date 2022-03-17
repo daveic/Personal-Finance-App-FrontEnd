@@ -15,7 +15,7 @@ namespace PersonalFinanceFrontEnd.Models
         public string TrsNote { get; set; }
         public bool Type { get; set; }
         public string NewTrsCode { get; set; }
-        public string input_value { get; set; }
+        public string Input_value { get; set; }
 
     }
     public class TransactionDetailsEdit

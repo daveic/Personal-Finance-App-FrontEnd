@@ -32,8 +32,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Debit_Details(int id)
         {
             Debit Debit = GetItemIDN<Debit>("Debits", id, GetUserData().Result);
-            Debit.input_value = Debit.DebValue.ToString();
-            Debit.input_value_remain = Debit.RemainToPay.ToString();
+            Debit.Input_value = Debit.DebValue.ToString();
+            Debit.Input_value_remain = Debit.RemainToPay.ToString();
             return PartialView(Debit);
         }
         public IActionResult Debit_Add()
@@ -49,10 +49,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                d.input_value_remain = d.input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
-                d.input_value = d.input_value.Replace(".", ",");
-                d.DebValue = Convert.ToDouble(d.input_value);
+                d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
+                d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
+                d.Input_value = d.Input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.Input_value);
             }
             d.Usr_OID = GetUserData().Result;
             //if (d.DebDateTime == DateTime.MinValue)
@@ -98,13 +98,13 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                d.input_value = d.input_value.Replace(".", ",");
-                d.DebValue = Convert.ToDouble(d.input_value);
-                d.input_value_remain = d.input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.input_value_remain);
+                d.Input_value = d.Input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.Input_value);
+                d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
+                d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
             }
             d.Usr_OID = GetUserData().Result;
-            int result = EditItemID<Debit>(nameof(Debit), d);
+            int result = EditItemIDN<Debit>("Debits", d);
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 2;

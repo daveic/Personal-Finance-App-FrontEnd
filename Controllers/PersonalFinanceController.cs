@@ -27,7 +27,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result;
           
 
-            ViewModel viewModel = new ViewModel();
+            ViewModel viewModel = new();
             IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
             IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
             IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", User_OID);
@@ -39,7 +39,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (!Banks.Any())
             {
                 Bank b = new() { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
-                int result = AddItem<Bank>(nameof(Bank), b);
+                int result = AddItemN<Bank>("Banks", b);
             }
             double TransactionSum = 0;
             foreach (var item in Transactions)
@@ -74,7 +74,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistYear = new();
             foreach (var year in UniqueYear)
             {
-                SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+                SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
                 itemlistYear.Add(subitem);
             }
             //Passo alla view la lista
@@ -87,10 +87,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                         .Select(x => new { Month = x.Key })
                         .ToList();
             //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistMonth = new List<SelectListItem>();
+            List<SelectListItem> itemlistMonth = new();
             foreach (var month in UniqueMonth)
             {
-                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
+                SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonth.Add(subitem);
             }
             //Passo alla view la lista
@@ -109,10 +109,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                                     .Select(x => new { Year = x.Key })
                                     .ToList();
             //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYearTr = new List<SelectListItem>();
+            List<SelectListItem> itemlistYearTr = new();
             foreach (var year in UniqueYearTr)
             {
-                SelectListItem subitem = new SelectListItem() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+                SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
                 itemlistYearTr.Add(subitem);
             }
             //Passo alla view la lista
@@ -128,7 +128,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<SelectListItem> itemlistMonthTr = new();
             foreach (var month in UniqueMonthTr)
             {
-                SelectListItem subitem = new SelectListItem() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
+                SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
                 itemlistMonthTr.Add(subitem);
             }
             //Passo alla view la lista
@@ -157,7 +157,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
                                .Select(x => x.First())
                                .ToList();
-            List<SelectListItem> Codes = new List<SelectListItem>();
+            List<SelectListItem> Codes = new();
             foreach (var item in UniqueCodes)
             {
                 SelectListItem code = new();
@@ -174,9 +174,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (isPresent is true)
                 {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = credit.CredCode;
-                    code.Text = credit.CredCode;
+                    SelectListItem code = new()
+                    {
+                        Value = credit.CredCode,
+                        Text = credit.CredCode
+                    };
                     Codes.Add(code);
                 }
                 isPresent = false;
@@ -189,9 +191,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (isPresent is false)
                 {
-                    SelectListItem code = new SelectListItem();
-                    code.Value = debit.DebCode;
-                    code.Text = debit.DebCode;
+                    SelectListItem code = new()
+                    {
+                        Value = debit.DebCode,
+                        Text = debit.DebCode
+                    };
                     Codes.Add(code);
                 }
                 isPresent = false;
@@ -223,7 +227,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                                             .OrderBy(x => x.Key)
                                             .Select(x => new { x.Key })
                                             .ToList();
-            List<string> strCodes = new List<string>();
+            List<string> strCodes = new();
             foreach (var item in UniqueCodes) strCodes.Add(item.Key);
             string jsonCodes = JsonConvert.SerializeObject(strCodes);
             if (type == 0) { ViewBag.CodesOut = jsonCodes; ViewBag.CodesOutV = strCodes; }
@@ -309,74 +313,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (detections);
         }
 
-        private T GetItemID<T>(string type, int id) where T : new()
-        {
-            T detection = new();
-            string path = "Get" + type + "Id?id=" + id;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<T>();
-                readTask.Wait();
-                detection = readTask.Result;
-            }
-            return (detection);
-        }
 
- 
-        private int EditItemID<T>(string type, T obj) where T : new()
-        {
-            string path = "Update" + type;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PutAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
 
-        private int AddItem<T>(string type, T obj) where T : new()
-        {
-            string path = "Add" + type;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
 
-        private int DeleteItem(string type, int id)
-        {
-            string path = "Delete" + type + "?id=" + id;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.DeleteAsync(path);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
 
        
 
@@ -398,7 +337,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credits_Debits()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewModel viewModel = new ViewModel();
+            ViewModel viewModel = new();
             viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
             viewModel.Credit = new Credit();
             viewModel.Debits = GetAllItems<Debit>("PersonalFinanceAPI", "Debits", User_OID);
@@ -537,7 +476,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     {
                         item.input_value = item.input_value.Replace(".", ",");
                         bank.BankValue = Convert.ToDouble(item.input_value);
-                        int result = EditItemID<Bank>(nameof(Bank), bank);
+                        int result = EditItemIDN<Bank>("Banks", bank);
                     }
                 }
             }
@@ -548,7 +487,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     if (itemt.ID == ticket.ID)
                     {
                         ticket.NumTicket = itemt.input_value;
-                        int result = EditItemID<Ticket>(nameof(Ticket), ticket);
+                        int result = EditItemIDN<Ticket>("Tickets", ticket);
                     }
                 }
             }
@@ -589,7 +528,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             b.ActBalance = tot;
 
-            AddItem<Balance>(nameof(Balance), b);
+            AddItemN<Balance>("Balances", b);
             return 1;
         }
         public int Transaction_Balance_Update(string User_OID)
@@ -607,167 +546,13 @@ namespace PersonalFinanceFrontEnd.Controllers
                 totTransaction += item.TrsValue;
             }
             b.ActBalance = totTransaction;
-            AddItem<Balance>(nameof(Balance), b);
+            AddItemN<Balance>("Balances", b);
             return 1;
         }
 
-        public int Transaction_Credit_Debit_Update(Transaction t)
-        {
-            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), t.Usr_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), t.Usr_OID);
-
-            if (t.TrsValue < 0)
-            {
-                foreach (var debit in Debits)
-                {
-                    if(t.TrsCode == debit.DebCode)
-                    {
-                        debit.RemainToPay += t.TrsValue;
-                        debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
-                        DeleteItem(nameof(Expiration), (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)));
-                        
-                        if(debit.RemainToPay <= 0)
-                        {
-                            Debit_Delete(debit);
-                        }
-                        else
-                        {
-                            Debit_Edit(debit, 1, true);
-                        }
-                    }
-
-                }
-                if (t.TrsCode.StartsWith("CRE"))
-                {
-                    Credit model = new()
-                    {
-                        Usr_OID = t.Usr_OID,
-                        CredCode = t.TrsCode,
-                        CredDateTime = DateTime.UtcNow,
-                        CredValue = t.TrsValue,
-                        CredTitle = "Prestito/Anticipo",
-                        CredNote = ""
-                    };
-                    Credit_Add(model, 1);
-                }
-
-            }
-            if(t.TrsValue > 0)
-            {
-               foreach(var credit in Credits)
-                {
-                    if (t.TrsCode == credit.CredCode)
-                    {
-                          credit.CredValue -= t.TrsValue;
-                        if (credit.CredValue <= 0)
-                        {
-                            Credit_Delete(credit);
-                        }
-                        else
-                        {
-                            Credit_Edit(credit, 1);
-                        }
-                    }
-                }
-                if (t.TrsCode.StartsWith("DEB"))
-                {
-                    Debit model = new();
-                    model.Usr_OID = t.Usr_OID;
-                    model.DebCode = t.TrsCode;
-                    model.DebInsDate = DateTime.UtcNow;
-                    model.DebValue = -t.TrsValue;
-                    model.DebTitle = "Prestito/Anticipo";
-                    model.DebNote = "";
-                    model.RemainToPay = -t.TrsValue;
-                    model.RtPaid = 0;
-                    model.RtNum = 1;
-                    Debit_Add(model, 1);
-                }
-            }            
-            return 1;
-        }
+        
 
 
-        public IEnumerable<T> GetAllItemsN<T>(string controller, string User_OID)
-        {
-            IEnumerable<T> detections = null;
-            string path = "api/" + controller + "/All" + "?User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<T>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-            return (detections);
-        }
-        public T GetItemIDN<T>(string controller, int id, string User_OID) where T : new()
-        {
-            T detection = new();
-            string path = "api/" + controller + "/Details" + "?id=" + id + "&User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<T>();
-                readTask.Wait();
-                detection = readTask.Result;
-            }
-            return (detection);
-        }
-        public int AddItemN<T>(string controller, T obj) where T : new()
-        {
-            string path = "api/" + controller + "/Add";
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var postTask = client.PostAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
-        public int EditItemIDN<T>(string controller, T obj) where T : new()
-        {
-            string path = "api/" + controller + "/Update";
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var postTask = client.PutAsJsonAsync<T>(path, obj);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
-        public int DeleteItemN(string controller, int id, string User_OID)
-        {
-            string path = "api/" + controller + "/Delete" + "?id=" + id + "&User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var postTask = client.DeleteAsync(path);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    return (0);
-                }
-            }
-            return (1);
-        }
 
 
     }

@@ -23,16 +23,16 @@
                 <span asp-validation-for="CredName" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="input_value">Importo</label>
-                <input type="number" step="0.01" class="form-control" asp-for="input_value" placeholder="€" style="background-color: #444">
-                <span asp-validation-for="input_value" class="text-danger"></span>
+                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
+                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
+                <span asp-validation-for="Input_value" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
                 <input type="hidden" class="form-control" asp-for="DebDateTime" style="background-color: #444" value="@DateTime.MinValue">
-                <input type="date" class="form-control" asp-for="input_DateTime" style="background-color: #444" value="@DateTime.MinValue">
+                <input type="date" class="form-control" asp-for="Input_DateTime" style="background-color: #444" value="@DateTime.MinValue">
 
             </div>
             <div class="col-md-6">
@@ -53,9 +53,9 @@
                 <span asp-validation-for="RtPaid" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="input_value_remain">Importo restante</label>
-                <input type="text" class="form-control" asp-for="input_value_remain" placeholder="€" style="background-color: #444">
-                <span asp-validation-for="input_value_remain" class="text-danger"></span>
+                <label for="recipient-name" class="col-form-label" asp-for="Input_value_remain">Importo restante</label>
+                <input type="text" class="form-control" asp-for="Input_value_remain" placeholder="€" style="background-color: #444">
+                <span asp-validation-for="Input_value_remain" class="text-danger"></span>
             </div>
         </div>
         <div class="row">

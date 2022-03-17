@@ -10,7 +10,7 @@ namespace PersonalFinanceFrontEnd.Models
         public string KMTitle { get; set; }
         public double KMValue { get; set; }
         public string KMNote { get; set; }
-        public string input_value { get; set; }
+        public string Input_value { get; set; }
         public int Exp_ID { get; set; }
         public bool On_Exp { get; set; }
     }

@@ -37,7 +37,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
             k.Usr_OID = GetUserData().Result;
-            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
+            k.KMValue = Convert.ToDouble(k.Input_value.Replace(".", ","));
             int result = AddItemN<KnownMovement>("KnownMovements", k);
             if (result == 0)
             {
@@ -55,7 +55,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Edit(KnownMovement k)
         {
-            k.KMValue = Convert.ToDouble(k.input_value.Replace(".", ","));
+            k.KMValue = Convert.ToDouble(k.Input_value.Replace(".", ","));
             k.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<KnownMovement>("KnownMovements", k);
             if (result == 0)
@@ -82,7 +82,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult KnownMovement_Details(int id)
         {
             KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, GetUserData().Result);
-            KnownMovement.input_value = KnownMovement.KMValue.ToString();
+            KnownMovement.Input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }
         public ActionResult KnownMovement_Delete(int id)
