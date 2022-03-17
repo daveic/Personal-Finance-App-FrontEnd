@@ -296,36 +296,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             return ConvertedMonth;
         }
 
-        private IEnumerable<T> GetAllItems<T>(string controller, string type, string User_OID)
-        {
-            IEnumerable<T> detections = null;
-            string path = "api/" + controller + "/GetAll" + type + "?User_OID=" + User_OID;
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<List<T>>();
-                readTask.Wait();
-                detections = readTask.Result;
-            }
-            return (detections);
-        }
-
-
 
 
 
        
-
-
-
-
-
-
-
-
 
 
         
@@ -338,10 +312,10 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewModel viewModel = new();
-            viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
-            viewModel.Credit = new Credit();
-            viewModel.Debits = GetAllItems<Debit>("PersonalFinanceAPI", "Debits", User_OID);
-            viewModel.Debit = new Debit();
+            viewModel.Credits = GetAllItemsN<Credit>("Credits", User_OID);
+            //viewModel.Credit = new Credit();
+            viewModel.Debits = GetAllItemsN<Debit>("Debits", User_OID);
+            //viewModel.Debit = new Debit();
             return View(viewModel);
         }
 
@@ -355,9 +329,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Budget()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            ViewBag.Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", "Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Take(5).ToList(); //Fetch imminent expirations
-            List<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
-            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), User_OID).ToList();
+            List<Expiration> Expirations = GetAllItemsN<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
+            List<KnownMovement> KnownMovements = GetAllItemsN<KnownMovement>("KnownMovements", User_OID).ToList();
             bool found = false;
             foreach (var km in KnownMovements)
             {
@@ -376,11 +349,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.Out = Expirations.Where(x => x.ExpValue < 0);
             
              ViewModel viewModel = new();
-            viewModel.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
+            viewModel.Banks = GetAllItemsN<Bank>("Banks", User_OID);
             viewModel.Bank = new Bank();
-            viewModel.Deposits = GetAllItems<Deposit>("PersonalFinanceAPI", "Deposits", User_OID);
+            viewModel.Deposits = GetAllItemsN<Deposit>("Deposits", User_OID);
             viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
+            viewModel.Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
             viewModel.Ticket = new Ticket();
             viewModel.Contanti = viewModel.Banks.First();
             viewModel.Budget_Calc = new Budget_Calc();
@@ -398,15 +371,15 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-            IEnumerable<Balance> Balances = GetAllItems<Balance>("PersonalFinanceAPI", nameof(Balances), GetUserData().Result);
+            IEnumerable<Balance> Balances = GetAllItemsN<Balance>("Balances", GetUserData().Result);
             double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
 
-            List<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+            List<Expiration> Expirations = GetAllItemsN<Expiration>("Expirations", GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
             foreach(var item in Expirations)
             {
                 if (item.ColorLabel == "orange") Expirations.Remove(item);
             }
-            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("PersonalFinanceAPI", nameof(KnownMovements), GetUserData().Result).ToList();
+            List<KnownMovement> KnownMovements = GetAllItemsN<KnownMovement>("KnownMovements", GetUserData().Result).ToList();
             //contare mesi tra date
             //Se >15 del mese aggiungi uno altrimenti togli
             //cicla per n volte quanti sono i mesi
@@ -427,128 +400,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             return RedirectToAction(nameof(Budget));
            
         }
-        //ADD NEW Methods
 
         
+       
 
-
-        
-
-
-
-        //FAST UPDATE LOGIC
-        //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
-        public ActionResult Fast_Update()
-        {
-            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            ViewModel model = new();
-            model.Banks = GetAllItems<Bank>("PersonalFinanceAPI", "Banks", User_OID);
-            model.Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", "Tickets", User_OID);
-            List<Bank> BankList = new();
-            List<Ticket> TicketList = new();
-            foreach (var item in model.Banks)
-            {
-                item.input_value = item.BankValue.ToString();
-                BankList.Add(item);
-            }
-            model.BankList = BankList;
-            foreach (var item in model.Tickets)
-            {
-                item.input_value = item.NumTicket.ToString();
-                TicketList.Add(item);
-            }
-            model.TicketList = TicketList;
-            return PartialView(model);
-        }
-        [HttpPost]
-        public ActionResult Fast_Update(ViewModel model)
-        {
-            string User_OID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            List<Bank> BankList = model.BankList;
-            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
-            List<Ticket> TicketList = model.TicketList;
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
-            foreach (var item in BankList)
-            {
-                foreach (var bank in Banks)
-                {
-                    if (item.ID == bank.ID)
-                    {
-                        item.input_value = item.input_value.Replace(".", ",");
-                        bank.BankValue = Convert.ToDouble(item.input_value);
-                        int result = EditItemIDN<Bank>("Banks", bank);
-                    }
-                }
-            }
-            foreach (var itemt in TicketList)
-            {
-                foreach (var ticket in Tickets)
-                {
-                    if (itemt.ID == ticket.ID)
-                    {
-                        ticket.NumTicket = itemt.input_value;
-                        int result = EditItemIDN<Ticket>("Tickets", ticket);
-                    }
-                }
-            }
-            Balance_Update(User_OID);
-            return RedirectToAction(nameof(Index));
-        }
-        public int Balance_Update(string User_OID)
-        {
-            Balance b = new();
-            b.Usr_OID = User_OID;
-            b.BalDateTime = DateTime.UtcNow;
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-            IEnumerable<Bank> Banks = GetAllItems<Bank>("PersonalFinanceAPI", nameof(Banks), User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("PersonalFinanceAPI", nameof(Tickets), User_OID);
-            double tot = 0;
-            double totTransaction = 0;
-
-            foreach (var item in Banks)
-            {
-                tot += item.BankValue;
-            }
-            foreach (var item in Tickets)
-            {
-                tot += Convert.ToInt32(item.NumTicket) * item.TicketValue;
-            }
-            foreach (var item in Transactions)
-            {
-                totTransaction += item.TrsValue;
-            }
-
-            Transaction tr = new() { Usr_OID = User_OID, TrsCode = "Fast_Update", TrsTitle = "Allineamento Fast Update", TrsDateTime = DateTime.UtcNow, TrsValue = tot - totTransaction, TrsNote = "Allineamento Fast Update eseguito il " + DateTime.UtcNow };
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/PersonalFinanceAPI/");
-                var postTask = client.PostAsJsonAsync<Transaction>("AddTransaction", tr);
-                postTask.Wait();
-                var result = postTask.Result;
-            }
-            b.ActBalance = tot;
-
-            AddItemN<Balance>("Balances", b);
-            return 1;
-        }
-        public int Transaction_Balance_Update(string User_OID)
-        {
-            Balance b = new()
-            {
-                Usr_OID = User_OID,
-                BalDateTime = DateTime.UtcNow
-            };
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-
-            double totTransaction = 0;
-            foreach (var item in Transactions)
-            {
-                totTransaction += item.TrsValue;
-            }
-            b.ActBalance = totTransaction;
-            AddItemN<Balance>("Balances", b);
-            return 1;
-        }
 
         
 

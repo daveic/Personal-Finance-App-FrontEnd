@@ -41,10 +41,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                client.PostAsJsonAsync(path, obj).Wait();
-                if (client.PostAsJsonAsync(path, obj).Result.IsSuccessStatusCode) return 0;
+                var postTask = client.PostAsJsonAsync(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
             }
-            return 1;
+            return (1);
         }
         //HTTP EDIT Generic method
         public int EditItemIDN<T>(string controller, T obj) where T : new()
@@ -65,10 +70,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                client.DeleteAsync(path).Wait();
-                if (client.DeleteAsync(path).Result.IsSuccessStatusCode) return 0;
+                var postTask = client.DeleteAsync(path);
+                postTask.Wait();
+                var result = postTask.Result; 
+                if (result.IsSuccessStatusCode)
+                {
+                    return (0);
+                }
             }
-            return 1;
+            return (1);
         }
     }
 }

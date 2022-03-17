@@ -196,6 +196,24 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
+        public int Transaction_Balance_Update(string User_OID)
+        {
+            Balance b = new()
+            {
+                Usr_OID = User_OID,
+                BalDateTime = DateTime.UtcNow
+            };
+            IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
+
+            double totTransaction = 0;
+            foreach (var item in Transactions)
+            {
+                totTransaction += item.TrsValue;
+            }
+            b.ActBalance = totTransaction;
+            AddItemN<Balance>("Balances", b);
+            return 1;
+        }
         public ActionResult Transaction_Edit(int id)
         {
             return Transaction_Details_Edit(id, GetUserData().Result);
@@ -290,8 +308,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public int Transaction_Credit_Debit_Update(Transaction t)
         {
-            IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), t.Usr_OID);
-            IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), t.Usr_OID);
+            IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", t.Usr_OID);
+            IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", t.Usr_OID);
 
             if (t.TrsValue < 0)
             {

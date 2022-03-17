@@ -13,17 +13,13 @@ namespace PersonalFinanceFrontEnd.Models
         public Deposit Deposit { get; set; }
         public IEnumerable<Ticket> Tickets { get; set; }
         public Ticket Ticket { get; set; }
-        public IEnumerable<KnownMovement> KnownMovements { get; set; }
-        public KnownMovement KnownMovement { get; set; }
-        public IEnumerable<Transaction> Transactions { get; set; }
         public Transaction Transaction { get; set; }
         public IEnumerable<Credit> Credits { get; set; }
         public Credit Credit { get; set; }
         public IEnumerable<Debit> Debits { get; set; }
         public Debit Debit { get; set; }
-        public IEnumerable<Expiration> Expirations { get; set; }
-        public Expiration Expiration { get; set; }
-        public int state { get; internal set; }
+
+
         public double TransactionSum { get; set; }
         public double CreditSum { get; set; }
         public double DebitSum { get; set; }
@@ -31,9 +27,7 @@ namespace PersonalFinanceFrontEnd.Models
         public double TotNoDebits { get; set; }
         public List<Bank> BankList { get; set; }
         public List<Ticket> TicketList { get; set; }
-        public List<ExpMonth> ExpirationList { get; set; }
         public Bank Contanti { get; set; }
-        public KnownMovement_Exp knownMovement_Exp { get; set; }
         public Budget_Calc Budget_Calc { get; set; }
     }
 }
