@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Net.Http;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -17,201 +18,210 @@ namespace PersonalFinanceFrontEnd.Controllers
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
-
-            string User_OID = GetUserData().Result;
-          
-
-            ViewModel viewModel = new();
-            IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
-            IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
-            IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", User_OID);
-            IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
-            IEnumerable<Deposit> Deposits = GetAllItemsN<Deposit>("Deposits", User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
-            IEnumerable<Balance> Balances = GetAllItemsN<Balance>("Balances", User_OID);
-
-            if (!Banks.Any())
+            DashAPIOut DOut = new();
+            string path = "api/Dashboard/Main" + "?sY=" + selectedYear + "&sM=" + selectedMonth + "&sYT=" + selectedYearTr + "&sMT=" + selectedMonthTr + "&User_OID=" + GetUserData().Result;
+            using (HttpClient client = new())
             {
-                Bank b = new() { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
-                int result = AddItemN<Bank>("Banks", b);
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                client.GetAsync(path).Wait();
+                client.GetAsync(path).Result.Content.ReadAsAsync<DashAPIOut>().Wait();
+                DOut = client.GetAsync(path).Result.Content.ReadAsAsync<DashAPIOut>().Result;
             }
-            double TransactionSum = 0;
-            foreach (var item in Transactions)
-            {
-                TransactionSum += item.TrsValue;
-            }
-            double CreditSum = 0;
-            foreach (var item in Credits)
-            {
-                CreditSum += item.CredValue;
-            }
-            double DebitSum = 0;
-            foreach (var item in Debits)
-            {
-                DebitSum += item.DebValue;
-            }
-            // Totale saldo + crediti - debiti
-            double TotWithDebits = TransactionSum + CreditSum - DebitSum;
-            // Totale saldo + crediti
-            double TotNoDebits = TransactionSum + CreditSum;
 
 
-            //############################################################################################################################
-            //FILTRI ANNO E MESE PER GRAFICO SALDO
-            //############################################################################################################################
-            //Trovo gli anni "unici"
-            var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
-                                    .OrderBy(x => x.Key)
-                                    .Select(x => new { Year = x.Key })
-                                    .ToList();
-            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYear = new();
-            foreach (var year in UniqueYear)
-            {
-                SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
-                itemlistYear.Add(subitem);
-            }
-            //Passo alla view la lista
-            ViewBag.ItemList = itemlistYear;
-            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
-            if (!String.IsNullOrEmpty(selectedYear)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Year.ToString() == selectedYear);
-            //Trovo i mesi "unici"
-            var UniqueMonth = Balances.GroupBy(x => x.BalDateTime.Month)
-                        .OrderBy(x => x.Key)
-                        .Select(x => new { Month = x.Key })
-                        .ToList();
-            //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistMonth = new();
-            foreach (var month in UniqueMonth)
-            {
-                SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
-                itemlistMonth.Add(subitem);
-            }
-            //Passo alla view la lista
-            ViewBag.ItemListMonth = itemlistMonth;
-            //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => MonthConverter(x.BalDateTime.Month) == selectedMonth);
-            //############################################################################################################################
+            //ViewModel viewModel = new();
+            //IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
+            //IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", User_OID);
+            //IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", User_OID);
+            //IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
+            //IEnumerable<Deposit> Deposits = GetAllItemsN<Deposit>("Deposits", User_OID);
+            //IEnumerable<Ticket> Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
+            //IEnumerable<Balance> Balances = GetAllItemsN<Balance>("Balances", User_OID);
+
+            //if (!Banks.Any())
+            //{
+            //    Bank b = new() { Usr_OID = User_OID, BankName = "Contanti", Iban = null, ID = 0, BankValue = 0, BankNote = "Totale contanti" };
+            //    int result = AddItemN<Bank>("Banks", b);
+            //}
+            //double TransactionSum = 0;
+            //foreach (var item in Transactions)
+            //{
+            //    TransactionSum += item.TrsValue;
+            //}
+            //double CreditSum = 0;
+            //foreach (var item in Credits)
+            //{
+            //    CreditSum += item.CredValue;
+            //}
+            //double DebitSum = 0;
+            //foreach (var item in Debits)
+            //{
+            //    DebitSum += item.DebValue;
+            //}
+            //// Totale saldo + crediti - debiti
+            //double TotWithDebits = TransactionSum + CreditSum - DebitSum;
+            //// Totale saldo + crediti
+            //double TotNoDebits = TransactionSum + CreditSum;
 
 
-            //############################################################################################################################
-            //FILTRI ANNO E MESE PER GRAFICI TRANSAZIONI
-            //############################################################################################################################
-            //Trovo gli anni "unici"
-            var UniqueYearTr = Transactions.GroupBy(x => x.TrsDateTime.Year)
-                                    .OrderBy(x => x.Key)
-                                    .Select(x => new { Year = x.Key })
-                                    .ToList();
-            //Creo la lista di anni "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistYearTr = new();
-            foreach (var year in UniqueYearTr)
-            {
-                SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
-                itemlistYearTr.Add(subitem);
-            }
-            //Passo alla view la lista
-            ViewBag.ItemListTr = itemlistYearTr;
-            //Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
-            if (!String.IsNullOrEmpty(selectedYearTr)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Year.ToString() == selectedYearTr);
-            //Trovo i mesi "unici"
-            var UniqueMonthTr = Transactions.GroupBy(x => x.TrsDateTime.Month)
-                        .OrderBy(x => x.Key)
-                        .Select(x => new { Month = x.Key })
-                        .ToList();
-            //Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
-            List<SelectListItem> itemlistMonthTr = new();
-            foreach (var month in UniqueMonthTr)
-            {
-                SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
-                itemlistMonthTr.Add(subitem);
-            }
-            //Passo alla view la lista
-            ViewBag.ItemListMonthTr = itemlistMonthTr;
-            //Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
-            if (!String.IsNullOrEmpty(selectedMonthTr)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonthTr);
-            //############################################################################################################################
+            ////############################################################################################################################
+            ////FILTRI ANNO E MESE PER GRAFICO SALDO
+            ////############################################################################################################################
+            ////Trovo gli anni "unici"
+            //var UniqueYear = Balances.GroupBy(x => x.BalDateTime.Year)
+            //                        .OrderBy(x => x.Key)
+            //                        .Select(x => new { Year = x.Key })
+            //                        .ToList();
+            ////Creo la lista di anni "unici" per il dropdown filter del grafico saldo
+            //List<SelectListItem> itemlistYear = new();
+            //foreach (var year in UniqueYear)
+            //{
+            //    SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+            //    itemlistYear.Add(subitem);
+            //}
+            ////Passo alla view la lista
+            //ViewBag.ItemList = itemlistYear;
+            ////Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
+            //if (!String.IsNullOrEmpty(selectedYear)) Balances = Balances.AsQueryable().Where(x => x.BalDateTime.Year.ToString() == selectedYear);
+            ////Trovo i mesi "unici"
+            //var UniqueMonth = Balances.GroupBy(x => x.BalDateTime.Month)
+            //            .OrderBy(x => x.Key)
+            //            .Select(x => new { Month = x.Key })
+            //            .ToList();
+            ////Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
+            //List<SelectListItem> itemlistMonth = new();
+            //foreach (var month in UniqueMonth)
+            //{
+            //    SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
+            //    itemlistMonth.Add(subitem);
+            //}
+            ////Passo alla view la lista
+            //ViewBag.ItemListMonth = itemlistMonth;
+            ////Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
+            //if (!String.IsNullOrEmpty(selectedMonth)) Balances = Balances.AsQueryable().Where(x => MonthConverter(x.BalDateTime.Month) == selectedMonth);
+            ////############################################################################################################################
 
 
-            var TransactionsIn = Transactions.Where(x => x.TrsValue >= 0);
-            var TransactionsOut = Transactions.Where(x => x.TrsValue < 0);
+            ////############################################################################################################################
+            ////FILTRI ANNO E MESE PER GRAFICI TRANSAZIONI
+            ////############################################################################################################################
+            ////Trovo gli anni "unici"
+            //var UniqueYearTr = Transactions.GroupBy(x => x.TrsDateTime.Year)
+            //                        .OrderBy(x => x.Key)
+            //                        .Select(x => new { Year = x.Key })
+            //                        .ToList();
+            ////Creo la lista di anni "unici" per il dropdown filter del grafico saldo
+            //List<SelectListItem> itemlistYearTr = new();
+            //foreach (var year in UniqueYearTr)
+            //{
+            //    SelectListItem subitem = new() { Text = year.Year.ToString(), Value = year.Year.ToString() };
+            //    itemlistYearTr.Add(subitem);
+            //}
+            ////Passo alla view la lista
+            //ViewBag.ItemListTr = itemlistYearTr;
+            ////Se al caricamento della pagina ho selezionato un anno (not empty), salvo in Balances i saldi di quell'anno
+            //if (!String.IsNullOrEmpty(selectedYearTr)) Transactions = Transactions.AsQueryable().Where(x => x.TrsDateTime.Year.ToString() == selectedYearTr);
+            ////Trovo i mesi "unici"
+            //var UniqueMonthTr = Transactions.GroupBy(x => x.TrsDateTime.Month)
+            //            .OrderBy(x => x.Key)
+            //            .Select(x => new { Month = x.Key })
+            //            .ToList();
+            ////Creo la lista di mesi "unici" per il dropdown filter del grafico saldo
+            //List<SelectListItem> itemlistMonthTr = new();
+            //foreach (var month in UniqueMonthTr)
+            //{
+            //    SelectListItem subitem = new() { Text = MonthConverter(month.Month), Value = MonthConverter(month.Month) };
+            //    itemlistMonthTr.Add(subitem);
+            //}
+            ////Passo alla view la lista
+            //ViewBag.ItemListMonthTr = itemlistMonthTr;
+            ////Se al caricamento della pagina ho selezionato un mese (not empty), salvo in Balances i saldi di quel mese
+            //if (!String.IsNullOrEmpty(selectedMonthTr)) Transactions = Transactions.AsQueryable().Where(x => MonthConverter(x.TrsDateTime.Month) == selectedMonthTr);
+            ////############################################################################################################################
 
 
-            //############################################################################################################################
-            //Rimuovo l'orario dal DateTime e salvo come json
-
-            string json = JsonConvert.SerializeObject(Balances);
-            //Passo alla view la lista aggiornata e convertita
-            ViewBag.Balances = json;
+            //var TransactionsIn = Transactions.Where(x => x.TrsValue >= 0);
+            //var TransactionsOut = Transactions.Where(x => x.TrsValue < 0);
 
 
+            ////############################################################################################################################
+            ////Rimuovo l'orario dal DateTime e salvo come json
+
+            //string json = JsonConvert.SerializeObject(Balances);
+            ////Passo alla view la lista aggiornata e convertita
+            //ViewBag.Balances = json;
 
 
 
 
-            var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-                               .Select(x => x.First())
-                               .ToList();
-            List<SelectListItem> Codes = new();
-            foreach (var item in UniqueCodes)
-            {
-                SelectListItem code = new();
-                code.Value = item.TrsCode;
-                code.Text = item.TrsCode;
-                Codes.Add(code);
-            }
-            bool isPresent = false;
-            foreach (var credit in Credits)
-            {
-                foreach (var item in Codes)
-                {
-                    if (credit.CredCode == item.Value) isPresent = true;
-                }
-                if (isPresent is true)
-                {
-                    SelectListItem code = new()
-                    {
-                        Value = credit.CredCode,
-                        Text = credit.CredCode
-                    };
-                    Codes.Add(code);
-                }
-                isPresent = false;
-            }
-            foreach (var debit in Debits)
-            {
-                foreach (var item in Codes)
-                {
-                    if (debit.DebCode == item.Value) isPresent = true;
-                }
-                if (isPresent is false)
-                {
-                    SelectListItem code = new()
-                    {
-                        Value = debit.DebCode,
-                        Text = debit.DebCode
-                    };
-                    Codes.Add(code);
-                }
-                isPresent = false;
-            }
-            TempData["Codes"] = Codes;
-            viewModel.Transaction = new Transaction();
 
-            GetDonutData(TransactionsIn, 1);
-            GetDonutData(TransactionsOut, 0);
 
-            string jsonTrans = JsonConvert.SerializeObject(Transactions);
-            ViewBag.Transactions = jsonTrans;
+            //var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
+            //                   .Select(x => x.First())
+            //                   .ToList();
+            //List<SelectListItem> Codes = new();
+            //foreach (var item in UniqueCodes)
+            //{
+            //    SelectListItem code = new();
+            //    code.Value = item.TrsCode;
+            //    code.Text = item.TrsCode;
+            //    Codes.Add(code);
+            //}
+            //bool isPresent = false;
+            //foreach (var credit in Credits)
+            //{
+            //    foreach (var item in Codes)
+            //    {
+            //        if (credit.CredCode == item.Value) isPresent = true;
+            //    }
+            //    if (isPresent is true)
+            //    {
+            //        SelectListItem code = new()
+            //        {
+            //            Value = credit.CredCode,
+            //            Text = credit.CredCode
+            //        };
+            //        Codes.Add(code);
+            //    }
+            //    isPresent = false;
+            //}
+            //foreach (var debit in Debits)
+            //{
+            //    foreach (var item in Codes)
+            //    {
+            //        if (debit.DebCode == item.Value) isPresent = true;
+            //    }
+            //    if (isPresent is false)
+            //    {
+            //        SelectListItem code = new()
+            //        {
+            //            Value = debit.DebCode,
+            //            Text = debit.DebCode
+            //        };
+            //        Codes.Add(code);
+            //    }
+            //    isPresent = false;
+            //}
+            //TempData["Codes"] = Codes;
+            //viewModel.Transaction = new Transaction();
 
-            //Passaggio di dati alla vista con ViewModel
-            viewModel.TransactionSum = TransactionSum;
-            viewModel.CreditSum = CreditSum;
-            viewModel.DebitSum = DebitSum;
-            viewModel.TotWithDebits = TotWithDebits;
-            viewModel.TotNoDebits = TotNoDebits;
-            viewModel.Banks = Banks;
+            //GetDonutData(TransactionsIn, 1);
+            //GetDonutData(TransactionsOut, 0);
 
-            return View(viewModel);
+            //string jsonTrans = JsonConvert.SerializeObject(Transactions);
+            //ViewBag.Transactions = jsonTrans;
+
+            ////Passaggio di dati alla vista con ViewModel
+            //viewModel.TransactionSum = TransactionSum;
+            //viewModel.CreditSum = CreditSum;
+            //viewModel.DebitSum = DebitSum;
+            //viewModel.TotWithDebits = TotWithDebits;
+            //viewModel.TotNoDebits = TotNoDebits;
+            //viewModel.Banks = Banks;
+            GetDonutData(DOut.TransactionsIn, 1);
+            GetDonutData(DOut.TransactionsOut, 0);
+            TempData["Codes"] = DOut.Codes;
+            return View(DOut);
         }
 
 
