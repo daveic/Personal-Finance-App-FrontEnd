@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
@@ -10,30 +8,29 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
+        //CRUD Service: HTTP GET-ALL Method
         public T GetWallet<T>(string controller, string User_OID)
         {
             T detections = default;
-            //T detections = null;
             string path = "api/" + controller + "/All" + "?User_OID=" + User_OID;
-            using (var client = new HttpClient())
+            using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                var responseTask = client.GetAsync(path);
-                responseTask.Wait();
-                var result = responseTask.Result;
-                var readTask = result.Content.ReadAsAsync<T>();
-                readTask.Wait();
-                detections = readTask.Result;
+                client.GetAsync(path).Wait();
+                client.GetAsync(path).Result.Content.ReadAsAsync<T>().Wait();
+                detections = client.GetAsync(path).Result.Content.ReadAsAsync<T>().Result;
             }
-            return (detections);
+            return detections;
         }
-        //WALLET Intermediate view
+
+        //WALLET Main View
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Wallet()
         {
-            var wallet = GetWallet<Wallet>("Wallet", GetUserData().Result);
-            return View(wallet);
+            return View(GetWallet<Wallet>("Wallet", GetUserData().Result));
         }
+
+        //DETAILS Methods
         public ActionResult Bank_Details(int id)
         {
             Bank Bank = GetItemIDN<Bank>("Banks", id, GetUserData().Result);
@@ -52,6 +49,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             Ticket.input_value = Ticket.TicketValue.ToString();
             return PartialView(Ticket);
         }
+
+        //ADD Methods
         public IActionResult Bank_Add()
         {
             return View(new Bank());
@@ -65,8 +64,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Bank>("Banks", b);
             if (result == 0)
             {
-                TempData["sendFlagB"] = 3;
                 Balance_Update(b.Usr_OID);
+                TempData["sendFlagB"] = 3;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -104,11 +103,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 Balance_Update(t.Usr_OID);
                 TempData["sendFlagT"] = 3;
-                //Balance_Update(t.Usr_OID);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
+
+        //EDIT Methods
         public ActionResult Bank_Edit(int id)
         {
             return Bank_Details(id);
@@ -122,8 +122,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Bank>("Banks", b);
             if (result == 0)
             {
-                TempData["sendFlagB"] = 2;
                 Balance_Update(b.Usr_OID);
+                TempData["sendFlagB"] = 2;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -159,12 +159,14 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Ticket>("Tickets", t);
             if (result == 0)
             {
-                TempData["sendFlagT"] = 2;
                 Balance_Update(t.Usr_OID);
+                TempData["sendFlagT"] = 2;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
         }
+
+        //DELETE Methods
         public ActionResult Bank_Delete(int id)
         {
             return Bank_Details(id);
@@ -212,6 +214,5 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
     }
 }
