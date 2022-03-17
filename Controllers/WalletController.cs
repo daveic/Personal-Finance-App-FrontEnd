@@ -34,7 +34,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Bank_Details(int id)
         {
             Bank Bank = GetItemIDN<Bank>("Banks", id, GetUserData().Result);
-            Bank.input_value = Bank.BankValue.ToString();
+            Bank.Input_value = Bank.BankValue.ToString();
             return PartialView(Bank);
         }
         public ActionResult Deposit_Details(int id)
@@ -58,8 +58,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Add(Bank b)
         {
-            b.input_value = b.input_value.Replace(".", ",");
-            b.BankValue = Convert.ToDouble(b.input_value);
+            b.Input_value = b.Input_value.Replace(".", ",");
+            b.BankValue = Convert.ToDouble(b.Input_value);
             b.Usr_OID = GetUserData().Result;
             int result = AddItemN<Bank>("Banks", b);
             if (result == 0)
@@ -116,8 +116,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Bank_Edit(Bank b)
         {
-            b.input_value = b.input_value.Replace(".", ",");
-            b.BankValue = Convert.ToDouble(b.input_value);           
+            b.Input_value = b.Input_value.Replace(".", ",");
+            b.BankValue = Convert.ToDouble(b.Input_value);           
             b.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Bank>("Banks", b);
             if (result == 0)

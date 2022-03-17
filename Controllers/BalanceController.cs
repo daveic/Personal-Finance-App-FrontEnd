@@ -20,7 +20,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             List<Ticket> TicketList = new();
             foreach (var item in model.Banks)
             {
-                item.input_value = item.BankValue.ToString();
+                item.Input_value = item.BankValue.ToString();
                 BankList.Add(item);
             }
             model.BankList = BankList;
@@ -46,8 +46,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (item.ID == bank.ID)
                     {
-                        item.input_value = item.input_value.Replace(".", ",");
-                        bank.BankValue = Convert.ToDouble(item.input_value);
+                        item.Input_value = item.Input_value.Replace(".", ",");
+                        bank.BankValue = Convert.ToDouble(item.Input_value);
                         int result = EditItemIDN<Bank>("Banks", bank);
                     }
                 }
