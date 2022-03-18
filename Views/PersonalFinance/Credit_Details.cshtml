@@ -11,10 +11,6 @@
                 <table class="table table-hover">
                     <tbody>
                         <tr class="table-active">
-                            <th scope="row">ID:</th>
-                            <td>@Model.ID</td>
-                        </tr>
-                        <tr class="table-active">
                             <th scope="row">Codice Credito:</th>
                             <td>@Model.CredCode</td>
                         </tr>
@@ -33,6 +29,10 @@
                         <tr class="table-active">
                             <th scope="row">Data inserimento:</th>
                             <td>@Model.CredDateTime.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        <tr class="table-active">
+                            <th scope="row">Data restituzione:</th>
+                            <td>@Model.PrevDateTime.ToString("dd/MM/yyyy")</td>
                         </tr>
                         <tr class="table-active">
                             <th scope="row">Note:</th>

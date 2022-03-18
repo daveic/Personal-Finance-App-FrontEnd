@@ -1,15 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 
@@ -22,6 +12,27 @@ namespace PersonalFinanceFrontEnd.Controllers
             Credit Credit = GetItemIDN<Credit>("Credits", id, GetUserData().Result);
             Credit.input_value = Credit.CredValue.ToString();
             return PartialView(Credit);
+        }
+        public IActionResult Credit_Add()
+        {
+            return View(new Credit());
+        }
+        [HttpPost]
+        public ActionResult Credit_Add(Credit c, int i)
+        {
+            if (i != 1)
+            {
+                c.input_value = c.input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.input_value);
+                c.Usr_OID = GetUserData().Result;
+            }
+            int result = AddItemN<Credit>("Credits", c);
+            if (result == 0)
+            {
+                TempData["sendFlagCred"] = 3;
+                return RedirectToAction(nameof(Credits));
+            }
+            return View();
         }
         public ActionResult Credit_Edit(int id)
         {
@@ -44,9 +55,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
-
-
+        public ActionResult Credit_Delete(int id)
+        {
+            return Credit_Details(id);
+        }
         [HttpPost]
         public ActionResult Credit_Delete(Credit c)
         {
@@ -65,35 +77,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
 
 
-
-
-
-
-
-
-        public IActionResult Credit_Add()
-        {
-            return View(new Credit());
-        }
-        [HttpPost]
-        public ActionResult Credit_Add(Credit c, int i)
-        {
-            if (i != 1)
-            {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
-                c.Usr_OID = GetUserData().Result;
-            }
-            int result = AddItemN<Credit>("Credits", c);
-            if (result == 0)
-            {
-                TempData["sendFlagCred"] = 3;
-                return RedirectToAction(nameof(Credits));
-            }
-            return View();
-        }
-
-        //CREDITS Intermediate view
         [Route("PersonalFinance/Credits")]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Credits()
@@ -103,7 +86,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 CreditList = GetAllItemsN<Credit>("Credits", User_OID)
             };
-            ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
+            ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             //ViewModel viewModel = new ViewModel();
             //viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
             //int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
