@@ -65,7 +65,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 Balance_Update(b.Usr_OID);
-                TempData["sendFlagB"] = 3;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -83,7 +82,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Deposit>("Deposits", d);
             if (result == 0)
             {
-                TempData["sendFlagD"] = 3;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -102,7 +100,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 Balance_Update(t.Usr_OID);
-                TempData["sendFlagT"] = 3;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -123,7 +120,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 Balance_Update(b.Usr_OID);
-                TempData["sendFlagB"] = 2;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -141,7 +137,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Deposit>("Deposits", d);
             if (result == 0)
             {
-                TempData["sendFlagD"] = 2;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -160,7 +155,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 Balance_Update(t.Usr_OID);
-                TempData["sendFlagT"] = 2;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -177,7 +171,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Banks", b.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagB"] = 1;
                 Balance_Update(GetUserData().Result);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -193,7 +186,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Deposits", d.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagD"] = 1;
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -208,7 +200,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Tickets", t.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagT"] = 1;
                 Balance_Update(GetUserData().Result);
                 return RedirectToAction(nameof(Wallet));
             }
