@@ -13,9 +13,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             ViewModel viewModel = new();
             viewModel.Credits = GetAllItemsN<Credit>("Credits", User_OID);
-            //viewModel.Credit = new Credit();
             viewModel.Debits = GetAllItemsN<Debit>("Debits", User_OID);
-            //viewModel.Debit = new Debit();
             return View(viewModel);
         }
     }
