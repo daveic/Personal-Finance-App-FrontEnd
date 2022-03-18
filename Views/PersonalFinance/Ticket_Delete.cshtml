@@ -7,11 +7,26 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 Stai per eliminare il seguente ticket:
-                <br /><br />Deposito n°: @Model.ID
-                <br />Gestore: @Model.TicketName
-                <br />N° ticket residui: @Model.NumTicket
-                <br />Valore ticket: @Model.TicketValue
                 <br /><br />
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Gestore</th>
+                                    <th scope="col">N° ticket residui</th>
+                                    <th scope="col">Valore ticket</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.TicketName</td>
+                                    <td>@Model.NumTicket</td>
+                                    <td>@Model.TicketValue.ToString("C")</td>
+                                </tr>           
+                            </tbody>
+                        </table>
+                    </div>
+                <br />
             </div>
         </div>
         <div class="form-row">

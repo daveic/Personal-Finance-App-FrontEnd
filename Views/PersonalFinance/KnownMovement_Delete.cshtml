@@ -7,10 +7,24 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 Stai per eliminare il seguente movimento:
-                <br /><br />Movimento n°: @Model.ID
-                <br />Titolo: @Model.KMTitle
-                <br />Importo: @Model.KMValue
                 <br /><br />
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Titolo</th>
+                                    <th scope="col">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.KMTitle</td>
+                                    <td>@Model.KMValue.ToString("C")</td>
+                                </tr>           
+                            </tbody>
+                        </table>
+                    </div>
+                <br />
             </div>
         </div>
         <div class="form-row">

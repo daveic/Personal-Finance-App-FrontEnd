@@ -2,7 +2,6 @@
 using PersonalFinanceFrontEnd.Models;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -52,29 +51,31 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
-            foreach (var itemt in TicketList)
+            if(TicketList != null)
             {
-                foreach (var ticket in Tickets)
+                foreach (var itemt in TicketList)
                 {
-                    if (itemt.ID == ticket.ID)
+                    foreach (var ticket in Tickets)
                     {
-                        ticket.NumTicket = itemt.input_value;
-                        int result = EditItemIDN<Ticket>("Tickets", ticket);
+                        if (itemt.ID == ticket.ID)
+                        {
+                            ticket.NumTicket = itemt.input_value;
+                            int result = EditItemIDN<Ticket>("Tickets", ticket);
+                        }
                     }
                 }
             }
-            Balance_Update(User_OID);
+            BalanceUpdate(User_OID);
             return RedirectToAction(nameof(Index));
         }
-        public int Balance_Update(string User_OID)
+        [HttpPost]
+        public int BalanceUpdate(string User_OID)
         {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Balances/");
-                client.PostAsJsonAsync<string>("Update", User_OID).Wait();
-                var result = client.PostAsJsonAsync<string>("Update", User_OID).Result;
-            }
-            return 1;
+            Balance b = new();
+            b.Usr_OID = User_OID;
+            b.BalDateTime = DateTime.UtcNow;
+            int result = AddItemN<Balance>("Balances", b);
+            return result;
         }
     }
 }

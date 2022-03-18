@@ -7,10 +7,24 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 Stai per eliminare il seguente deposito:
-                <br /><br />Deposito n°: @Model.ID
-                <br />Banca: @Model.BankName
-                <br />Importo: @Model.DepValue
                 <br /><br />
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Banca</th>
+                                    <th scope="col">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.BankName</td>
+                                    <td>@Model.DepValue.ToString("C")</td>
+                                </tr>           
+                            </tbody>
+                        </table>
+                    </div>
+                <br />
             </div>
         </div>
         <div class="form-row">

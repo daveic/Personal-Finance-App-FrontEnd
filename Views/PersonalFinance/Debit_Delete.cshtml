@@ -7,11 +7,26 @@
         <div class="form-row">
             <div class="form-group col-md-12">
                 Stai per eliminare il seguente debito:
-                <br /><br />Credito n°: @Model.ID
-                <br />Titolo: @Model.DebTitle
-                <br />Debitore: @Model.CredName
-                <br />Importo: @Model.DebValue
                 <br /><br />
+                    <div class="table-responsive-xl">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Titolo</th>
+                                    <th scope="col">Debitore</th>
+                                    <th scope="col">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@Model.DebTitle</td>
+                                    <td>@Model.CredName</td>
+                                    <td>@Model.DebValue.ToString("C")</td>
+                                </tr>           
+                            </tbody>
+                        </table>
+                    </div>
+                <br />
             </div>
         </div>
         <div class="form-row">
