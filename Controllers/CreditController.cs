@@ -70,13 +70,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
-
-
-
-
-
-
         [Route("PersonalFinance/Credits")]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Credits()
@@ -87,12 +80,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 CreditList = GetAllItemsN<Credit>("Credits", User_OID)
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
-            //ViewModel viewModel = new ViewModel();
-            //viewModel.Credits = GetAllItems<Credit>("PersonalFinanceAPI", "Credits", User_OID);
-            //int sendFlag = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
-            //viewModel.state = sendFlag;
             return View(Credits);
         }
-
     }
 }
