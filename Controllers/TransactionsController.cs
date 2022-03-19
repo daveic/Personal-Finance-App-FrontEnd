@@ -327,7 +327,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         }
                         else
                         {
-                            Debit_Edit(debit, 1, true);
+                            //Debit_Edit(debit, 1, true);
                         }
                     }
 

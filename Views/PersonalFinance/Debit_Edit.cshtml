@@ -7,7 +7,7 @@
     <div class="modal-body">
         <input type="hidden" asp-for="ID" />
         <div class="form-row">
-            <h4>Modifica credito con ID: @Model.ID</h4>
+            <h4>Modifica debito</h4>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -22,62 +22,72 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="CredName">Creditore</label>
                 <input type="text" class="form-control" asp-for="CredName" style="background-color: #444">
                 <span asp-validation-for="CredName" class="text-danger"></span>
             </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
-                <input type="text" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
-                <span asp-validation-for="Input_value" class="text-danger"></span>
-            </div>
+            @if(Model.Multiplier == 0)
+            {
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
+                    <input type="text" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
+                    <span asp-validation-for="Input_value" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
+                    <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444">
+                    <span asp-validation-for="DebDateTime" class="text-danger"></span>
+                </div>
+            }
+            @if (Model.Multiplier != 0)
+            {
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° di rate totali</label>
+                    <input type="text" class="form-control" asp-for="RtNum" style="background-color: #444">
+                    <span asp-validation-for="RtNum" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="RtPaid">N° di rate pagate</label>
+                    <input type="text" class="form-control" asp-for="RtPaid" style="background-color: #444">
+                    <span asp-validation-for="RtPaid" class="text-danger"></span>
+                </div>
+            }
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
-                <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444">
-                <span asp-validation-for="DebDateTime" class="text-danger"></span>
+        @if(Model.Multiplier != 0)
+        {               
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="Input_value_remain">Importo Residuo</label>
+                    <input type="text" class="form-control" asp-for="Input_value_remain" style="background-color: #444">
+                    <span asp-validation-for="Input_value_remain" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="Multiplier">Ogni n</label>
+                    <input type="number" class="form-control" asp-for="Multiplier" style="background-color: #444">
+                    <span asp-validation-for="Multiplier" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="RtFreq">Frequenza</label>
+                    <select class="form-control" id="RtFreq" name="RtFreq" asp-for="RtFreq" style="background-color: #444">
+                        <option>-- Seleziona --</option>
+                        <option>Mesi</option>
+                        <option>Anni</option>
+                    </select>
+                    <span asp-validation-for="RtFreq" class="text-danger"></span>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebInsDate">Data inserimento</label>
-                <input type="date" class="form-control" asp-for="DebInsDate" style="background-color: #444">
-                <span asp-validation-for="DebInsDate" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° di rate totali</label>
-                <input type="text" class="form-control" asp-for="RtNum" style="background-color: #444">
-                <span asp-validation-for="RtNum" class="text-danger"></span>
-            </div>
-            <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="RtPaid">N° di rate pagate</label>
-                <input type="text" class="form-control" asp-for="RtPaid" style="background-color: #444">
-                <span asp-validation-for="RtPaid" class="text-danger"></span>
-            </div>
-            <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="Input_value_remain">Importo Residuo</label>
-                <input type="text" class="form-control" asp-for="Input_value_remain" style="background-color: #444">
-                <span asp-validation-for="Input_value_remain" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="Multiplier">Ogni n</label>
-                <input type="number" class="form-control" asp-for="Multiplier" style="background-color: #444">
-                <span asp-validation-for="Multiplier" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="RtFreq">Frequenza</label>
-                <select class="form-control" id="RtFreq" name="RtFreq" asp-for="RtFreq" style="background-color: #444">
-                    <option>-- Seleziona --</option>
-                    <option>Mesi</option>
-                    <option>Anni</option>
-                </select>
-                <span asp-validation-for="RtFreq" class="text-danger"></span>
-            </div>
-        </div>
+            <input type="hidden" class="form-control" asp-for="DebDateTime" style="background-color: #444">
+            <input type="hidden" class="form-control" asp-for="DebValue" style="background-color: #444">
+        } else
+        {
+            <input type="hidden" class="form-control" asp-for="RtNum" style="background-color: #444">
+            <input type="hidden" class="form-control" asp-for="RtPaid" style="background-color: #444">
+            <input type="hidden" class="form-control" asp-for="Multiplier" style="background-color: #444">
+            <input type="hidden" class="form-control" asp-for="RtFreq" style="background-color: #444">
+            <input type="hidden" class="form-control" asp-for="RemainToPay" style="background-color: #444">
+
+        }
         <div class="row">
             <div class="col-md-12">
                 <label for="message-text" class="col-form-label" asp-for="DebNote">Note:</label>
@@ -85,6 +95,7 @@
             </div>
         </div>
         <input type="hidden" class="form-control" asp-for="Exp_ID" style="background-color: #444">
+        <input type="hidden" class="form-control" asp-for="DebInsDate" style="background-color: #444">
         <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
             <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>

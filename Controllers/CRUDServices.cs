@@ -1,6 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -52,16 +55,34 @@ namespace PersonalFinanceFrontEnd.Controllers
             return (1);
         }
         //HTTP EDIT Generic method
+        public async Task<int> EditItemIDKAsync<T>(string controller, T obj) where T : new()
+        {
+            string path = "api/" + controller + "/Update";
+            using (HttpClient client = new())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                string json = JsonSerializer.Serialize(obj);
+                var content = new StringContent(json);
+                HttpResponseMessage response = await client.PutAsync(path, content);
+                //var postTask = client.PutAsync<T>(path, obj);
+
+                if (response.IsSuccessStatusCode) { return (0); }
+            }
+            return (1);
+        }
         public int EditItemIDN<T>(string controller, T obj) where T : new()
         {
             string path = "api/" + controller + "/Update";
             using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
-                client.PutAsJsonAsync(path, obj).Wait();
-                if (client.PutAsJsonAsync(path, obj).Result.IsSuccessStatusCode) return 0;
+                client.DefaultRequestHeaders.TransferEncodingChunked = false;
+                var postTask = client.PutAsJsonAsync<T>(path, obj);
+                postTask.Wait();
+                var result = postTask.Result;
+                if (result.IsSuccessStatusCode) { return (0); }
             }
-            return 1;
+            return (1);
         }
         //HTTP DELETE Generic method
         public int DeleteItemN(string controller, int id, string User_OID)

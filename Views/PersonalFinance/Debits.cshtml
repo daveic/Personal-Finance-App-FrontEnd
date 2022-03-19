@@ -18,6 +18,22 @@
         </div>
     </div>
 </div>
+<!-- Modal ADD-->
+<div class="modal fade" id="newitempart" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuovo debito a rate</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="form-row">
+                <partial name="Debit_Add_Part" model="Model.Debit" />
+            </div>
+        </div>
+    </div>
+</div>
 <br />
 <br />
 <!-- Modal EDIT-->
@@ -116,6 +132,7 @@ else if (ViewBag.state == 3)
         <div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
             <div class="card-header">
                 <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi debito</button>
+                <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitempart" data-whatever="getbootstrap">Aggiungi debito rateizzato</button>
             </div>
             <div class="card-body">
                 <div class="card-body">

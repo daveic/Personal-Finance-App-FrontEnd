@@ -38,48 +38,50 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public IActionResult Debit_Add()
         {
-            Debit model = new()
-            {
-                DebDateTime = DateTime.MinValue
-            };
-            return View(model);
+            return View(new Debit());
         }
         [HttpPost]
         public ActionResult Debit_Add(Debit d, int i)
         {
             if (i != 1)
             {
-                d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
                 d.Input_value = d.Input_value.Replace(".", ",");
                 d.DebValue = Convert.ToDouble(d.Input_value);
+                d.RemainToPay = d.DebValue;
             }
+            d.DebInsDate = DateTime.Now;
+            d.RtNum = 1;
+            d.RtPaid = 0;
+            d.RtFreq = "Mesi";
+            d.Multiplier = 0;
             d.Usr_OID = GetUserData().Result;
-            //if (d.DebDateTime == DateTime.MinValue)
-            //{
-            //    d.DebDateTime = d.DebInsDate.AddMonths(Convert.ToInt32((d.RtNum * d.Multiplier)));
-            //}
+            int result = AddItemN<Debit>("Debits", d);
+            if (result == 0)
+            {
+                TempData["sendFlagDeb"] = 3;
 
-            //for (int k = 0; k < d.RtNum; k++)
-            //{
-            //    Expiration exp = new Expiration();
-            //    exp.Usr_OID = d.Usr_OID;
-            //    exp.ExpTitle = d.DebTitle;
-            //    exp.ExpDescription = d.DebTitle + "rata: " + (k + 1);
-            //    if (d.RtFreq == "Mesi")
-            //    {
-            //        exp.ExpDateTime = d.DebInsDate.AddMonths(k * d.Multiplier);
-            //    }
-            //    if (d.RtFreq == "Anni")
-            //    {
-            //        exp.ExpDateTime = d.DebInsDate.AddYears(k * d.Multiplier);
-            //    }
-            //    exp.ColorLabel = "red";
-            //    exp.ExpValue = d.DebValue / d.RtNum;
-            //    AddItem<Expiration>("Expiration", exp);
-            //}
-            //IEnumerable<Expiration> Expirations = GetAllItems<Expiration>("PersonalFinanceAPI", nameof(Expirations), d.Usr_OID);
-            //d.Exp_ID = Expirations.Last().ID - Convert.ToInt32(d.RtNum) + 1;
+                return RedirectToAction(nameof(Debits));
+            }
+            return View();
+        }
+        public IActionResult Debit_Add_Part()
+        {
+            return View(new Debit());
+        }
+        [HttpPost]
+        public ActionResult Debit_Add_Part(Debit d, int i)
+        {
+            if (i != 1)
+            {
+                d.Input_value = d.Input_value.Replace(".", ",");
+                d.DebValue = Convert.ToDouble(d.Input_value);
+                d.RemainToPay = d.DebValue;
+            }
+            d.DebInsDate = DateTime.Now;
+            d.DebDateTime = DateTime.MinValue;
+            d.RtPaid = 0;
+            d.Usr_OID = GetUserData().Result;
+
             int result = AddItemN<Debit>("Debits", d); //????
             if (result == 0)
             {
@@ -94,14 +96,22 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Debit_Details(id);
         }
         [HttpPost]
-        public ActionResult Debit_Edit(Debit d, int i, bool fromTransaction)
+        public ActionResult Debit_Edit(Debit d, int i/*, bool fromTransaction*/)
         {
             if (i != 1)
             {
-                d.Input_value = d.Input_value.Replace(".", ",");
-                d.DebValue = Convert.ToDouble(d.Input_value);
-                d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
-                d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
+                if(d.Input_value != null)
+                {
+                    d.Input_value = d.Input_value.Replace(".", ",");
+                    d.DebValue = Convert.ToDouble(d.Input_value);
+                }
+
+                if(d.Multiplier != 0) //Sto modificando un debito a rate
+                {
+                    d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
+                    d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
+                }
+
             }
             d.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Debit>("Debits", d);
@@ -112,23 +122,24 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        [HttpPost]
-        public ActionResult Debit_Exp_Update(Debit d, bool fromTransaction)
-        {
-            Debit_Exp dexp = new()
-            {
-                Debit = d,
-                FromTransaction = fromTransaction
-            };
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Debits/");
-                var postTask = client.PutAsJsonAsync<Debit_Exp>("UpdateExpOnDebit", dexp);
-                postTask.Wait();
-                var result = postTask.Result;
-            }
-            return RedirectToAction(nameof(KnownMovements));
-        }
+
+        //[HttpPost]
+        //public ActionResult Debit_Exp_Update(Debit d, bool fromTransaction)
+        //{
+        //    Debit_Exp dexp = new()
+        //    {
+        //        Debit = d,
+        //        FromTransaction = fromTransaction
+        //    };
+        //    using (var client = new HttpClient())
+        //    {
+        //        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Debits/");
+        //        var postTask = client.PutAsJsonAsync<Debit_Exp>("UpdateExpOnDebit", dexp);
+        //        postTask.Wait();
+        //        var result = postTask.Result;
+        //    }
+        //    return RedirectToAction(nameof(KnownMovements));
+        //}
         public ActionResult Debit_Delete(int id)
         {
             return Debit_Details(id);
