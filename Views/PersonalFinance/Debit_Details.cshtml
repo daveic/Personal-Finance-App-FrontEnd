@@ -50,11 +50,11 @@
                             </tr>
                             <tr class="table-active">
                                 <th scope="row">Importo singola rata:</th>
-                                <td>@(Model.DebValue/Model.RtNum)</td>
+                                <td>@((Model.DebValue/Model.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td>
                             </tr>
                             <tr class="table-active">
                                 <th scope="row">Importo rimanente:</th>
-                                <td>@Model.RemainToPay€</td>
+                                <td>@Model.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                             </tr>                            
                         }
                         <tr class="table-active">

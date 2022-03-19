@@ -140,7 +140,6 @@ else if (ViewBag.state == 3)
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
                                     <th scope="col">Codice Debito</th>
                                     <th scope="col">Titolo</th>
                                     <th scope="col">Creditore</th>
@@ -156,7 +155,6 @@ else if (ViewBag.state == 3)
                                 @foreach (var item in Model.DebitList)
                                 {
                                     <tr>
-                                        <td>@item.ID</td>
                                         <td>@item.DebCode</td>
                                         <td>@item.DebTitle</td>
                                         <td>@item.CredName</td>

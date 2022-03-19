@@ -189,8 +189,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     TempData["sendFlagTr"] = 3;
-                    Transaction_Balance_Update(t.Usr_OID);
-                    Transaction_Credit_Debit_Update(t);
+                    //Transaction_Balance_Update(t.Usr_OID);
+                    //Transaction_Credit_Debit_Update(t);
                     return RedirectToAction(nameof(Transactions));
                 }
             }
@@ -306,81 +306,81 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-        public int Transaction_Credit_Debit_Update(Transaction t)
-        {
-            IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", t.Usr_OID);
-            IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", t.Usr_OID);
+        //public int Transaction_Credit_Debit_Update(Transaction t)
+        //{
+        //    IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", t.Usr_OID);
+        //    IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", t.Usr_OID);
 
-            if (t.TrsValue < 0)
-            {
-                foreach (var debit in Debits)
-                {
-                    if (t.TrsCode == debit.DebCode)
-                    {
-                        debit.RemainToPay += t.TrsValue;
-                        debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
-                        DeleteItemN("Expirations", (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)), debit.Usr_OID);
+        //    if (t.TrsValue < 0)
+        //    {
+        //        foreach (var debit in Debits)
+        //        {
+        //            if (t.TrsCode == debit.DebCode)
+        //            {
+        //                debit.RemainToPay += t.TrsValue;
+        //                debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
+        //                DeleteItemN("Expirations", (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)), debit.Usr_OID);
 
-                        if (debit.RemainToPay <= 0)
-                        {
-                            Debit_Delete(debit);
-                        }
-                        else
-                        {
-                            //Debit_Edit(debit, 1, true);
-                        }
-                    }
+        //                if (debit.RemainToPay <= 0)
+        //                {
+        //                    Debit_Delete(debit);
+        //                }
+        //                else
+        //                {
+        //                    //Debit_Edit(debit, 1, true);
+        //                }
+        //            }
 
-                }
-                if (t.TrsCode.StartsWith("CRE"))
-                {
-                    Credit model = new()
-                    {
-                        Usr_OID = t.Usr_OID,
-                        CredCode = t.TrsCode,
-                        CredDateTime = DateTime.UtcNow,
-                        CredValue = t.TrsValue,
-                        CredTitle = "Prestito/Anticipo",
-                        CredNote = ""
-                    };
-                    Credit_Add(model, 1);
-                }
+        //        }
+        //        if (t.TrsCode.StartsWith("CRE"))
+        //        {
+        //            Credit model = new()
+        //            {
+        //                Usr_OID = t.Usr_OID,
+        //                CredCode = t.TrsCode,
+        //                CredDateTime = DateTime.UtcNow,
+        //                CredValue = t.TrsValue,
+        //                CredTitle = "Prestito/Anticipo",
+        //                CredNote = ""
+        //            };
+        //            Credit_Add(model, 1);
+        //        }
 
-            }
-            if (t.TrsValue > 0)
-            {
-                foreach (var credit in Credits)
-                {
-                    if (t.TrsCode == credit.CredCode)
-                    {
-                        credit.CredValue -= t.TrsValue;
-                        if (credit.CredValue <= 0)
-                        {
-                            Credit_Delete(credit);
-                        }
-                        else
-                        {
-                            Credit_Edit(credit, 1);
-                        }
-                    }
-                }
-                if (t.TrsCode.StartsWith("DEB"))
-                {
-                    Debit model = new();
-                    model.Usr_OID = t.Usr_OID;
-                    model.DebCode = t.TrsCode;
-                    model.DebInsDate = DateTime.UtcNow;
-                    model.DebValue = -t.TrsValue;
-                    model.DebTitle = "Prestito/Anticipo";
-                    model.DebNote = "";
-                    model.RemainToPay = -t.TrsValue;
-                    model.RtPaid = 0;
-                    model.RtNum = 1;
-                    Debit_Add(model, 1);
-                }
-            }
-            return 1;
-        }
+        //    }
+        //    if (t.TrsValue > 0)
+        //    {
+        //        foreach (var credit in Credits)
+        //        {
+        //            if (t.TrsCode == credit.CredCode)
+        //            {
+        //                credit.CredValue -= t.TrsValue;
+        //                if (credit.CredValue <= 0)
+        //                {
+        //                    Credit_Delete(credit);
+        //                }
+        //                else
+        //                {
+        //                    Credit_Edit(credit, 1);
+        //                }
+        //            }
+        //        }
+        //        if (t.TrsCode.StartsWith("DEB"))
+        //        {
+        //            Debit model = new();
+        //            model.Usr_OID = t.Usr_OID;
+        //            model.DebCode = t.TrsCode;
+        //            model.DebInsDate = DateTime.UtcNow;
+        //            model.DebValue = -t.TrsValue;
+        //            model.DebTitle = "Prestito/Anticipo";
+        //            model.DebNote = "";
+        //            model.RemainToPay = -t.TrsValue;
+        //            model.RtPaid = 0;
+        //            model.RtNum = 1;
+        //            Debit_Add(model, 1);
+        //        }
+        //    }
+        //    return 1;
+        //}
         public ActionResult Transaction_Delete(int id)
         {
             return Transaction_Details(id);
