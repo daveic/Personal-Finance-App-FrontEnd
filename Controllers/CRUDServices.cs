@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -64,8 +63,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 string json = JsonSerializer.Serialize(obj);
                 var content = new StringContent(json);
                 HttpResponseMessage response = await client.PutAsync(path, content);
-                //var postTask = client.PutAsync<T>(path, obj);
-
                 if (response.IsSuccessStatusCode) { return (0); }
             }
             return (1);

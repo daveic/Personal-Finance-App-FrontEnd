@@ -7,7 +7,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-        //DEBITS Intermediate view
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Debits()
         {
@@ -71,7 +70,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             d.RtPaid = 0;
             d.Usr_OID = GetUserData().Result;
 
-            int result = AddItemN<Debit>("Debits", d); //????
+            int result = AddItemN<Debit>("Debits", d);
             if (result == 0)
             {
                 TempData["sendFlagDeb"] = 3;
@@ -85,7 +84,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return Debit_Details(id);
         }
         [HttpPost]
-        public ActionResult Debit_Edit(Debit d, int i/*, bool fromTransaction*/)
+        public ActionResult Debit_Edit(Debit d, int i)
         {
             if (i != 1)
             {
@@ -109,24 +108,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
-        //[HttpPost]
-        //public ActionResult Debit_Exp_Update(Debit d, bool fromTransaction)
-        //{
-        //    Debit_Exp dexp = new()
-        //    {
-        //        Debit = d,
-        //        FromTransaction = fromTransaction
-        //    };
-        //    using (var client = new HttpClient())
-        //    {
-        //        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Debits/");
-        //        var postTask = client.PutAsJsonAsync<Debit_Exp>("UpdateExpOnDebit", dexp);
-        //        postTask.Wait();
-        //        var result = postTask.Result;
-        //    }
-        //    return RedirectToAction(nameof(KnownMovements));
-        //}
         public ActionResult Debit_Delete(int id)
         {
             return Debit_Details(id);
@@ -134,11 +115,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Delete(Debit d)
         {
-            //Debit deb = GetItemIDN<Debit>("Debits", d.ID, GetUserData().Result);
-            //for (int i = 0; i <= (deb.RtNum - deb.RtPaid); i++)
-            //{
-            //    int res = DeleteItemN("Expirations", (deb.Exp_ID + i), GetUserData().Result);
-            //}
             int result = DeleteItemN("Debits", d.ID, GetUserData().Result);
             if (result == 0)
             {

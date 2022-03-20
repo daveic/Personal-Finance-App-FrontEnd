@@ -7,6 +7,18 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
+        [Route("PersonalFinance/Credits")]
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+        public ActionResult Credits()
+        {
+            string User_OID = GetUserData().Result; //Fetch User Data
+            Credits Credits = new()
+            {
+                CreditList = GetAllItemsN<Credit>("Credits", User_OID)
+            };
+            ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
+            return View(Credits);
+        }
         public ActionResult Credit_Details(int id)
         {
             Credit Credit = GetItemIDN<Credit>("Credits", id, GetUserData().Result);
@@ -69,18 +81,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 return RedirectToAction(nameof(Credits));
             }
             return View();
-        }
-        [Route("PersonalFinance/Credits")]
-        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
-        public ActionResult Credits()
-        {
-            string User_OID = GetUserData().Result; //Fetch User Data
-            Credits Credits = new()
-            {
-                CreditList = GetAllItemsN<Credit>("Credits", User_OID)
-            };
-            ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
-            return View(Credits);
         }
     }
 }
