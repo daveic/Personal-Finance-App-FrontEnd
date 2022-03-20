@@ -16,7 +16,7 @@ namespace PersonalFinanceFrontEnd.Models
         public bool Type { get; set; }
         public string NewTrsCode { get; set; }
         public string Input_value { get; set; }
-
+        public DateTime? TrsDateTimeExp { get; set; }
     }
     public class TransactionDetailsEdit
     {

@@ -23,10 +23,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
                     <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
                     <span asp-validation-for="TrsTitle" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data rientro/scadenza</label>
+                    <input type="date" class="form-control" id="theDate" asp-for="TrsDateTimeExp" style="background-color: #444" value="gg/mm/YYY">
+                    <span asp-validation-for="TrsDateTimeExp" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
                     <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Seleziona categoria</label>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Seleziona una categoria esistente oppure creane una nuova nel campo sotto.">info</span>

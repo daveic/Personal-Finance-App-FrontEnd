@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
-using System.Net.Http.Json;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -105,13 +94,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                     d.Input_value = d.Input_value.Replace(".", ",");
                     d.DebValue = Convert.ToDouble(d.Input_value);
                 }
-
                 if(d.Multiplier != 0) //Sto modificando un debito a rate
                 {
                     d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
                     d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
                 }
-
             }
             d.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Debit>("Debits", d);
@@ -147,11 +134,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Delete(Debit d)
         {
-            Debit deb = GetItemIDN<Debit>("Debits", d.ID, GetUserData().Result);
-            for (int i = 0; i <= (deb.RtNum - deb.RtPaid); i++)
-            {
-                int res = DeleteItemN("Expirations", (deb.Exp_ID + i), GetUserData().Result);
-            }
+            //Debit deb = GetItemIDN<Debit>("Debits", d.ID, GetUserData().Result);
+            //for (int i = 0; i <= (deb.RtNum - deb.RtPaid); i++)
+            //{
+            //    int res = DeleteItemN("Expirations", (deb.Exp_ID + i), GetUserData().Result);
+            //}
             int result = DeleteItemN("Debits", d.ID, GetUserData().Result);
             if (result == 0)
             {

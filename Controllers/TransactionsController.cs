@@ -189,8 +189,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     TempData["sendFlagTr"] = 3;
-                    //Transaction_Balance_Update(t.Usr_OID);
-                    //Transaction_Credit_Debit_Update(t);
                     return RedirectToAction(nameof(Transactions));
                 }
             }
