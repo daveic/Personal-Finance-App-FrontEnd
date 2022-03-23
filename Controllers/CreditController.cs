@@ -10,7 +10,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Credit_Details(int id)
         {
             Credit Credit = GetItemIDN<Credit>("Credits", id, GetUserData().Result);
-            Credit.input_value = Credit.CredValue.ToString();
+            Credit.Input_value = Credit.CredValue.ToString();
             return PartialView(Credit);
         }
         public IActionResult Credit_Add()
@@ -22,8 +22,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
+                c.Input_value = c.Input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.Input_value);
                 c.Usr_OID = GetUserData().Result;
             }
             int result = AddItemN<Credit>("Credits", c);
@@ -43,8 +43,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                c.input_value = c.input_value.Replace(".", ",");
-                c.CredValue = Convert.ToDouble(c.input_value);
+                c.Input_value = c.Input_value.Replace(".", ",");
+                c.CredValue = Convert.ToDouble(c.Input_value);
             }
             c.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Credit>("Credits", c);

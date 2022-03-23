@@ -64,7 +64,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Bank>("Banks", b);
             if (result == 0)
             {
-                BalanceUpdate(b.Usr_OID);
+                BalanceUpdate(b.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -99,7 +99,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Ticket>("Tickets", t);
             if (result == 0)
             {
-                BalanceUpdate(t.Usr_OID);
+                BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -119,7 +119,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Bank>("Banks", b);
             if (result == 0)
             {
-                BalanceUpdate(b.Usr_OID);
+                BalanceUpdate(b.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -154,7 +154,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Ticket>("Tickets", t);
             if (result == 0)
             {
-                BalanceUpdate(t.Usr_OID);
+                BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -171,7 +171,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Banks", b.ID, GetUserData().Result);
             if (result == 0)
             {
-                BalanceUpdate(GetUserData().Result);
+                BalanceUpdate(GetUserData().Result, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -200,7 +200,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Tickets", t.ID, GetUserData().Result);
             if (result == 0)
             {
-                BalanceUpdate(GetUserData().Result);
+                BalanceUpdate(GetUserData().Result, false);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();

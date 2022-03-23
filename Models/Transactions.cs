@@ -17,12 +17,15 @@ namespace PersonalFinanceFrontEnd.Models
         public string NewTrsCode { get; set; }
         public string Input_value { get; set; }
         public DateTime? TrsDateTimeExp { get; set; }
+        public string DebCredChoice { get; set; }
+        public double DebCredInValue { get; set; } 
     }
     public class TransactionDetailsEdit
     {
-        public int ID { get; set; }
-        public string User_OID { get; set; }
-        public List<SelectListItem> Codes { get; set; }
+        public List<Debit> DebitsRat { get; set; }
+        public List<Debit> DebitsMono { get; set; }
+        public List<Credit> CreditsMono { get; set; }
+        public List<string> Codes { get; set; }
     }
     public class Transactions
     {

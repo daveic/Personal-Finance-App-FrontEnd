@@ -65,14 +65,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
-            BalanceUpdate(User_OID);
+            BalanceUpdate(User_OID , true);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public int BalanceUpdate(string User_OID)
+        public int BalanceUpdate(string User_OID, bool fromFU)
         {
             Balance b = new();
             b.Usr_OID = User_OID;
+            b.FromFU = fromFU;
             b.BalDateTime = DateTime.UtcNow;
             int result = AddItemN<Balance>("Balances", b);
             return result;
