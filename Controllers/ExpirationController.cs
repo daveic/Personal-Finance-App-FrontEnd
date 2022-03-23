@@ -93,8 +93,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Expiration_Add(Expiration e)
         {
-            e.input_value = e.input_value.Replace(".", ",");
-            e.ExpValue = Convert.ToDouble(e.input_value);
+            e.Input_value = e.Input_value.Replace(".", ",");
+            e.ExpValue = Convert.ToDouble(e.Input_value);
             e.Usr_OID = GetUserData().Result;
             int result = AddItemN<Expiration>("Expirations", e);
             if (result == 0)
@@ -106,7 +106,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Expiration_Details(int id)
         {
             Expiration Expiration = GetItemIDN<Expiration>("Expirations", id, GetUserData().Result);
-            Expiration.input_value = Expiration.ExpValue.ToString();
+            Expiration.Input_value = Expiration.ExpValue.ToString();
             return PartialView(Expiration);
         }
         public ActionResult Expiration_Delete(int id)

@@ -157,6 +157,18 @@ namespace PersonalFinanceFrontEnd.Controllers
             //}
             TempData["Codes"] = TrsAPI.Codes;
             TrsToView.Transaction = new Transaction();
+            TransactionDetailsEdit detection = new();
+            path = "api/Transactions/DetailsEdit?User_OID=" + GetUserData().Result;
+            using (HttpClient client = new())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                client.GetAsync(path).Wait();
+                client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Wait();
+                detection = client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Result;
+            }
+            ViewBag.DebitListRat = detection.DebitsRat;
+            ViewBag.DebitList = detection.DebitsMono;
+            ViewBag.CreditList = detection.CreditsMono;
             return View(TrsToView);
         }
 
@@ -175,10 +187,18 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Transaction_Add(Transaction t)
         {
-            t.Input_value = t.Input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.Input_value);
+            if (t.Input_value != null)
+            {
+                t.Input_value = t.Input_value.Replace(".", ",");
+                t.TrsValue = Convert.ToDouble(t.Input_value);
+            }
             if (t.Type == false) t.TrsValue = -t.TrsValue;
             if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
+            if (t.DebCredChoice is null) t.DebCredChoice = "";
+            if (t.TrsCode is null) t.TrsCode = "";
+            if (t.TrsTitle is null) t.TrsTitle = "";
+            if (t.TrsDateTimeExp is null) t.TrsDateTimeExp = DateTime.MinValue;
+            if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
             t.Usr_OID = GetUserData().Result;
             using (var client = new HttpClient())
             {
@@ -269,18 +289,18 @@ namespace PersonalFinanceFrontEnd.Controllers
             //    }
             //    isPresent = false;
             //}
-            TransactionDetailsEdit TrDet = new() { ID = id, User_OID = User_OID };
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
-                var postTask = client.PostAsJsonAsync<TransactionDetailsEdit>("DetailsEdit", TrDet);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
-                {
-                    TempData["Codes"] = result;
-                }
-            }
+           // TransactionDetailsEdit TrDet = new() { ID = id, User_OID = User_OID };
+            //using (var client = new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
+            //    var postTask = client.PostAsJsonAsync<TransactionDetailsEdit>("DetailsEdit", TrDet);
+            //    postTask.Wait();
+            //    var result = postTask.Result;
+            //    if (result.IsSuccessStatusCode)
+            //    {
+            //        TempData["Codes"] = result;
+            //    }
+            //}
             if (t.TrsValue < 0) t.Type = false; else t.Type = true;
             t.Input_value = t.TrsValue.ToString();
             return PartialView(t);

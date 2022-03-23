@@ -221,6 +221,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             GetDonutData(DOut.TransactionsIn, 1);
             GetDonutData(DOut.TransactionsOut, 0);
             TempData["Codes"] = DOut.Codes;
+            TransactionDetailsEdit detection = new();
+            path = "api/Transactions/DetailsEdit?User_OID=" + GetUserData().Result;
+            using (HttpClient client = new())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                client.GetAsync(path).Wait();
+                client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Wait();
+                detection = client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Result;
+            }
+            ViewBag.DebitListRat = detection.DebitsRat;
+            ViewBag.DebitList = detection.DebitsMono;
+            ViewBag.CreditList = detection.CreditsMono;
+
             return View(DOut);
         }
 
