@@ -160,7 +160,7 @@ else if (ViewBag.state == 3)
                                         <td>@item.CredName</td>
                                         <td>@item.DebValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                         <td>@item.DebDateTime.ToString("dd/MM/yyyy")</td>
-                                        <td>@((item.RtNum- item.RtPaid).ToString("0.0"))</td>
+                                        <td>@((item.RtNum- item.RtPaid).ToString("0."))</td>
                                         <td>@item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                         <td>
                                             @if (@item.DebNote != null && @item.DebNote.Length > 12 )

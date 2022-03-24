@@ -200,6 +200,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (t.TrsDateTimeExp is null) t.TrsDateTimeExp = DateTime.MinValue;
             if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
             t.Usr_OID = GetUserData().Result;
+            //if cred or deb code is existing, throw error - 
+            //if debcredinput is > remain to pay o creditvalue, throw error
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");

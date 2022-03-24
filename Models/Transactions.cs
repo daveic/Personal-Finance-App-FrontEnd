@@ -18,6 +18,7 @@ namespace PersonalFinanceFrontEnd.Models
         public string Input_value { get; set; }
         public DateTime? TrsDateTimeExp { get; set; }
         public string DebCredChoice { get; set; }
+       // [Range(typeof(int), "0", "100", ErrorMessage = "{0} can only be between {1} and {2}")]
         public double DebCredInValue { get; set; } 
     }
     public class TransactionDetailsEdit
