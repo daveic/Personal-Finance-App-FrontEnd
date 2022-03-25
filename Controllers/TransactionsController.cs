@@ -6,11 +6,6 @@ using System.Net.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
-using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
