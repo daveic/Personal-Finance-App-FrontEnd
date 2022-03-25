@@ -1,39 +1,25 @@
 ﻿@model PersonalFinanceFrontEnd.Models.Transaction
 
 
-
-
 <div class="modal-body">
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" data-bs-toggle="tab" href="#treasy">
-                <span class="material-icons">receipt_long</span>
-            </a>
+            <a class="nav-link active" data-bs-toggle="tab" href="#treasy"><span class="material-icons">receipt_long</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#rate"><span class="material-icons">
-toll
-</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#rate"><span class="material-icons">toll</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#creturn"><span class="material-icons" style="color: green">
-add_circle_outline
-</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#creturn"><span class="material-icons" style="color: green">add_circle_outline</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#dpay"><span class="material-icons" style="color: green">
-remove_circle_outline
-</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#dpay"><span class="material-icons" style="color: green">remove_circle_outline</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#ncred"><span class="material-icons" style="color: green">
-playlist_add_circle
-</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#ncred"><span class="material-icons" style="color: green">playlist_add_circle</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#ndeb"><span class="material-icons" style="color: green">
-playlist_add_circle
-</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#ndeb"><span class="material-icons" style="color: green">playlist_add_circle</span></a>
         </li>
     </ul>
     <br />
@@ -112,7 +98,7 @@ playlist_add_circle
                         {
                             @foreach (var item in ViewBag.DebitListRat)
                             {
-                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode &nbsp;&nbsp;-&nbsp;&nbsp; Importo rata: @((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</span>
+                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode &nbsp;&nbsp;-&nbsp;&nbsp; Importo rata: @((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</span><br />
                             }                          
                         }
                     }
@@ -122,43 +108,34 @@ playlist_add_circle
                     <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
                 </div> 
             </form>    
-            </div>
-                    <div class="tab-pane fade" id="dpay">
-                        <form asp-action="Transaction_Add" style="margin: 0 auto;">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                              @* <label for="recipient-name" class="col-form-label" asp-for="TrsDebCredPay.DebCredChoice">Colore</label>*@
+        </div>
+        <div class="tab-pane fade" id="dpay">
+            <form asp-action="Transaction_Add" style="margin: 0 auto;">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h5>Pagamento debito</h5><br />
+                <p>Seleziona il debito da pagare:</p>
                 <div class="form-check form-check-inline">
                     @{
                         if(ViewBag.DebitList != null)
                         {
-                                @foreach (var item in ViewBag.DebitList)
-                                {
-                                    <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /> @item.DebCode @item.DebValue
-                                }                          
+                            @foreach (var item in ViewBag.DebitList)
+                            {
+                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode &nbsp;&nbsp;-&nbsp;&nbsp; Importo: @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</span><br />
+                            }                          
                         }
-
                     }
                 </div>
-                                <div class="col-md-4">
+                <br />
+                <div class="row">
                     <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
                     <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
                     <span asp-validation-for="DebCredInValue" class="text-danger"></span>
-                    <asp:RangeValidator id="Range1"
-           ControlToValidate="DebCredInValue"
-           MinimumValue="0"
-           MaximumValue= "9"
-           Type="Integer"
-           Text="The value must be integer and greater or equal than 0"
-           runat="server"/>
                 </div>
-                        <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
-            </div>
-             </form>    
-             </div>
-
-        
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                </div>
+            </form>    
+        </div>        
         <div class="tab-pane fade" id="ncred">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -232,10 +209,7 @@ playlist_add_circle
         </div> 
         <div class="tab-pane fade" id="creturn">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
-                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                   
-                              @* <label for="recipient-name" class="col-form-label" asp-for="TrsDebCredPay.DebCredChoice">Colore</label>*@
+                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>                 
                 <div class="form-check form-check-inline">
                     @{
                         if(ViewBag.CreditList != null)
@@ -245,25 +219,20 @@ playlist_add_circle
                                     <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" /> @item.CredCode @item.CredValue
                                 }                          
                         }
-
                     }
                 </div> 
-                                <div class="col-md-4">
+                <div class="col-md-4">
                     <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
                     <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
                     <span asp-validation-for="DebCredInValue" class="text-danger"></span>
-                </div>
-              
-                        <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
-            </div>
-   
-</form>
-      </div>
-        
-        
-        </div>
-    </div>
+                </div>              
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                </div>        
+            </form>
+        </div>       
+    </div>   
+</div>
 
 
 
