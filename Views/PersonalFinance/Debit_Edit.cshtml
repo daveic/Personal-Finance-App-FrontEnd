@@ -37,7 +37,13 @@
             {
                 <div class="col-md-4">
                     <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
-                    <input type="text" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
+                    @if (Model.FromTrs == 0)
+                    {
+                        <input type="text" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
+                    } else if (Model.FromTrs == 1)
+                    {
+                        <input type="text" class="form-control" readonly asp-for="Input_value" placeholder="€" style="background-color: #444">
+                    }
                     <span asp-validation-for="Input_value" class="text-danger"></span>
                 </div>
                 <div class="col-md-4">
