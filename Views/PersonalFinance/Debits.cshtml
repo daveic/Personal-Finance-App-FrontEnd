@@ -173,7 +173,10 @@ else if (ViewBag.state == 3)
                                         <td style='white-space: nowrap'>
                                             <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
                                             <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                            @if(@item.FromTrs == 0)
+                                            {
                                             <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
+                                            }
                                         </td>
                                     </tr>
                                 }

@@ -23,6 +23,7 @@ namespace PersonalFinanceFrontEnd.Models
         public string Input_value_remain { get; set; }
         public string DebNote { get; set; }
         public int Exp_ID { get; set; }
+        public int FromTrs { get; set; }
     }
     public class Debits
     {

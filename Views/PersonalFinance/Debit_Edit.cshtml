@@ -12,7 +12,13 @@
         <div class="row">
             <div class="col-md-6">
                 <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito</label>
-                <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
+                @if (Model.FromTrs == 0)
+                {
+                    <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
+                } else if (Model.FromTrs == 1)
+                {
+                    <input type="text" class="form-control" readonly asp-for="DebCode" style="background-color: #444">
+                }
                 <span asp-validation-for="DebCode" class="text-danger"></span>
             </div>
             <div class="col-md-6">
@@ -96,6 +102,7 @@
         </div>
         <input type="hidden" class="form-control" asp-for="Exp_ID" style="background-color: #444">
         <input type="hidden" class="form-control" asp-for="DebInsDate" style="background-color: #444">
+        <input type="hidden" class="form-control" asp-for="FromTrs" style="background-color: #444">
         <div class="modal-footer">
             <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
             <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiorna</button>
