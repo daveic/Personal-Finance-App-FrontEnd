@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -229,173 +228,38 @@ namespace PersonalFinanceFrontEnd.Controllers
             AddItemN<Balance>("Balances", b);
             return 1;
         }
-        public ActionResult Transaction_Edit(int id)
-        {
-            return Transaction_Details_Edit(id, GetUserData().Result);
-        }
-        public ActionResult Transaction_Details_Edit(int id, string User_OID)
-        {
-            Transaction t = GetItemIDN<Transaction>("Transactions", id, User_OID);
-            //IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("PersonalFinanceAPI", nameof(Transactions), User_OID);
-            //IEnumerable<Credit> Credits = GetAllItems<Credit>("PersonalFinanceAPI", nameof(Credits), User_OID);
-            //IEnumerable<Debit> Debits = GetAllItems<Debit>("PersonalFinanceAPI", nameof(Debits), User_OID);
-            //
-            //var UniqueCodes = Transactions.GroupBy(x => x.TrsCode)
-            //                              .Select(x => x.First())
-            //                              .ToList();
-            //List<SelectListItem> Codes = new List<SelectListItem>();
-            //foreach (var item in UniqueCodes)
-            //{
-            //    SelectListItem code = new();
-            //    code.Value = item.TrsCode;
-            //    code.Text = item.TrsCode;
-            //    Codes.Add(code);
-            //}
-            //bool isPresent = false;
-            //foreach (var credit in Credits)
-            //{
-            //    foreach (var item in Codes)
-            //    {
-            //        if (credit.CredCode == item.Value) isPresent = true;
-            //    }
-            //    if (isPresent is true)
-            //    {
-            //        SelectListItem code = new SelectListItem
-            //        {
-            //            Value = credit.CredCode,
-            //            Text = credit.CredCode
-            //        };
-            //        Codes.Add(code);
-            //    }
-            //    isPresent = false;
-            //}
-            //foreach (var debit in Debits)
-            //{
-            //    foreach (var item in Codes)
-            //    {
-            //        if (debit.DebCode == item.Value) isPresent = true;
-            //    }
-            //    if (isPresent is false)
-            //    {
-            //        SelectListItem code = new()
-            //        {
-            //            Value = debit.DebCode,
-            //            Text = debit.DebCode
-            //        };
-            //        Codes.Add(code);
-            //    }
-            //    isPresent = false;
-            //}
-           // TransactionDetailsEdit TrDet = new() { ID = id, User_OID = User_OID };
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
-            //    var postTask = client.PostAsJsonAsync<TransactionDetailsEdit>("DetailsEdit", TrDet);
-            //    postTask.Wait();
-            //    var result = postTask.Result;
-            //    if (result.IsSuccessStatusCode)
-            //    {
-            //        TempData["Codes"] = result;
-            //    }
-            //}
-            if (t.TrsValue < 0) t.Type = false; else t.Type = true;
-            t.Input_value = t.TrsValue.ToString();
-            return PartialView(t);
-        }
-
-        [HttpPost]
-        public ActionResult Transaction_Edit(Transaction t)
-        {
-            t.Input_value = t.Input_value.Replace(".", ",");
-            t.TrsValue = Convert.ToDouble(t.Input_value);
-            if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
-            if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
-            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            t.Usr_OID = GetUserData().Result;
-            int result = EditItemIDN<Transaction>("Transactions", t);
-            if (result == 0)
-            {
-                TempData["sendFlagTr"] = 2;
-                Transaction_Balance_Update(t.Usr_OID);
-                return RedirectToAction(nameof(Transactions));
-            }
-            return View();
-        }
-        //public int Transaction_Credit_Debit_Update(Transaction t)
+        //public ActionResult Transaction_Edit(int id)
         //{
-        //    IEnumerable<Credit> Credits = GetAllItemsN<Credit>("Credits", t.Usr_OID);
-        //    IEnumerable<Debit> Debits = GetAllItemsN<Debit>("Debits", t.Usr_OID);
-
-        //    if (t.TrsValue < 0)
-        //    {
-        //        foreach (var debit in Debits)
-        //        {
-        //            if (t.TrsCode == debit.DebCode)
-        //            {
-        //                debit.RemainToPay += t.TrsValue;
-        //                debit.RtPaid += (-t.TrsValue) / (debit.DebValue / debit.RtNum);
-        //                DeleteItemN("Expirations", (debit.Exp_ID + Convert.ToInt32(debit.RtPaid - 1)), debit.Usr_OID);
-
-        //                if (debit.RemainToPay <= 0)
-        //                {
-        //                    Debit_Delete(debit);
-        //                }
-        //                else
-        //                {
-        //                    //Debit_Edit(debit, 1, true);
-        //                }
-        //            }
-
-        //        }
-        //        if (t.TrsCode.StartsWith("CRE"))
-        //        {
-        //            Credit model = new()
-        //            {
-        //                Usr_OID = t.Usr_OID,
-        //                CredCode = t.TrsCode,
-        //                CredDateTime = DateTime.UtcNow,
-        //                CredValue = t.TrsValue,
-        //                CredTitle = "Prestito/Anticipo",
-        //                CredNote = ""
-        //            };
-        //            Credit_Add(model, 1);
-        //        }
-
-        //    }
-        //    if (t.TrsValue > 0)
-        //    {
-        //        foreach (var credit in Credits)
-        //        {
-        //            if (t.TrsCode == credit.CredCode)
-        //            {
-        //                credit.CredValue -= t.TrsValue;
-        //                if (credit.CredValue <= 0)
-        //                {
-        //                    Credit_Delete(credit);
-        //                }
-        //                else
-        //                {
-        //                    Credit_Edit(credit, 1);
-        //                }
-        //            }
-        //        }
-        //        if (t.TrsCode.StartsWith("DEB"))
-        //        {
-        //            Debit model = new();
-        //            model.Usr_OID = t.Usr_OID;
-        //            model.DebCode = t.TrsCode;
-        //            model.DebInsDate = DateTime.UtcNow;
-        //            model.DebValue = -t.TrsValue;
-        //            model.DebTitle = "Prestito/Anticipo";
-        //            model.DebNote = "";
-        //            model.RemainToPay = -t.TrsValue;
-        //            model.RtPaid = 0;
-        //            model.RtNum = 1;
-        //            Debit_Add(model, 1);
-        //        }
-        //    }
-        //    return 1;
+        //    return Transaction_Details_Edit(id, GetUserData().Result);
         //}
+        //public ActionResult Transaction_Details_Edit(int id, string User_OID)
+        //{
+        //    Transaction t = GetItemIDN<Transaction>("Transactions", id, User_OID);
+
+        //    if (t.TrsValue < 0) t.Type = false; else t.Type = true;
+        //    t.Input_value = t.TrsValue.ToString();
+        //    return PartialView(t);
+        //}
+
+        //[HttpPost]
+        //public ActionResult Transaction_Edit(Transaction t)
+        //{
+        //    t.Input_value = t.Input_value.Replace(".", ",");
+        //    t.TrsValue = Convert.ToDouble(t.Input_value);
+        //    if (t.Type == false) t.TrsValue = -Math.Abs(t.TrsValue);
+        //    if (t.Type == true) t.TrsValue = Math.Abs(t.TrsValue);
+        //    if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
+        //    t.Usr_OID = GetUserData().Result;
+        //    int result = EditItemIDN<Transaction>("Transactions", t);
+        //    if (result == 0)
+        //    {
+        //        TempData["sendFlagTr"] = 2;
+        //        Transaction_Balance_Update(t.Usr_OID);
+        //        return RedirectToAction(nameof(Transactions));
+        //    }
+        //    return View();
+        //}
+
         public ActionResult Transaction_Delete(int id)
         {
             return Transaction_Details(id);

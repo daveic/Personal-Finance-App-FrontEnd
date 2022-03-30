@@ -10,16 +10,16 @@
             <a class="nav-link" data-bs-toggle="tab" href="#rate"><span class="material-icons">toll</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#creturn"><span class="material-icons" style="color: green">add_circle_outline</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#creturn"><span class="material-icons">add_circle_outline</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#dpay"><span class="material-icons" style="color: green">remove_circle_outline</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#dpay"><span class="material-icons">remove_circle_outline</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#ncred"><span class="material-icons" style="color: green">playlist_add_circle</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#ncred"><span class="material-icons">bookmark_add</span></a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="tab" href="#ndeb"><span class="material-icons" style="color: green">playlist_add_circle</span></a>
+            <a class="nav-link" data-bs-toggle="tab" href="#ndeb"><span class="material-icons">bookmark_remove</span></a>
         </li>
     </ul>
     <br />
@@ -92,17 +92,32 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Pagamento rata debito</h5><br />
                 <p>Seleziona il debito di cui pagare la rata:</p>
-                <div class="form-check form-check-inline">
-                    @{
-                        if(ViewBag.DebitListRat != null)
-                        {
-                            @foreach (var item in ViewBag.DebitListRat)
-                            {
-                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode &nbsp;&nbsp;-&nbsp;&nbsp; Importo rata: @((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</span><br />
-                            }                          
-                        }
-                    }
-                </div> 
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Codice debito</th>
+                            <th scope="col">Importo</th>
+                        </tr>
+                    </thead>
+                    <tbody>  
+                                                  
+                            @{
+                                if(ViewBag.DebitListRat != null)
+                                {
+                                    @foreach (var item in ViewBag.DebitListRat)
+                                    {
+    <tr>  
+                                        <td>
+                                        <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode</span><br />
+                                   </td>
+                                   <td>@((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td> 
+                                   </tr>
+                                    }                          
+                                }
+                            }            
+                   
+                    </tbody>
+                </table>
                 <br /><br />
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
@@ -114,21 +129,37 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Pagamento debito</h5><br />
                 <div class="row">
-                    <div class="col-md-9">
-                        <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il debito da pagare:</label>
-                        <div class="form-check form-check-inline">
+                    <div class="col-md-8">
+                        <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il debito da pagare:</label> 
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Codice debito</th>
+                                    <th scope="col">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>                        
                             @{
                                 if(ViewBag.DebitList != null)
                                 {
                                     @foreach (var item in ViewBag.DebitList)
                                     {
-                                        <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode</span><span style="text-align:end"> &nbsp;&nbsp;-&nbsp;&nbsp; Importo: @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</span><br />
-                                    }                          
+                                        <tr>
+                                            <td>
+                                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" />&nbsp;&nbsp;@item.DebCode
+                                            </td>
+                                            <td>                                    
+                                                @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                            </td>
+                                        </tr>
+                                     }                          
                                 }
-                            }
-                        </div>
+                            }            
+                        
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
                         <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
                         <span asp-validation-for="DebCredInValue" class="text-danger"></span>
@@ -213,23 +244,44 @@
         </div> 
         <div class="tab-pane fade" id="creturn">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
-                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>                 
-                <div class="form-check form-check-inline">
-                    @{
+                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>      
+                                 <h5>Rientro credito</h5><br />
+                <div class="row">
+                    <div class="col-md-8">
+                        <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il credito rientrato:</label> 
+<table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Codice credito</th>
+                                    <th scope="col">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>                        
+                            @{
                         if(ViewBag.CreditList != null)
                         {
                             @foreach (var item in ViewBag.CreditList)
                             {
-                                <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" /> @item.CredCode @item.CredValue
-                            }                          
-                        }
-                    }
-                </div> 
-                <div class="col-md-4">
+                                                                        <tr>
+                                            <td>
+                                <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" /> @item.CredCode
+                                                                </td>
+                                            <td>   
+                                                @item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                            </td>
+                                        </tr>
+                                     }                          
+                                }
+                            }            
+                        
+                            </tbody>
+                        </table>
+                    </div>
+                <div class="col-md-4" style="vertical-align:central">
                     <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
                     <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
                     <span asp-validation-for="DebCredInValue" class="text-danger"></span>
-                </div>  
+                </div>   </div>  
                 <br />
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>

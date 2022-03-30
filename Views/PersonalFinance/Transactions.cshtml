@@ -20,7 +20,7 @@
 </div>
 <br />
 <br />
-<!-- Modal EDIT-->
+@*<!-- Modal EDIT-->
 <div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 <!-- Modal DELETE-->
 <div class="modal fade" id="deleteitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
@@ -81,13 +81,13 @@
         <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
     </div>
 }
-else if (ViewBag.state == 2)
+@*else if (ViewBag.state == 2)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione modificata correttamente.</p>
     </div>
-}
+}*@
 else if (ViewBag.state == 3)
 {
     <div class="alert alert-dismissible fade show" role="alert">
@@ -180,7 +180,7 @@ else if (ViewBag.state == 3)
                                     </td>
                                     <td style="white-space: nowrap">
                                         <span class="btn btn-outline-primary material-icons md-24 orange600" type="button" onclick="Details(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Dettagli">info</span>
-                                        <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>
+                                       @* <span class="btn btn-outline-secondary material-icons md-24 orange600" type="button" onclick="Edit(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Modifica">edit</span>*@
                                         <span class="btn btn-outline-danger material-icons md-24 orange600" type="button" onclick="Delete(@item.ID)" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Elimina">delete</span>
                                     </td>
                                 </tr>
@@ -355,12 +355,12 @@ else if (ViewBag.state == 3)
 
 @section scripts {
     <script>
-        function Edit(ClientID) {
-            var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
-            $("#ModalBodyDiv").load(url, function () {
-                $("#edititem").modal("show");
-            })
-        }
+        //function Edit(ClientID) {
+        //    var url = "/PersonalFinance/Transaction_Edit/" + ClientID;
+        //    $("#ModalBodyDiv").load(url, function () {
+        //        $("#edititem").modal("show");
+        //    })
+        //}
         function Delete(ClientID) {
             var url = "/PersonalFinance/Transaction_Delete/" + ClientID;
             $("#ModalBodyDivDel").load(url, function () {
