@@ -23,7 +23,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data 
             KnownMovements knownMovements = new()
             {
-                KnownMovementList = GetAllItemsN<KnownMovement>("KnownMovements", User_OID)
+                KnownMovementList = GetAllItems<KnownMovement>("KnownMovements", User_OID)
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagKM") ? TempData["sendFlagKM"] : 0);
             ViewBag.ID = User_OID;
@@ -81,7 +81,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult KnownMovement_Details(int id)
         {
-            KnownMovement KnownMovement = GetItemIDN<KnownMovement>("KnownMovements", id, GetUserData().Result);
+            KnownMovement KnownMovement = GetItemID<KnownMovement>("KnownMovements", id, GetUserData().Result);
             KnownMovement.Input_value = KnownMovement.KMValue.ToString();
             return PartialView(KnownMovement);
         }

@@ -12,14 +12,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             Debits debits = new()
             {
-                DebitList = GetAllItemsN<Debit>("Debits", GetUserData().Result)
+                DebitList = GetAllItems<Debit>("Debits", GetUserData().Result)
             };            
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagDeb") ? TempData["sendFlagDeb"] : 0);
             return View(debits);
         }
         public ActionResult Debit_Details(int id)
         {
-            Debit Debit = GetItemIDN<Debit>("Debits", id, GetUserData().Result);
+            Debit Debit = GetItemID<Debit>("Debits", id, GetUserData().Result);
             Debit.Input_value = Debit.DebValue.ToString();
             Debit.Input_value_remain = Debit.RemainToPay.ToString();
             return PartialView(Debit);

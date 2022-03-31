@@ -105,7 +105,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         }
         public ActionResult Expiration_Details(int id)
         {
-            Expiration Expiration = GetItemIDN<Expiration>("Expirations", id, GetUserData().Result);
+            Expiration Expiration = GetItemID<Expiration>("Expirations", id, GetUserData().Result);
             Expiration.Input_value = Expiration.ExpValue.ToString();
             return PartialView(Expiration);
         }

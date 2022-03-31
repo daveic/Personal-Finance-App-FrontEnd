@@ -6,7 +6,7 @@
     <div class="modal-body">
         <input type="hidden" asp-for="ID" />
         <div class="form-row">
-            <h4>Modifica credito con ID: @Model.ID</h4>
+            <h4>Modifica conto</h4>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -39,3 +39,10 @@
         </div>
     </div>
 </form>
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+    });
+</script>

@@ -13,8 +13,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result;
             ViewModel model = new();
-            model.Banks = GetAllItemsN<Bank>("Banks", User_OID);
-            model.Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
+            model.Banks = GetAllItems<Bank>("Banks", User_OID);
+            model.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
             List<Bank> BankList = new();
             List<Ticket> TicketList = new();
             foreach (var item in model.Banks)
@@ -37,8 +37,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result;
             List<Bank> BankList = model.BankList;
             List<Ticket> TicketList = model.TicketList;
-            IEnumerable<Bank> Banks = GetAllItemsN<Bank>("Banks", User_OID);
-            IEnumerable<Ticket> Tickets = GetAllItemsN<Ticket>("Tickets", User_OID);
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("Banks", User_OID);
+            IEnumerable<Ticket> Tickets = GetAllItems<Ticket>("Tickets", User_OID);
             foreach (var item in BankList)
             {
                 foreach (var bank in Banks)

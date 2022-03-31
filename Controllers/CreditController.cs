@@ -14,14 +14,14 @@ namespace PersonalFinanceFrontEnd.Controllers
             string User_OID = GetUserData().Result; //Fetch User Data
             Credits Credits = new()
             {
-                CreditList = GetAllItemsN<Credit>("Credits", User_OID)
+                CreditList = GetAllItems<Credit>("Credits", User_OID)
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             return View(Credits);
         }
         public ActionResult Credit_Details(int id)
         {
-            Credit Credit = GetItemIDN<Credit>("Credits", id, GetUserData().Result);
+            Credit Credit = GetItemID<Credit>("Credits", id, GetUserData().Result);
             Credit.Input_value = Credit.CredValue.ToString();
             return PartialView(Credit);
         }

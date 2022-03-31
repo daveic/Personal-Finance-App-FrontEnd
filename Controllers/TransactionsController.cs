@@ -170,7 +170,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         public ActionResult Transaction_Details(int id)
         {
-            return PartialView(GetItemIDN<Transaction>("Transactions", id, GetUserData().Result));
+            return PartialView(GetItemID<Transaction>("Transactions", id, GetUserData().Result));
         }
 
 
@@ -217,7 +217,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 Usr_OID = User_OID,
                 BalDateTime = DateTime.UtcNow
             };
-            IEnumerable<Transaction> Transactions = GetAllItemsN<Transaction>("Transactions", User_OID);
+            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("Transactions", User_OID);
 
             double totTransaction = 0;
             foreach (var item in Transactions)

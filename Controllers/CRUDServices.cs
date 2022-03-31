@@ -9,7 +9,7 @@ namespace PersonalFinanceFrontEnd.Controllers
     public partial class PersonalFinanceController
     {
         //HTTP GET-ALL Generic method
-        public IEnumerable<T> GetAllItemsN<T>(string controller, string User_OID)
+        public IEnumerable<T> GetAllItems<T>(string controller, string User_OID)
         {
             IEnumerable<T> detections = null;
             string path = "api/" + controller + "/All" + "?User_OID=" + User_OID;
@@ -23,7 +23,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             return detections;
         }
         //HTTP GET-BY-ID Generic method
-        public T GetItemIDN<T>(string controller, int id, string User_OID) where T : new()
+        public T GetItemID<T>(string controller, int id, string User_OID) where T : new()
         {
             T detection = new();
             string path = "api/" + controller + "/Details" + "?id=" + id + "&User_OID=" + User_OID;

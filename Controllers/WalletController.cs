@@ -33,19 +33,19 @@ namespace PersonalFinanceFrontEnd.Controllers
         //DETAILS Methods
         public ActionResult Bank_Details(int id)
         {
-            Bank Bank = GetItemIDN<Bank>("Banks", id, GetUserData().Result);
+            Bank Bank = GetItemID<Bank>("Banks", id, GetUserData().Result);
             Bank.Input_value = Bank.BankValue.ToString();
             return PartialView(Bank);
         }
         public ActionResult Deposit_Details(int id)
         {
-            Deposit Deposit = GetItemIDN<Deposit>("Deposits", id, GetUserData().Result);
+            Deposit Deposit = GetItemID<Deposit>("Deposits", id, GetUserData().Result);
             Deposit.input_value = Deposit.DepValue.ToString();
             return PartialView(Deposit);
         }
         public ActionResult Ticket_Details(int id)
         {
-            Ticket Ticket = GetItemIDN<Ticket>("Tickets", id, GetUserData().Result);
+            Ticket Ticket = GetItemID<Ticket>("Tickets", id, GetUserData().Result);
             Ticket.input_value = Ticket.TicketValue.ToString();
             return PartialView(Ticket);
         }
