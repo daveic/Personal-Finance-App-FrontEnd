@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PersonalFinanceFrontEnd.Models
 {
@@ -9,8 +10,14 @@ namespace PersonalFinanceFrontEnd.Models
         public string Usr_OID { get; set; }
         public int ID { get; set; }
         public string TrsCode { get; set; }
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Titolo")]
         public string TrsTitle { get; set; }
+        [Display(Name = "Data inserimento")]
         public DateTime TrsDateTime { get; set; }
+        [Required]
+        [Display(Name = "Importo")]
         public double TrsValue { get; set; }
         public string TrsNote { get; set; }
         public bool Type { get; set; }

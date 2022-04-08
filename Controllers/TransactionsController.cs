@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PersonalFinanceFrontEnd.Models;
@@ -181,33 +180,70 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Transaction_Add(Transaction t)
         {
-            if (t.Input_value != null)
-            {
-                t.Input_value = t.Input_value.Replace(".", ",");
-                t.TrsValue = Convert.ToDouble(t.Input_value);
-            }
-            if (t.Type == false) t.TrsValue = -t.TrsValue;
-            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-            if (t.DebCredChoice is null) t.DebCredChoice = "";
-            if (t.TrsCode is null) t.TrsCode = "";
-            if (t.TrsTitle is null) t.TrsTitle = "";
-            if (t.TrsDateTimeExp is null) t.TrsDateTimeExp = DateTime.MinValue;
-            if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
             t.Usr_OID = GetUserData().Result;
-            //if cred or deb code is existing, throw error - 
-            //if debcredinput is > remain to pay o creditvalue, throw error
-            using (var client = new HttpClient())
+            if(t.DebCredChoice != null)
             {
-                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
-                var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
-                postTask.Wait();
-                var result = postTask.Result;
-                if (result.IsSuccessStatusCode)
+                if (t.DebCredChoice.StartsWith("DEB"))
                 {
-                    TempData["sendFlagTr"] = 3;
-                    return RedirectToAction(nameof(Transactions));
+                    var Debits = GetAllItems<Debit>("Debits", t.Usr_OID);
+                    foreach (var debit in Debits)
+                    {
+                        if (t.DebCredChoice == debit.DebCode)
+                        {
+                            if (t.DebCredInValue > debit.RemainToPay)
+                            {
+                                TempData["sendFlagTr"] = 4;
+                                return RedirectToAction(nameof(Transactions));
+                            }
+                        }
+                    }
+                } else if (t.DebCredChoice.StartsWith("CRE")) 
+                {
+                    var Credits = GetAllItems<Credit>("Credits", t.Usr_OID);
+                    foreach (var credit in Credits)
+                    {
+                        if (t.DebCredChoice == credit.CredCode)
+                        {
+                            if (t.DebCredInValue > credit.CredValue) 
+                            {
+                                TempData["sendFlagTr"] = 2;
+                                return RedirectToAction(nameof(Transactions));
+                            }
+                        }
+                    }
                 }
             }
+             else
+            {
+                if (t.Input_value != null)
+                {
+                    t.Input_value = t.Input_value.Replace(".", ",");
+                    t.TrsValue = Convert.ToDouble(t.Input_value);
+                }
+                if (t.Type == false) t.TrsValue = -t.TrsValue;
+                if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
+                if (t.DebCredChoice is null) t.DebCredChoice = "";
+                if (t.TrsCode is null) t.TrsCode = "";
+                if (t.TrsTitle is null) t.TrsTitle = "";
+                if (t.TrsDateTimeExp is null) t.TrsDateTimeExp = DateTime.MinValue;
+                if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
+                //if cred or deb code is existing, throw error - 
+                //if debcredinput is > remain to pay o creditvalue, throw error
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
+                    var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
+                    postTask.Wait();
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        TempData["sendFlagTr"] = 3;
+                        return RedirectToAction(nameof(Transactions));
+                    }
+                }
+            }
+                        
+
             return View();
         }
         public int Transaction_Balance_Update(string User_OID)

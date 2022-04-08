@@ -1,6 +1,7 @@
 ﻿@model PersonalFinanceFrontEnd.Models.Transaction
 
 
+
 <div class="modal-body">
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -45,8 +46,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-8">
-                            <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo</label>
-                            <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444">
+                            <label for="recipient-name" class="col-form-label" asp-for="TrsTitle">Titolo <font color="red">*</font></label>
+                            <input type="text" class="form-control" asp-for="TrsTitle" style="background-color: #444" data-val="true" data-val-required="Titolo è necessario.">
                             <span asp-validation-for="TrsTitle" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
@@ -59,13 +60,13 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
-                            <input type="number" step="0.01" class="form-control" asp-for="Input_value" style="background-color: #444" value="" placeholder="€">
+                            <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
+                            <input type="number" step="0.01" class="form-control" asp-for="Input_value" style="background-color: #444" value="" placeholder="€" data-val="true" data-val-required="Importo è necessario.">
                             <span asp-validation-for="Input_value" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
-                            <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento</label>
-                            <input type="date" class="form-control" id="theDate" asp-for="TrsDateTime" style="background-color: #444" value="gg/mm/YYY">
+                            <label for="recipient-name" class="col-form-label" asp-for="TrsDateTime">Data inserimento <font color="red">*</font></label>
+                            <input type="date" class="form-control" id="theDate" asp-for="TrsDateTime" style="background-color: #444" value="gg/mm/YYY" data-val="true" data-val-required="Data inserimento è necessario.">
                             <span asp-validation-for="TrsDateTime" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
@@ -284,8 +285,9 @@
                     <span asp-validation-for="DebCredInValue" class="text-danger"></span>
                 </div>   </div>  
                 <br />
+
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9" OnClientClick="userValid()">Aggiungi</button>
                 </div>        
             </form>
         </div>       
