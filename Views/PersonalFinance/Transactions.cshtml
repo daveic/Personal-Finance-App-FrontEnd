@@ -96,6 +96,13 @@ else if (ViewBag.state == 4)
         <strong>ERRORE</strong> - L'importo inserito è maggiore del valore del debito. TRANSAZIONE ANNULLATA.
     </div>
 }
+else if (ViewBag.state == 5)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <strong>ERRORE</strong> - Il Titolo inserito non è valido. TRANSAZIONE ANNULLATA.
+    </div>
+}
 else if (ViewBag.state == 3)
 {
     <div class="alert alert-dismissible fade show" role="alert">

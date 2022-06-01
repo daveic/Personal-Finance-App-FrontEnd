@@ -181,6 +181,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transaction_Add(Transaction t)
         {
             t.Usr_OID = GetUserData().Result;
+            if (t.TrsTitle != null)
+            {
+                if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE"))
+                {
+                    TempData["sendFlagTr"] = 5;
+                    return RedirectToAction(nameof(Transactions));
+                }
+            }
             if(t.DebCredChoice != null)
             {
                 if (t.DebCredChoice.StartsWith("DEB"))
