@@ -172,8 +172,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
-             else
-            {
+            // else
+            //{
                 if (t.Input_value != null)
                 {
                     t.Input_value = t.Input_value.Replace(".", ",");
@@ -201,7 +201,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         return RedirectToAction(nameof(Transactions));
                     }
                 }
-            }
+            //}
             
 
             return View();

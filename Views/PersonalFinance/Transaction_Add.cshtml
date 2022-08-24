@@ -128,7 +128,7 @@
         <div class="tab-pane fade" id="dpay">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <h5>Pagamento debito</h5><br />
+                <h5>Restituzione prestito</h5><br />
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il debito da pagare:</label> 
@@ -246,7 +246,7 @@
         <div class="tab-pane fade" id="creturn">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                  <div asp-validation-summary="ModelOnly" class="text-danger"></div>      
-                                 <h5>Rientro credito</h5><br />
+                                 <h5>Rientro anticipo</h5><br />
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il credito rientrato:</label> 

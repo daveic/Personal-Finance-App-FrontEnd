@@ -12,24 +12,26 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Budget()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
+            //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
+            Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, "2022");
+            //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
             bool found = false;
             foreach (var km in KnownMovements)
             {
-                foreach (var exp in Expirations)
+                foreach (var exp in Expirations.ExpirationList)
                 {
                     if (km.KMTitle == exp.ExpTitle && km.KMValue == exp.ExpValue)
                     {
                         found = true;
                     }
                 }
-                if (found is false) Expirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+                if (found is false) Expirations.ExpirationList.ToList().Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
                 found = false;
             }
 
-            ViewBag.In = Expirations.Where(x => x.ExpValue >= 0);
-            ViewBag.Out = Expirations.Where(x => x.ExpValue < 0);
+            ViewBag.In = Expirations.ExpirationList.ToList().Where(x => x.ExpValue >= 0);
+            ViewBag.Out = Expirations.ExpirationList.ToList().Where(x => x.ExpValue < 0);
 
             ViewModel viewModel = new();
             viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
