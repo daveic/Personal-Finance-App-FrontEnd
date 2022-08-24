@@ -91,8 +91,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             this.ViewBag.MaxPage = (count / PageSize) - (count % PageSize == 0 ? 1 : 0);
             this.ViewBag.Page = page;
 
-            TrsToView TrsToView = new();
-            TrsToView.Transactions = data;
+            TrsToView TrsToView = new()
+            {
+                Transactions = data
+            };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
 
             
@@ -179,10 +181,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (t.Type == false) t.TrsValue = -t.TrsValue;
                 if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-                if (t.DebCredChoice is null) t.DebCredChoice = "";
-                if (t.TrsCode is null) t.TrsCode = "";
-                if (t.TrsTitle is null) t.TrsTitle = "";
-                if (t.TrsDateTimeExp is null) t.TrsDateTimeExp = DateTime.MinValue;
+                t.DebCredChoice ??= "";
+                t.TrsCode ??= "";
+                t.TrsTitle ??= "";
+                t.TrsDateTimeExp ??= DateTime.MinValue;
                 if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
                 //if cred or deb code is existing, throw error - 
                 //if debcredinput is > remain to pay o creditvalue, throw error

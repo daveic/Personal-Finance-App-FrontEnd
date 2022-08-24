@@ -12,9 +12,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Fast_Update()
         {
             string User_OID = GetUserData().Result;
-            ViewModel model = new();
-            model.Banks = GetAllItems<Bank>("Banks", User_OID);
-            model.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
+            ViewModel model = new()
+            {
+                Banks = GetAllItems<Bank>("Banks", User_OID),
+                Tickets = GetAllItems<Ticket>("Tickets", User_OID)
+            };
             List<Bank> BankList = new();
             List<Ticket> TicketList = new();
             foreach (var item in model.Banks)
@@ -71,10 +73,12 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public int BalanceUpdate(string User_OID, bool fromFU)
         {
-            Balance b = new();
-            b.Usr_OID = User_OID;
-            b.FromFU = fromFU;
-            b.BalDateTime = DateTime.UtcNow;
+            Balance b = new()
+            {
+                Usr_OID = User_OID,
+                FromFU = fromFU,
+                BalDateTime = DateTime.UtcNow
+            };
             int result = AddItemN<Balance>("Balances", b);
             return result;
         }
