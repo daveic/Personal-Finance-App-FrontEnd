@@ -198,6 +198,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     {
                         if (t.DebCredChoice == debit.DebCode)
                         {
+                           // (item.DebValue / item.RtNum)
                             if (t.DebCredInValue > debit.RemainToPay)
                             {
                                 TempData["sendFlagTr"] = 4;
@@ -245,33 +246,34 @@ namespace PersonalFinanceFrontEnd.Controllers
                     var result = postTask.Result;
                     if (result.IsSuccessStatusCode)
                     {
+                        BalanceUpdate(t.Usr_OID, false);
                         TempData["sendFlagTr"] = 3;
                         return RedirectToAction(nameof(Transactions));
                     }
                 }
             }
-                        
+            
 
             return View();
         }
-        public int Transaction_Balance_Update(string User_OID)
-        {
-            Balance b = new()
-            {
-                Usr_OID = User_OID,
-                BalDateTime = DateTime.UtcNow
-            };
-            IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("Transactions", User_OID);
+        //public int Transaction_Balance_Update(string User_OID)
+        //{
+        //    Balance b = new()
+        //    {
+        //        Usr_OID = User_OID,
+        //        BalDateTime = DateTime.UtcNow
+        //    };
+        //    IEnumerable<Transaction> Transactions = GetAllItems<Transaction>("Transactions", User_OID);
 
-            double totTransaction = 0;
-            foreach (var item in Transactions)
-            {
-                totTransaction += item.TrsValue;
-            }
-            b.ActBalance = totTransaction;
-            AddItemN<Balance>("Balances", b);
-            return 1;
-        }
+        //    double totTransaction = 0;
+        //    foreach (var item in Transactions)
+        //    {
+        //        totTransaction += item.TrsValue;
+        //    }
+        //    b.ActBalance = totTransaction;
+        //    AddItemN<Balance>("Balances", b);
+        //    return 1;
+        //}
         //public ActionResult Transaction_Edit(int id)
         //{
         //    return Transaction_Details_Edit(id, GetUserData().Result);
@@ -315,7 +317,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 TempData["sendFlagTr"] = 1;
-                Transaction_Balance_Update(GetUserData().Result);
+                BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Transactions));
             }
             return View();
