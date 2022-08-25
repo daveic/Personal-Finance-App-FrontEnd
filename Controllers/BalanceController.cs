@@ -8,7 +8,7 @@ namespace PersonalFinanceFrontEnd.Controllers
     public partial class PersonalFinanceController
     {
         //FAST UPDATE LOGIC
-        //In caso di aggiunta di nuova banca/ticket, occorre solo aggiungere l'immagine sotto images con nome in minuscolo e "-" al posto degli spazi (in .jpeg)
+        //Vengono presentati tutti i conti coi relativi saldi e l'utente ha la possibilità di modificare il saldo di ognuno, aggiornando poi il Balance totale
         public ActionResult Fast_Update()
         {
             string User_OID = GetUserData().Result;

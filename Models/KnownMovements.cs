@@ -27,7 +27,4 @@ namespace PersonalFinanceFrontEnd.Models
         public IEnumerable<KnownMovement> KnownMovementList { get; set; }
         public KnownMovement_Exp KnownMovement_Exp { get; set; }
     }
-
-
-
 }

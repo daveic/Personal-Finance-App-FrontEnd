@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 
@@ -46,12 +37,10 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
         public ActionResult KnownMovement_Edit(int id)
         {
             return KnownMovement_Details(id);
         }
-
         [HttpPost]
         public ActionResult KnownMovement_Edit(KnownMovement k)
         {
@@ -65,7 +54,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
         [HttpPost]
         public ActionResult KnownMovement_Exp_Update(KnownMovement_Exp KM_Exp)
         {
@@ -100,6 +88,5 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             return View();
         }
-
     }
 }
