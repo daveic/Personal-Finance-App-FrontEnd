@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Azure;
+using Microsoft.Graph;
 using PersonalFinanceFrontEnd.Models;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Budget()
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
             Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
             List<Expiration> MonthExpirations = Expirations.ExpirationList.OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
-            //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
             bool found = false;
             List<Expiration> TempExpOut = new();
@@ -69,21 +68,23 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Budget_Calc(Budget_Calc bc)
         {
+            string User_OID = GetUserData().Result;
+
+            double TotalInOut = 0;
 
 
-
-
-
-            IEnumerable<Balance> Balances = GetAllItems<Balance>("Balances", GetUserData().Result);
+            IEnumerable<Balance> Balances = GetAllItems<Balance>("Balances", User_OID);
             double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
 
-            List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", GetUserData().Result).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+            List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
             foreach (var item in Expirations)
             {
                 if (item.ColorLabel == "orange") Expirations.Remove(item);
             }
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", GetUserData().Result).ToList();
             //contare mesi tra date
+            //((date1.Year - date2.Year) * 12) + date1.Month - date2.Month
+            //    (EndDate - StartDate).TotalDays
             //Se >15 del mese aggiungi uno altrimenti togli
             //cicla per n volte quanti sono i mesi
             foreach (var km in KnownMovements)
@@ -93,9 +94,16 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             foreach (var item in Expirations)
             {
+                if (item.ExpTitle.StartsWith("DEB")) item.ExpValue = -item.ExpValue;
+                TotalInOut += item.ExpValue;
+            }
+            double DayStimatedInOut = TotalInOut / ((bc.Future_Date - DateTime.Now).TotalDays);
+
+            foreach (var item in Expirations)
+            {
+
                 stimated_total += item.ExpValue;
             }
-
             //e.input_value = e.input_value.Replace(".", ",");
             //e.ExpValue = Convert.ToDouble(e.input_value);
 
