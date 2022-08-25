@@ -97,6 +97,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Codice debito</th>
+                            <th scope="col">Titolo</th>
                             <th scope="col">Importo</th>
                         </tr>
                     </thead>
@@ -111,6 +112,9 @@
                                         <td>
                                         <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode</span><br />
                                    </td>
+                                                                           <td>
+                                        <span>&nbsp;&nbsp;@item.DebTitle</span>
+                                   </td>
                                    <td>@((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td> 
                                    </tr>
                                     }                          
@@ -121,7 +125,7 @@
                 <br /><br />
                 <input type="hidden" class="form-control" asp-for="DebCredInValue" style="background-color: #444">
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Invia</button>
                 </div> 
             </form>    
         </div>
@@ -168,7 +172,7 @@
                 </div>
                 <br />
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Invia</button>
                 </div>
             </form>    
         </div>        
@@ -287,7 +291,7 @@
                 <br />
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9" OnClientClick="userValid()">Aggiungi</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #2574A9" OnClientClick="userValid()">Invia</button>
                 </div>        
             </form>
         </div>       
