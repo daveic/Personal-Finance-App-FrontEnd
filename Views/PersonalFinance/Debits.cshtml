@@ -131,8 +131,18 @@ else if (ViewBag.state == 3)
     <div class="col-md-9">
         <div class="card shadow p-3 border-danger mb-3" style="margin: 0 auto;">
             <div class="card-header">
-                <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi debito</button>
-                <button type="button" class="btn btn-sm" style="background-color: #2574A9" data-toggle="modal" data-target="#newitempart" data-whatever="getbootstrap">Aggiungi debito rateizzato</button>
+                <button type="button" class="btn btn-primary btn-sm" style="background-color: #2574A9; display: inline-flex;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">
+                    Aggiungi debito &nbsp;
+                    <span class="material-icons" style="padding-right: 0px; font-size: 20px; line-height: 0.9">
+                        playlist_add
+                    </span>
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" style="background-color: #2574A9; display: inline-flex;" data-toggle="modal" data-target="#newitempart" data-whatever="getbootstrap">
+                    Aggiungi debito rateizzato &nbsp;
+                    <span class="material-icons" style="padding-right: 0px; font-size: 20px; line-height: 0.9">
+                        post_add
+                    </span>
+                </button>
             </div>
             <div class="card-body">
                 <div class="card-body">
