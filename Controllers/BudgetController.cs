@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Azure;
 using PersonalFinanceFrontEnd.Models;
 using System;
 using System.Collections.Generic;
@@ -13,33 +14,50 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
-            Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, "2022");
+            Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
+            List<Expiration> MonthExpirations = Expirations.ExpirationList.OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
             //List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList(); //Fetch imminent expirations
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
             bool found = false;
+            List<Expiration> TempExpOut = new();
+            List<Expiration> TempExpIn = new();
             foreach (var km in KnownMovements)
             {
-                foreach (var exp in Expirations.ExpirationList)
+                foreach (var exp in MonthExpirations)
                 {
                     if (km.KMTitle == exp.ExpTitle && km.KMValue == exp.ExpValue)
                     {
                         found = true;
                     }
                 }
-                if (found is false) Expirations.ExpirationList.ToList().Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+                if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
                 found = false;
             }
+            foreach (var item in MonthExpirations)
+            { 
+                if(item.ExpValue < 0)
+                {
+                    TempExpOut.Add(item);
+                }
+                if (item.ExpValue >= 0)
+                {
+                    if(item.ExpTitle.StartsWith("DEB") ) TempExpOut.Add(item);
+                    else TempExpIn.Add(item);
+                }
+            }
 
-            ViewBag.In = Expirations.ExpirationList.ToList().Where(x => x.ExpValue >= 0);
-            ViewBag.Out = Expirations.ExpirationList.ToList().Where(x => x.ExpValue < 0);
+            ViewBag.In = TempExpIn;
+            ViewBag.Out = TempExpOut;
 
-            ViewModel viewModel = new();
-            viewModel.Banks = GetAllItems<Bank>("Banks", User_OID);
-            viewModel.Bank = new Bank();
-            viewModel.Deposits = GetAllItems<Deposit>("Deposits", User_OID);
-            viewModel.Deposit = new Deposit();
-            viewModel.Tickets = GetAllItems<Ticket>("Tickets", User_OID);
-            viewModel.Ticket = new Ticket();
+            ViewModel viewModel = new()
+            {
+                Banks = GetAllItems<Bank>("Banks", User_OID),
+                Bank = new Bank(),
+                Deposits = GetAllItems<Deposit>("Deposits", User_OID),
+                Deposit = new Deposit(),
+                Tickets = GetAllItems<Ticket>("Tickets", User_OID),
+                Ticket = new Ticket()
+            };
             viewModel.Contanti = viewModel.Banks.First();
             viewModel.Budget_Calc = new Budget_Calc();
             return View(viewModel);
