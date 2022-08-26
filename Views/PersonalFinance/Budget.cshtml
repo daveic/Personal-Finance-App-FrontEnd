@@ -88,15 +88,18 @@
                                         @foreach (var item in ViewBag.In)
                                         {
                                             <tr>
-                                                <td>@item.ExpTitle</td>
+                                                <td>                          
+                                                    <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
+                                                    &nbsp; @item.ExpTitle
+                                                </td>
                                                 <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                             </tr>
 
                                         }
-                                    </tbody>
-                                    Totale entrate: @ViewBag.TotIn €
+                                    </tbody>                                    
                                 </table>
                             </div>
+                            <h3>Totale entrate: @ViewBag.TotIn.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h3>
                         </div>
                     </div>
                     <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
@@ -114,14 +117,17 @@
                                         @foreach (var item in ViewBag.Out)
                                         {
                                             <tr>
-                                                <td>@item.ExpTitle</td>
+                                                <td>                          
+                                                    <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
+                                                    &nbsp; @item.ExpTitle
+                                                </td>
                                                 <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                             </tr>
                                         }
                                     </tbody>                                    
                                 </table>
                             </div>
-                            Totale uscite: @ViewBag.TotOut €
+                            <h3>Totale uscite: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h3>
                         </div>
                     </div>
                 </div>
