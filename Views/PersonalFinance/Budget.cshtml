@@ -66,7 +66,9 @@
         </div>
     </div>
     <div class="col-sm-8">
-        <h3>Movimenti previsti in questo mese</h3>
+        @if(ViewBag.stimated_total == 0)
+        {
+            <h3>Movimenti previsti in questo mese</h3>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-body">
                 <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
@@ -82,14 +84,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        
                                         @foreach (var item in ViewBag.In)
                                         {
                                             <tr>
                                                 <td>@item.ExpTitle</td>
                                                 <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                             </tr>
+
                                         }
                                     </tbody>
+                                    Totale entrate: @ViewBag.TotIn €
                                 </table>
                             </div>
                         </div>
@@ -113,14 +118,17 @@
                                                 <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                             </tr>
                                         }
-                                    </tbody>
+                                    </tbody>                                    
                                 </table>
                             </div>
+                            Totale uscite: @ViewBag.TotOut €
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        }
+        
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">Totale flusso attuale</div>
             <div class="card-body">

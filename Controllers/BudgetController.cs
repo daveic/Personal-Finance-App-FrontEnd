@@ -41,13 +41,18 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 if (item.ExpValue >= 0)
                 {
-                    if(item.ExpTitle.StartsWith("DEB") ) TempExpOut.Add(item);
+                    if (item.ExpTitle.StartsWith("DEB")) { 
+                        item.ExpValue = -item.ExpValue;
+                        TempExpOut.Add(item); 
+                    }
                     else TempExpIn.Add(item);
                 }
             }
 
             ViewBag.In = TempExpIn;
+            ViewBag.TotIn = TempExpIn.Sum(x => x.ExpValue);
             ViewBag.Out = TempExpOut;
+            ViewBag.TotOut = TempExpOut.Sum(x => x.ExpValue);
             ViewBag.stimated_total = stimated_total;
             ViewModel viewModel = new()
             {
@@ -124,7 +129,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             //e.ExpValue = Convert.ToDouble(e.input_value);
 
 
-            return RedirectToAction("Budget", stimated_total);
+            return RedirectToAction("Budget", new { stimated_total = stimated_total });
 
         }
 
