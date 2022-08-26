@@ -5,13 +5,14 @@ using PersonalFinanceFrontEnd.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
         //BUDGET Intermediate view        
-        public ActionResult Budget()
+        public ActionResult Budget(double stimated_total)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
@@ -47,7 +48,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             ViewBag.In = TempExpIn;
             ViewBag.Out = TempExpOut;
-
+            ViewBag.stimated_total = stimated_total;
             ViewModel viewModel = new()
             {
                 Banks = GetAllItems<Bank>("Banks", User_OID),
@@ -76,10 +77,19 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Balance> Balances = GetAllItems<Balance>("Balances", User_OID);
             double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
 
-            List<Expiration> Expirations = GetAllItems<Expiration>("Expirations", User_OID).OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+
+            IEnumerable<Expiration> ExpirationList = GetAllExp<Expiration>("Expirations", User_OID);
+
+            List<Expiration> Expirations = ExpirationList.OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
+            List<Expiration> ExpirationsToRemove = new();
+
             foreach (var item in Expirations)
             {
-                if (item.ColorLabel == "orange") Expirations.Remove(item);
+                if (item.ColorLabel == "orange") ExpirationsToRemove.Add(item);
+            }
+            foreach (var item in ExpirationsToRemove)
+            {
+                Expirations.Remove(item);
             }
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", GetUserData().Result).ToList();
             //contare mesi tra date
@@ -87,29 +97,49 @@ namespace PersonalFinanceFrontEnd.Controllers
             //    (EndDate - StartDate).TotalDays
             //Se >15 del mese aggiungi uno altrimenti togli
             //cicla per n volte quanti sono i mesi
+            double totalKM = 0;
             foreach (var km in KnownMovements)
             {
-                Expirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+                totalKM += km.KMValue;
+                //Expirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
 
             }
+            double finalKMTotal = (totalKM / 30) * ((bc.Future_Date - DateTime.Now).TotalDays);
             foreach (var item in Expirations)
             {
                 if (item.ExpTitle.StartsWith("DEB")) item.ExpValue = -item.ExpValue;
                 TotalInOut += item.ExpValue;
             }
-            double DayStimatedInOut = TotalInOut / ((bc.Future_Date - DateTime.Now).TotalDays);
 
-            foreach (var item in Expirations)
-            {
+            //double DayStimatedInOut = TotalInOut / ((bc.Future_Date - DateTime.Now).TotalDays);
 
-                stimated_total += item.ExpValue;
-            }
+            stimated_total = stimated_total + finalKMTotal + TotalInOut;
+
+            //foreach (var item in Expirations)
+            //{
+
+            //     item.ExpValue;
+            //}
             //e.input_value = e.input_value.Replace(".", ",");
             //e.ExpValue = Convert.ToDouble(e.input_value);
 
 
-            return RedirectToAction(nameof(Budget));
+            return RedirectToAction("Budget", stimated_total);
 
+        }
+
+        public IEnumerable<T> GetAllExp<T>(string controller, string User_OID)
+        {
+            IEnumerable<T> detections = null;
+            string path = "api/" + controller + "/GetAllExp" + "?User_OID=" + User_OID;
+            using (HttpClient client = new())
+            {
+                client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                client.GetAsync(path).Wait();
+                client.GetAsync(path).Result.Content.ReadAsAsync<List<T>>().Wait();
+                detections = client.GetAsync(path).Result.Content.ReadAsAsync<List<T>>().Result;
+            }
+            return detections;
         }
     }
 }
