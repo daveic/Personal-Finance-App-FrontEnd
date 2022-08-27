@@ -53,9 +53,18 @@
             </div>
         </div>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+
+                    <div class="card-header">Saldo ad oggi</div>
+                    <div class="card-body"></div>
+                </div>
+                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
             <div class="card-header">Saldo ipotizzato al ...</div>
             <div class="card-body">
                 @ViewBag.stimated_total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                </div>
+            </div>
             </div>
         </div>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
@@ -73,6 +82,7 @@
             <div class="card-body">
                 <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
                     <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                        <h4>Totale entrate: @ViewBag.TotIn.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
                         <div class="card-header">Entrate</div>
                         <div class="card-body">
                             <div class="table-responsive-xl">
@@ -99,10 +109,10 @@
                                     </tbody>                                    
                                 </table>
                             </div>
-                            <h3>Totale entrate: @ViewBag.TotIn.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h3>
                         </div>
                     </div>
                     <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                        <h4>Totale uscite: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
                         <div class="card-header">Uscite</div>
                         <div class="card-body">
                             <div class="table-responsive-xl">
@@ -126,15 +136,86 @@
                                         }
                                     </tbody>                                    
                                 </table>
-                            </div>
-                            <h3>Totale uscite: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h3>
+                            </div>                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         }
-        
+        @if (ViewBag.stimated_total != 0){
+            <h3>Movimenti previsti nel periodo selezionato</h3>
+            <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+                <div class="card-body">
+                    <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                            <h4>Totale entrate: @ViewBag.TotIn.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
+                            <div class="card-header">Entrate</div>
+                            <div class="card-body">
+                                <div class="table-responsive-xl">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Titolo</th>
+                                                <th scope="col">Importo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @foreach (var item in ViewBag.In)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
+                                                        &nbsp; @item.ExpTitle
+                                                        @if (@item.ColorLabel == "orange")
+                                                        {
+                                                            <b>( x</b>
+                                                            @ViewBag.MonthCount
+                                                            <b>)</b>
+                                                        }
+                                                    </td>
+                                                    <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+                            <h4>Totale uscite: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br/>
+                            <div class="card-header">Uscite</div>
+                            <div class="card-body">
+                                <div class="table-responsive-xl">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Titolo</th>
+                                                <th scope="col">Importo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in ViewBag.Out)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
+                                                        &nbsp; @item.ExpTitle
+                                                    </td>
+                                                    <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">Totale flusso attuale</div>
             <div class="card-body">

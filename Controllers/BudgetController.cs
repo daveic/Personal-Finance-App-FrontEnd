@@ -12,28 +12,48 @@ namespace PersonalFinanceFrontEnd.Controllers
     public partial class PersonalFinanceController
     {
         //BUDGET Intermediate view        
-        public ActionResult Budget(double stimated_total)
+        public ActionResult Budget(double stimated_total, DateTime Future_Date)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
-            Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
-            List<Expiration> MonthExpirations = Expirations.ExpirationList.OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
-            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
-            bool found = false;
+            List <Expiration> ExpirationToShow = new ();
             List<Expiration> TempExpOut = new();
             List<Expiration> TempExpIn = new();
-            foreach (var km in KnownMovements)
+            List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
+            if (stimated_total == 0)
             {
-                foreach (var exp in MonthExpirations)
+                Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
+                List<Expiration> MonthExpirations = Expirations.ExpirationList.OrderBy(x => x.ExpDateTime.Month).Where(x => x.ExpDateTime.Month == DateTime.Now.Month).ToList();
+                
+                bool found = false;
+
+                foreach (var km in KnownMovements)
                 {
-                    if (km.KMTitle == exp.ExpTitle && km.KMValue == exp.ExpValue)
+                    foreach (var exp in MonthExpirations)
                     {
-                        found = true;
+                        if (km.KMTitle == exp.ExpTitle && km.KMValue == exp.ExpValue)
+                        {
+                            found = true;
+                        }
                     }
+                    if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+                    found = false;
                 }
-                if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
-                found = false;
+                ExpirationToShow = MonthExpirations;    
             }
-            foreach (var item in MonthExpirations)
+            if (stimated_total != 0)
+            {
+                List<Expiration> Expirations = FilterExpList(User_OID, Future_Date);
+                foreach (var km in KnownMovements)
+                {
+                    Expirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue, ColorLabel = "orange" });
+                }
+                ExpirationToShow = Expirations;
+                ViewBag.MonthCount = ((Future_Date - DateTime.Now).TotalDays) / 30;
+                
+            }
+
+
+            foreach (var item in ExpirationToShow)
             { 
                 if(item.ExpValue < 0)
                 {
@@ -48,12 +68,13 @@ namespace PersonalFinanceFrontEnd.Controllers
                     else TempExpIn.Add(item);
                 }
             }
-
+            //ViewBag.MonthCount = 0;
             ViewBag.In = TempExpIn;
             ViewBag.TotIn = TempExpIn.Sum(x => x.ExpValue);
             ViewBag.Out = TempExpOut;
             ViewBag.TotOut = TempExpOut.Sum(x => x.ExpValue);
             ViewBag.stimated_total = stimated_total;
+            
             ViewModel viewModel = new()
             {
                 Banks = GetAllItems<Bank>("Banks", User_OID),
@@ -83,19 +104,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             double stimated_total = Balances.Last().ActBalance + bc.Corrective_Item_0 + bc.Corrective_Item_1 + bc.Corrective_Item_2 + bc.Corrective_Item_3;
 
 
-            IEnumerable<Expiration> ExpirationList = GetAllExp<Expiration>("Expirations", User_OID);
-
-            List<Expiration> Expirations = ExpirationList.OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= bc.Future_Date).ToList();
-            List<Expiration> ExpirationsToRemove = new();
-
-            foreach (var item in Expirations)
-            {
-                if (item.ColorLabel == "orange") ExpirationsToRemove.Add(item);
-            }
-            foreach (var item in ExpirationsToRemove)
-            {
-                Expirations.Remove(item);
-            }
+            List<Expiration> Expirations = FilterExpList(User_OID, bc.Future_Date);
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", GetUserData().Result).ToList();
             //contare mesi tra date
             //((date1.Year - date2.Year) * 12) + date1.Month - date2.Month
@@ -120,17 +129,29 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             stimated_total = stimated_total + finalKMTotal + TotalInOut;
 
-            //foreach (var item in Expirations)
-            //{
-
-            //     item.ExpValue;
-            //}
-            //e.input_value = e.input_value.Replace(".", ",");
-            //e.ExpValue = Convert.ToDouble(e.input_value);
 
 
-            return RedirectToAction("Budget", new { stimated_total = stimated_total });
+            return RedirectToAction("Budget", new { stimated_total = stimated_total, future_date = bc.Future_Date }) ;
 
+        }
+
+        public List<Expiration> FilterExpList(string User_OID, DateTime Future_Date)
+        {
+
+            IEnumerable<Expiration> ExpirationList = GetAllExp<Expiration>("Expirations", User_OID);
+
+            List<Expiration> Expirations = ExpirationList.OrderBy(x => x.ExpDateTime).Where(x => x.ExpDateTime <= Future_Date).ToList();
+            List<Expiration> ExpirationsToRemove = new();
+
+            foreach (var item in Expirations)
+            {
+                if (item.ColorLabel == "orange") ExpirationsToRemove.Add(item);
+            }
+            foreach (var item in ExpirationsToRemove)
+            {
+                Expirations.Remove(item);
+            }
+            return Expirations;
         }
 
         public IEnumerable<T> GetAllExp<T>(string controller, string User_OID)
