@@ -52,19 +52,39 @@
                 <partial name="Budget_Calc" model="Model.Budget_Calc" />
             </div>
         </div>
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));">
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
+        <div class="card shadow p-3 border-light mb-3">
+            <div class="cards" style="padding-top: 5px; gap: 15px; grid-template-columns: none; margin: unset">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card shadow p-3 border-dark mb-3">
 
-                    <div class="card-header">Saldo ad oggi</div>
-                    <div class="card-body"></div>
+                            <div class="card-header">Saldo ad oggi</div>
+                            <div class="card-body">
+                                <h5>@ViewBag.ActualBalance.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h5>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card shadow p-3 border-dark mb-3">
+                            @if (@ViewBag.Future_Date != new DateTime())
+                            {
+                                <div class="card-header">Saldo previsto al @ViewBag.Future_Date.ToString("dd/MM/yyyy")</div>
+                            }
+                            else if (@ViewBag.Future_Date == new DateTime())
+                            {
+                                <div class="card-header">Saldo previsto al ...</div>
+                            }
+
+                            <div class="card-body">
+                                <h5>@ViewBag.stimated_total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h5>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; width: -webkit-fill-available">
-            <div class="card-header">Saldo ipotizzato al ...</div>
-            <div class="card-body">
-                @ViewBag.stimated_total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
-                </div>
-            </div>
+                
+
+
             </div>
         </div>
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
@@ -132,6 +152,15 @@
                                                     &nbsp; @item.ExpTitle
                                                 </td>
                                                 <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                                    @foreach (var exp in ViewBag.ExpDone)
+                                                    {
+                                                        @if (exp.ExpTitle == @item.ExpTitle)
+                                                        {
+                                                            <b>ciao</b>
+                                                        }
+                                                    
+                                                        
+                                                    }
                                             </tr>
                                         }
                                     </tbody>                                    
@@ -140,6 +169,7 @@
                         </div>
                     </div>
                 </div>
+                    <br /><h4>Flusso mensile previsto:  @ViewBag.ActualFlux.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4>
             </div>
         </div>
         }
@@ -167,11 +197,11 @@
                                                 <tr>
                                                     <td>
                                                         <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
-                                                        &nbsp; @item.ExpTitle
+                                                        &nbsp; @item.ExpTitle &nbsp;
                                                         @if (@item.ColorLabel == "orange")
                                                         {
                                                             <b>( x</b>
-                                                            @ViewBag.MonthCount
+                                                            @Math.Round(ViewBag.MonthCount, 1)
                                                             <b>)</b>
                                                         }
                                                     </td>
@@ -218,8 +248,8 @@
         }
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">Totale flusso attuale</div>
-            <div class="card-body">
-                testo
+            <div class="card-body">                
+                <h4>Totale flusso mensile attuale: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
             </div>
         </div>
     </div>

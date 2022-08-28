@@ -18,7 +18,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             List <Expiration> ExpirationToShow = new ();
             List<Expiration> TempExpOut = new();
             List<Expiration> TempExpIn = new();
+            List<Expiration> ExpDone = new();
             List<KnownMovement> KnownMovements = GetAllItems<KnownMovement>("KnownMovements", User_OID).ToList();
+            IEnumerable<Transaction> transactions = GetAllItems<Transaction>("Transactions", User_OID);
+            transactions = transactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
+            IEnumerable<Balance> Balances = GetAllItems<Balance>("Balances", User_OID);
             if (stimated_total == 0)
             {
                 Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
@@ -38,6 +42,13 @@ namespace PersonalFinanceFrontEnd.Controllers
                     if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
                     found = false;
                 }
+                foreach (var item in transactions)
+                {
+                    if (item.TrsDateTimeExp != null)
+                    {
+                        MonthExpirations.Add(new Expiration() { ExpTitle = item.TrsCode, ExpValue = item.TrsValue });
+                    }
+                }
                 ExpirationToShow = MonthExpirations;    
             }
             if (stimated_total != 0)
@@ -51,10 +62,17 @@ namespace PersonalFinanceFrontEnd.Controllers
                 ViewBag.MonthCount = ((Future_Date - DateTime.Now).TotalDays) / 30;
                 
             }
-
+         
 
             foreach (var item in ExpirationToShow)
             { 
+                foreach (var tr in transactions)
+                {
+                    if(item.ExpTitle == tr.TrsCode)
+                    {
+                        ExpDone.Add(item);
+                    }
+                }
                 if(item.ExpValue < 0)
                 {
                     TempExpOut.Add(item);
@@ -68,13 +86,20 @@ namespace PersonalFinanceFrontEnd.Controllers
                     else TempExpIn.Add(item);
                 }
             }
-            //ViewBag.MonthCount = 0;
+            double TotIn = TempExpIn.Sum(x => x.ExpValue);
+            double TotOut = TempExpOut.Sum(x => x.ExpValue);
+            double ActBalance = Balances.Last().ActBalance;
             ViewBag.In = TempExpIn;
-            ViewBag.TotIn = TempExpIn.Sum(x => x.ExpValue);
+            ViewBag.TotIn = TotIn;
             ViewBag.Out = TempExpOut;
-            ViewBag.TotOut = TempExpOut.Sum(x => x.ExpValue);
+            ViewBag.TotOut = TotOut;
+            ViewBag.ExpDone = ExpDone;
+            ViewBag.ActualFlux = TotIn + TotOut;
             ViewBag.stimated_total = stimated_total;
-            
+            ViewBag.Future_Date = Future_Date;            
+            ViewBag.ActualBalance = ActBalance;
+
+
             ViewModel viewModel = new()
             {
                 Banks = GetAllItems<Bank>("Banks", User_OID),
