@@ -46,7 +46,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (item.TrsDateTimeExp != null)
                     {
-                        MonthExpirations.Add(new Expiration() { ExpTitle = item.TrsCode, ExpValue = item.TrsValue });
+                        MonthExpirations.Add(new Expiration() { ExpTitle = item.TrsCode, ExpValue = item.TrsValue, ColorLabel = item.ExpColorLabel });
                     }
                 }
                 ExpirationToShow = MonthExpirations;    
