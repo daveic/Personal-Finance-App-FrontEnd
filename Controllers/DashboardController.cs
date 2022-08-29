@@ -76,49 +76,49 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
         }
 
-        private static string MonthConverter(int monthNum)
-        {
-            string ConvertedMonth = "";
-            switch (monthNum)
-            {
-                case 1:
-                    ConvertedMonth = "Gennaio";
-                    break;
-                case 2:
-                    ConvertedMonth = "Febbraio";
-                    break;
-                case 3:
-                    ConvertedMonth = "Marzo";
-                    break;
-                case 4:
-                    ConvertedMonth = "Aprile";
-                    break;
-                case 5:
-                    ConvertedMonth = "Maggio";
-                    break;
-                case 6:
-                    ConvertedMonth = "Giugno";
-                    break;
-                case 7:
-                    ConvertedMonth = "Luglio";
-                    break;
-                case 8:
-                    ConvertedMonth = "Agosto";
-                    break;
-                case 9:
-                    ConvertedMonth = "Settembre";
-                    break;
-                case 10:
-                    ConvertedMonth = "Ottobre";
-                    break;
-                case 11:
-                    ConvertedMonth = "Novembre";
-                    break;
-                case 12:
-                    ConvertedMonth = "Dicembre";
-                    break;
-            }
-            return ConvertedMonth;
-        }
+        //private static string MonthConverter(int monthNum)
+        //{
+        //    string ConvertedMonth = "";
+        //    switch (monthNum)
+        //    {
+        //        case 1:
+        //            ConvertedMonth = "Gennaio";
+        //            break;
+        //        case 2:
+        //            ConvertedMonth = "Febbraio";
+        //            break;
+        //        case 3:
+        //            ConvertedMonth = "Marzo";
+        //            break;
+        //        case 4:
+        //            ConvertedMonth = "Aprile";
+        //            break;
+        //        case 5:
+        //            ConvertedMonth = "Maggio";
+        //            break;
+        //        case 6:
+        //            ConvertedMonth = "Giugno";
+        //            break;
+        //        case 7:
+        //            ConvertedMonth = "Luglio";
+        //            break;
+        //        case 8:
+        //            ConvertedMonth = "Agosto";
+        //            break;
+        //        case 9:
+        //            ConvertedMonth = "Settembre";
+        //            break;
+        //        case 10:
+        //            ConvertedMonth = "Ottobre";
+        //            break;
+        //        case 11:
+        //            ConvertedMonth = "Novembre";
+        //            break;
+        //        case 12:
+        //            ConvertedMonth = "Dicembre";
+        //            break;
+        //    }
+        //    return ConvertedMonth;
+        //}
     }
 }

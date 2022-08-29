@@ -90,7 +90,18 @@
         <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
             <div class="card-header">Come funziona</div>
             <div class="card-body">
-                testo
+                In questa sezione è possibile fare delle stime e previsioni, basate su dati storici, attuali e stimati futuri.<br />
+                <br />
+                <u><b>Situazione attuale:</b></u><br />
+                Nella colonna a lato sono rappresentate tutte le entrate e uscite previste nel mese corrente, aggiornate in riferimento alle ultime transazioni inserite.
+                I valori contrassegnati da una spunta verde indicano quei movimenti che sono già avvenuti, di cui si trova immediato riscontro nell'archivio transazioni.<br />
+                <br />
+                <u><b>Previsioni:</b></u><br />
+                Puoi inserire quì sopra una data nel futuro ed eventuali fattori correttivi che ritieni appropriati, il sistema calcolerà il saldo previsto per quella data, tenendo conto dei movimenti mensili noti, dei crediti e debiti e delle scadenze.<br /><br />
+                <i>Parole chiave:</i><br />
+                <b>Flusso</b>: Differenza tra entrate e uscite.<br />
+                <b>Saldo</b>: Somma totale posseduta ad oggi.<br />
+                <b>Fattore correttivo</b>: Importo arbitrario definito dall'utente per correggere le previsioni tenendo conto di importi non calcolabili dal sistema.
             </div>
         </div>
     </div>
@@ -122,18 +133,18 @@
                                                     <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
                                                     &nbsp; @item.ExpTitle
                                                 </td>
-                                                    <td>
-                                                        @item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))&nbsp;
+                                                <td>
+                                                        <span>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))&nbsp;
                                                         @foreach (var exp in ViewBag.ExpDone)
                                                         {
                                                             @if (exp.ExpTitle == @item.ExpTitle)
                                                             {
-                                                                <span class="material-icons" style="color: green">
+                                                                <span class="material-icons" style="color: green; font-size: 18px; vertical-align: text-bottom">
                                                                     done
                                                                 </span>
                                                             }
                                                         }
-                                                
+                                                        </span>
                                                 
                                                 
                                                 </td>
@@ -171,7 +182,7 @@
                                                     {
                                                         @if (exp.ExpTitle == @item.ExpTitle)
                                                         {
-                                                                <span class="material-icons" style= "color: green">
+                                                                <span class="material-icons" style="color: green; font-size: 18px; vertical-align: text-bottom">
                                                                     done
                                                                 </span>
                                                         }
@@ -185,9 +196,56 @@
                         </div>
                     </div>
                 </div>
-                    <br /><h4>Flusso mensile previsto:  @ViewBag.ActualFlux.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <p style="font-size: x-large">Flusso mensile previsto:  @ViewBag.ActualFlux.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</p>
+                    </div>
+                    <div class="col-6">
+                        <p style="font-size: x-large">Flusso mensile rimanente:  @ViewBag.ExpDoneRemain.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</p>
+                    </div>
+                </div>
             </div>
+
         </div>
+        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+            <div class="card-header">Totale flusso attuale</div>
+            <div class="card-body">                
+                <h4>Totale flusso mensile attuale: @ViewBag.MonthFlux.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
+                <div class="row">
+                    <div class="col-6">
+                        <p style="font-size: x-large">Differenza tra previsto e attuale: @ViewBag.DiffExEff.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</p>
+                    </div>
+                    <div class="col-6">
+                        <p style="font-size: x-large">
+                            Differenza percentuale: @Math.Round(ViewBag.PercDiff, 0) % @if (ViewBag.MonthFlux > ViewBag.ActualFlux)
+                            {
+                                <span class="material-icons" style="color: red">
+                                    arrow_drop_up
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="material-icons" style="color: green">
+                                    arrow_drop_down
+                                </span>
+                            }
+                        </p>
+
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>        
+
+                <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
+                    <div class="card-header">Flussi nei mesi precedenti</div>
+                    <div class="card-body">
+                        <h4>Flussi totali effettivi nei cinque mesi precedenti</h4><br />
+                        <canvas id="myChart" style="width:100%;max-width:1000px"></canvas>
+                    </div>
+                </div>
         }
         @if (ViewBag.stimated_total != 0){
             <h3>Movimenti previsti nel periodo selezionato</h3>
@@ -249,6 +307,12 @@
                                                     <td>
                                                         <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
                                                         &nbsp; @item.ExpTitle
+                                                        @if (@item.ColorLabel == "orange")
+                                                        {
+                                                            <b>( x</b>
+                                                            @Math.Round(ViewBag.MonthCount, 1)
+                                                            <b>)</b>
+                                                        }
                                                     </td>
                                                     <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                                 </tr>
@@ -259,24 +323,19 @@
                             </div>
                         </div>
                     </div>
+                    <br /><p style="font-size: x-large">Flusso previsto nel periodo:  @ViewBag.ActualFlux.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</p>
                 </div>
             </div>
         }
-        <div class="card shadow p-3 border-light mb-3" style="margin: 0 auto;">
-            <div class="card-header">Totale flusso attuale</div>
-            <div class="card-body">                
-                <h4>Totale flusso mensile attuale: @ViewBag.TotOut.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</h4><br />
-            </div>
-        </div>
+        
     </div>
 </div>
 
 
    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 
-
-            @section scripts {
                 <script>
                     function EditBank(ClientID) {
                         var url = "/PersonalFinance/Bank_Edit/" + ClientID;
@@ -294,4 +353,55 @@
                         $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
                     });
                 </script>
+    
+    <script>
+        var ctxb = document.getElementById("myChart");
+        var myChart = new Chart(ctxb, {
+            type: 'bar',
+            data: {
+            labels: @Html.Raw(ViewBag.BarMonths),
+                datasets: [{
+                    label: "Totale €",
+                    data: @Html.Raw(ViewBag.BarValues),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)'
+                    ,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    display: false
+                },
+                plugins: {
+                    labels: {
+                        fontColor: "#506678"
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            maxRotation: 90,
+                            minRotation: 80
+                        },
+                        color: 'red',
+                        gridLines: {
+                            offsetGridLines: true
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }],
+                    x: {
+
+                    }
+                }
             }
+        });
+
+
+    </script>
+            
