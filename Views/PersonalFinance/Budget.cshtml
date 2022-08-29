@@ -122,7 +122,21 @@
                                                     <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
                                                     &nbsp; @item.ExpTitle
                                                 </td>
-                                                <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
+                                                    <td>
+                                                        @item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))&nbsp;
+                                                        @foreach (var exp in ViewBag.ExpDone)
+                                                        {
+                                                            @if (exp.ExpTitle == @item.ExpTitle)
+                                                            {
+                                                                <span class="material-icons" style="color: green">
+                                                                    done
+                                                                </span>
+                                                            }
+                                                        }
+                                                
+                                                
+                                                
+                                                </td>
                                             </tr>
 
                                         }
@@ -151,16 +165,17 @@
                                                     <span class="dot" style="background-color: @item.ColorLabel; border-radius: 50%; display: inline-block; height: 11px; width: 11px;"></span>
                                                     &nbsp; @item.ExpTitle
                                                 </td>
-                                                <td>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                                    <td>
+                                                        @item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))&nbsp;
                                                     @foreach (var exp in ViewBag.ExpDone)
                                                     {
                                                         @if (exp.ExpTitle == @item.ExpTitle)
                                                         {
-                                                            <b>ciao</b>
+                                                                <span class="material-icons" style= "color: green">
+                                                                    done
+                                                                </span>
                                                         }
-
-
-                                                        }
+                                                    }
                                                     </td>
                                             </tr>
                                         }

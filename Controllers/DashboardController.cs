@@ -41,6 +41,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
+            ViewBag.MonthExpirations = detection.MonthExpirations;
 
             return View(DOut);
         }

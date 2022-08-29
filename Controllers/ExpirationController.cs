@@ -51,6 +51,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             e.Input_value = e.Input_value.Replace(".", ",");
             e.ExpValue = Convert.ToDouble(e.Input_value);
             e.Usr_OID = GetUserData().Result;
+            e.ExpTitle = "SCD " + e.ExpTitle;
             int result = AddItemN<Expiration>("Expirations", e);
             if (result == 0)
             {
