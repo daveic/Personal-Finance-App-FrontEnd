@@ -29,6 +29,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             k.Usr_OID = GetUserData().Result;
             k.KMValue = Convert.ToDouble(k.Input_value.Replace(".", ","));
+            k.KMTitle = "MVF " + k.KMTitle;
             int result = AddItemN<KnownMovement>("KnownMovements", k);
             if (result == 0)
             {
