@@ -47,7 +47,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 {
                     if (item.ID == bank.ID)
                     {
-                        //item.Input_value = item.Input_value.Replace(".", ",");
+                        item.Input_value = item.Input_value.Replace(",", ".");
                         bank.BankValue = Convert.ToDouble(item.Input_value);
                         int result = EditItemIDN<Bank>("Banks", bank);
                     }
