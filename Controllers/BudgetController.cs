@@ -43,7 +43,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                             found = true;
                         }
                     }
-                    if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue });
+                    if (found is false) MonthExpirations.Add(new Expiration() { ExpTitle = km.KMTitle, ExpValue = km.KMValue, ColorLabel = "orange" });
                     found = false;
                 }
                 foreach (var item in transactions)
