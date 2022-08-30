@@ -7,16 +7,18 @@ using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController : Controller
     {
-
         [Authorize]
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
+            
             DashAPIOut DOut = new();
             string path = "api/Dashboard/Main" + "?sY=" + selectedYear + "&sM=" + selectedMonth + "&sYT=" + selectedYearTr + "&sMT=" + selectedMonthTr + "&User_OID=" + GetUserData().Result;
             using (HttpClient client = new())
@@ -76,6 +78,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (type == 1) { ViewBag.CodeValuesIn = jsonCodeValues; ViewBag.CodeValuesInV = count; ViewBag.TotCountIn = totalCountIn; }
         }
 
+        
+  
         //private static string MonthConverter(int monthNum)
         //{
         //    string ConvertedMonth = "";

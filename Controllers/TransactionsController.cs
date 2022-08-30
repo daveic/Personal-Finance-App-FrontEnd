@@ -132,16 +132,25 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Transaction_Add(Transaction t)
         {
-            t.Usr_OID = GetUserData().Result;            
+            t.Usr_OID = GetUserData().Result;
             //if cred or deb code is existing, throw error - 
             //if debcredinput is > remain to pay o creditvalue, throw error
             if (t.TrsTitle != null)
             {
-                if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE"))
+            
+                if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE") || t.TrsTitle.StartsWith("MVF") || t.TrsTitle.StartsWith("SCD"))
                 {
-                    TempData["sendFlagTr"] = 5;
-                    return RedirectToAction(nameof(Transactions));
+                    _notyf.Error("Il titolo della transazione non può iniziare per DEB, CRE, MVF o SCD. Inserimento annullato.");
+                    
+                    return RedirectToAction(nameof(Index));
                 }
+                if (t.TrsCode is null && t.NewTrsCode is null)
+                {
+                    _notyf.Error("Occorre specificare una categoria. Transazione annullata.");
+                    //TempData["sendFlagTr"] = 5; 
+                    return RedirectToAction(nameof(Index));
+                }    
+                  
             }
             if(t.DebCredChoice != null)
             {
@@ -155,8 +164,9 @@ namespace PersonalFinanceFrontEnd.Controllers
                            // (item.DebValue / item.RtNum)
                             if (t.DebCredInValue > debit.RemainToPay)
                             {
-                                TempData["sendFlagTr"] = 4;
-                                return RedirectToAction(nameof(Transactions));
+                                _notyf.Error("Importo inserito maggiore del valore del credito. Transazione annullata.");
+                                //TempData["sendFlagTr"] = 4;
+                                return RedirectToAction(nameof(Index));
                             }
                         }
                     }
@@ -169,8 +179,9 @@ namespace PersonalFinanceFrontEnd.Controllers
                         {
                             if (t.DebCredInValue > credit.CredValue) 
                             {
-                                TempData["sendFlagTr"] = 2;
-                                return RedirectToAction(nameof(Transactions));
+                                _notyf.Error("Importo inserito maggiore del valore del debito. Transazione annullata.");
+                                //TempData["sendFlagTr"] = 2;
+                                return RedirectToAction(nameof(Index));
                             }
                         }
                     }
@@ -186,8 +197,9 @@ namespace PersonalFinanceFrontEnd.Controllers
                         if (result.IsSuccessStatusCode)
                         {
                             BalanceUpdate(t.Usr_OID, false);
-                            TempData["sendFlagTr"] = 3;
-                            return RedirectToAction(nameof(Transactions));
+                            _notyf.Success("Transazione inserita correttamente");
+                            //TempData["sendFlagTr"] = 3;
+                            return RedirectToAction(nameof(Index));
                         }
                     }
                 }
@@ -215,11 +227,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     BalanceUpdate(t.Usr_OID, false);
-                    TempData["sendFlagTr"] = 3;
-                    return RedirectToAction(nameof(Transactions));
+                    _notyf.Success("Transazione inserita correttamente");
+                    return RedirectToAction(nameof(Index));
                 }
             }
-
             return View();
         }
        
@@ -233,7 +244,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Transactions", t.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagTr"] = 1;
+                _notyf.Warning("Transazione rimossa correttamente");
                 BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Transactions));
             }

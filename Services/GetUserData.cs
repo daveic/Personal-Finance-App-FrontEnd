@@ -12,6 +12,7 @@ using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -26,19 +27,18 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private readonly string[] _graphScopes;
 
-
+        private readonly INotyfService _notyf;
 
         public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
-                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler) 
+                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler, INotyfService notyf) 
         {
             _logger = logger;
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
-
-
+            _notyf = notyf;
         }
   
         public async Task<string> GetUserData()

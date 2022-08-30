@@ -21,6 +21,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -57,9 +59,8 @@ namespace PersonalFinanceFrontEnd
                .AddMicrosoftIdentityConsentHandler();
             System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
 
-            //Test
+            services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.BottomRight; });
 
-            //Add this line.
             services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents());
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -100,6 +101,7 @@ namespace PersonalFinanceFrontEnd
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseNotyf();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

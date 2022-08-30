@@ -19,7 +19,7 @@
     </div>
 </div>
 <br />
-<br />
+
 
 @*<!-- Modal EDIT-->
 <div class="modal fade" id="edititem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
@@ -75,41 +75,14 @@
     </div>
 </div>
 
-@if (ViewBag.state == 1)
+@*@if (ViewBag.state == 1)
 {
     <div class="alert alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
     </div>
-}
-else if (ViewBag.state == 2)
-{
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <strong>ERRORE</strong> - L'importo inserito è maggiore del valore del credito. TRANSAZIONE ANNULLATA.
-    </div>
-}
-else if (ViewBag.state == 4)
-{
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <strong>ERRORE</strong> - L'importo inserito è maggiore del valore del debito. TRANSAZIONE ANNULLATA.
-    </div>
-}
-else if (ViewBag.state == 5)
-{
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <strong>ERRORE</strong> - Il Titolo inserito non è valido. TRANSAZIONE ANNULLATA.
-    </div>
-}
-else if (ViewBag.state == 3)
-{
-    <div class="alert alert-dismissible fade show" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <p><strong>Completato!</strong> Transazione creata correttamente.</p>
-    </div>
-}
+}*@
+
 <br />
 
 
@@ -147,7 +120,11 @@ else if (ViewBag.state == 3)
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-5">
-                            <button type="button" class="btn btn-sm" style="background-color: #2574A9;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione</button>
+                            <button type="button" class="btn btn-sm" style="background-color: #2574A9;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">Aggiungi transazione &nbsp;
+                                <span class="material-icons" style="padding-right: 0px; font-size: 20px; line-height: 0.9; vertical-align: text-bottom;">
+                                    receipt_long
+                                </span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -377,10 +354,10 @@ else if (ViewBag.state == 3)
         //    })
         //}
         function alertModal(title, body) {
-  // Display error message to the user in a modal
-  $('#alert-modal-title').html("errore");
-  $('#alert-modal-body').html(body);
-  $('#alert-modal').modal('show');
+          // Display error message to the user in a modal
+          $('#alert-modal-title').html("errore");
+          $('#alert-modal-body').html(body);
+          $('#alert-modal').modal('show');
 }
         function Delete(ClientID) {
             var url = "/PersonalFinance/Transaction_Delete/" + ClientID;

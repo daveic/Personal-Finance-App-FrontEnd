@@ -6,7 +6,7 @@
     <div class="modal-body">
         <h5>Data di riferimento</h5>
         <span style="white-space:nowrap">           
-            <input type="date" class="form-control" id="theDate" asp-for="Future_Date" style="background-color: #444; display: inline-flex; width: 60%" value="gg/mm/YYY">
+            <input type="date" min=DateTime.UtcNow.Date class ="form-control" id="theDate" asp-for="Future_Date" style="background-color: #444; display: inline-flex; width: 60%" value="gg/mm/YYY">
         </span>
         <br /><br />
         <span style="white-space:nowrap">

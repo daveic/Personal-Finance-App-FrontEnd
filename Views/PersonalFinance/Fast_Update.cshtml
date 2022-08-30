@@ -34,7 +34,7 @@
                                     <div class="col-md-6">
                                         <h5 class="card-title">Saldo attuale (€):</h5>
                                         <input type="hidden" class="form-control" asp-for="BankList[i].ID">
-                                        <input type="text" class="form-control" asp-for="BankList[i].Input_value" style="background-color: #444">
+                                        <input type="number" step="0.01" class="form-control" asp-for="BankList[i].Input_value" style="background-color: #444" placeholder="€">
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                 <div class="col-md-6">
                                     <h5 class="card-title">Saldo attuale (€):</h5>
                                     <input type="hidden" class="form-control" asp-for="BankList[0].ID">
-                                    <input type="text" class="form-control" asp-for="BankList[0].Input_value" style="background-color: #444">
+                                    <input type="number" step="0.01" class="form-control" asp-for="BankList[0].Input_value" style="background-color: #444" placeholder="€">
                                 </div>
                             </div>
                         </div>

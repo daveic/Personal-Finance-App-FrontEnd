@@ -58,13 +58,13 @@
                             @{
                                 var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                             }
-                            @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "-- Nessuna --", new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Nuova categoria" })
+                            @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "-- Nessuna --", new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Nuova categoria"})
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
-                            <input type="number" step="0.01" class="form-control" asp-for="Input_value" style="background-color: #444" value="" placeholder="€" data-val="true" data-val-required="Importo è necessario.">
+                            <input type="number" step="0.01" min="0" class="form-control" asp-for="Input_value" style="background-color: #444" value="" placeholder="€" data-val="true" data-val-required="Importo è necessario.">
                             <span asp-validation-for="Input_value" class="text-danger"></span>
                         </div>
                         <div class="col-md-4">
@@ -150,7 +150,7 @@
                                     {
     <tr>  
                                         <td>
-                                        <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" /><span>&nbsp;&nbsp;@item.DebCode</span><br />
+                                        <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required/><span>&nbsp;&nbsp;@item.DebCode</span><br />
                                    </td>
                                                                            <td>
                                         <span>&nbsp;&nbsp;@item.DebTitle</span>
@@ -191,7 +191,7 @@
                                     {
                                         <tr>
                                             <td>
-                                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" />&nbsp;&nbsp;@item.DebCode
+                                               <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required />&nbsp;&nbsp;@item.DebCode
                                             </td>
                                             <td>                                    
                                                 @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
@@ -199,14 +199,13 @@
                                         </tr>
                                      }                          
                                 }
-                            }            
-                        
+                            }                                    
                             </tbody>
                         </table>
                     </div>
                     <div class="col-md-4">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
-                        <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
+                        <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
                         <span asp-validation-for="DebCredInValue" class="text-danger"></span>
                     </div>
                 </div>
@@ -294,7 +293,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il credito rientrato:</label> 
-<table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th scope="col">Codice credito</th>
@@ -302,29 +301,26 @@
                                 </tr>
                             </thead>
                             <tbody>                        
-                            @{
-                        if(ViewBag.CreditList != null)
-                        {
-                            @foreach (var item in ViewBag.CreditList)
+                            @{if(ViewBag.CreditList != null)
                             {
-                                                                        <tr>
-                                            <td>
-                                <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" /> @item.CredCode
-                                                                </td>
-                                            <td>   
-                                                @item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
-                                            </td>
-                                        </tr>
-                                     }                          
-                                }
-                            }            
-                        
+                                @foreach (var item in ViewBag.CreditList)
+                                {
+                                    <tr>
+                                        <td>
+                                            <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" required/> @item.CredCode
+                                        </td>
+                                        <td>   
+                                            @item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                        </td>
+                                    </tr>
+                                }                          
+                            }}                        
                             </tbody>
                         </table>
                     </div>
                 <div class="col-md-4" style="vertical-align:central">
                     <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo</label>
-                    <input type="number" step="0.01" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
+                    <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€">
           
                     <span asp-validation-for="DebCredInValue" class="text-danger"></span>
                 </div>   </div>  
@@ -358,7 +354,7 @@
         });
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
-        });
+        });        
     </script>
 }
 

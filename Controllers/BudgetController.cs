@@ -27,6 +27,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Balance> Balances = GetAllItems<Balance>("Balances", User_OID);
             double MonthFlux = 0;
 
+            if(Future_Date <= DateTime.UtcNow.Date && Future_Date != new DateTime())
+            {
+                _notyf.Error("Sellezionare una data successiva a quella attuale");
+                return RedirectToAction(nameof(Budget));
+            }
             if (stimated_total == 0)
             {
                 Expirations Expirations = (Expirations)GetAllItemsMain<Expirations>("Expirations", User_OID, DateTime.Now.Year.ToString());
