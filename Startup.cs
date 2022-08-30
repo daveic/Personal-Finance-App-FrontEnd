@@ -5,9 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Azure;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+
 using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using System;
 using Microsoft.Identity.Web.UI;
+using Microsoft.AspNetCore.Mvc;
 using PersonalFinanceFrontEnd.Controllers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
@@ -47,7 +55,11 @@ namespace PersonalFinanceFrontEnd
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
-            // System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
+
+            //Test
+
+            //Add this line.
             services.Configure<CookieAuthenticationOptions>(CookieAuthenticationDefaults.AuthenticationScheme, options => options.Events = new RejectSessionCookieWhenAccountNotInCacheEvents());
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
