@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -173,27 +174,28 @@ namespace PersonalFinanceFrontEnd.Controllers
                             }
                         }
                     }
-                }               
-            }
-            if (t.DebCredChoice.StartsWith("SCD") || t.DebCredChoice.StartsWith("MVF"))
-            {
-                t.TrsCode = t.DebCredChoice;
-                using (var client = new HttpClient())
+                }  else if (t.DebCredChoice.StartsWith("SCD") || t.DebCredChoice.StartsWith("MVF"))
                 {
-                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
-                    var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
-                    postTask.Wait();
-                    var result = postTask.Result;
-                    if (result.IsSuccessStatusCode)
+                    t.TrsCode = t.DebCredChoice;
+                    using (var client = new HttpClient())
                     {
-                        BalanceUpdate(t.Usr_OID, false);
-                        TempData["sendFlagTr"] = 3;
-                        return RedirectToAction(nameof(Transactions));
+                        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
+                        var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
+                        postTask.Wait();
+                        var result = postTask.Result;
+                        if (result.IsSuccessStatusCode)
+                        {
+                            BalanceUpdate(t.Usr_OID, false);
+                            TempData["sendFlagTr"] = 3;
+                            return RedirectToAction(nameof(Transactions));
+                        }
                     }
                 }
             }
+            
             if (t.Input_value != null)
             {
+                //CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
                 t.Input_value = t.Input_value.Replace(",", ".");
                 t.TrsValue = Convert.ToDouble(t.Input_value);
             }

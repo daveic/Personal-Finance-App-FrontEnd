@@ -18,6 +18,9 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.Mvc;
 using PersonalFinanceFrontEnd.Controllers;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using System.Collections.Generic;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -52,7 +55,7 @@ namespace PersonalFinanceFrontEnd
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
-
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("de-DE");
 
             //Test
 
@@ -70,6 +73,24 @@ namespace PersonalFinanceFrontEnd
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            var defaultDateCulture = "fr-FR";
+            var ci = new CultureInfo(defaultDateCulture);
+            ci.NumberFormat.NumberDecimalSeparator = ".";
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+            // Configure the Localization middleware
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(ci),
+                SupportedCultures = new List<CultureInfo>
+    {
+        ci,
+    },
+                SupportedUICultures = new List<CultureInfo>
+    {
+        ci,
+    }
+            });
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
