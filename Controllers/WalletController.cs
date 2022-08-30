@@ -76,7 +76,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Add(Deposit d)
         {
-            d.input_value = d.Input_value.Replace(",", ".");
+            d.input_value = d.input_value.Replace(",", ".");
             d.DepValue = Convert.ToDouble(d.input_value);
             d.Usr_OID = GetUserData().Result;
             int result = AddItemN<Deposit>("Deposits", d);
@@ -93,7 +93,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Add(Ticket t)
         {
-            t.Input_value = t.Input_value.Replace(",", ".");
+            t.input_value = t.input_value.Replace(",", ".");
             t.TicketValue = Convert.ToDouble(t.input_value);
             t.Usr_OID = GetUserData().Result;
             int result = AddItemN<Ticket>("Tickets", t);
@@ -131,7 +131,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Edit(Deposit d)
         {
-            d.input_value = d.Input_value.Replace(",", ".");
+            d.input_value = d.input_value.Replace(",", ".");
             d.DepValue = Convert.ToDouble(d.input_value);
             d.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Deposit>("Deposits", d);
@@ -148,7 +148,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Ticket_Edit(Ticket t)
         {
-            t.Input_value = t.Input_value.Replace(",", ".");
+            t.input_value = t.input_value.Replace(",", ".");
             t.TicketValue = Convert.ToDouble(t.input_value);
             t.Usr_OID = GetUserData().Result;
             int result = EditItemIDN<Ticket>("Tickets", t);
