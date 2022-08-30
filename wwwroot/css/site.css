@@ -169,7 +169,7 @@ small {
 .dropdown-item-inline {
     display: block;
     width: 100%;
-    padding: 0rem 0.1rem;
+    padding: 0.1rem 0.1rem;
     clear: both;
     font-weight: 400;
     color: #fff;
