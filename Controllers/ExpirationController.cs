@@ -48,7 +48,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Expiration_Add(Expiration e)
         {
-            e.Input_value = e.Input_value.Replace(".", ",");
+            e.Input_value = e.Input_value.Replace(",", ".");
             e.ExpValue = Convert.ToDouble(e.Input_value);
             e.Usr_OID = GetUserData().Result;
             e.ExpTitle = "SCD " + e.ExpTitle;

@@ -34,7 +34,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                c.Input_value = c.Input_value.Replace(".", ",");
+                c.Input_value = c.Input_value.Replace(",", ".");
                 c.CredValue = Convert.ToDouble(c.Input_value);
                 c.Usr_OID = GetUserData().Result;
             }
@@ -55,7 +55,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                c.Input_value = c.Input_value.Replace(".", ",");
+                c.Input_value = c.Input_value.Replace(",", ".");
                 c.CredValue = Convert.ToDouble(c.Input_value);
             }
             c.Usr_OID = GetUserData().Result;

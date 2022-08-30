@@ -33,7 +33,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                d.Input_value = d.Input_value.Replace(".", ",");
+                d.Input_value = d.Input_value.Replace(",", ".");
                 d.DebValue = Convert.ToDouble(d.Input_value);
                 d.RemainToPay = d.DebValue;
             }
@@ -61,7 +61,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             if (i != 1)
             {
-                d.Input_value = d.Input_value.Replace(".", ",");
+                d.Input_value = d.Input_value.Replace(",", ".");
                 d.DebValue = Convert.ToDouble(d.Input_value);
                 d.RemainToPay = d.DebValue;
             }
@@ -90,7 +90,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 if(d.Input_value != null)
                 {
-                    d.Input_value = d.Input_value.Replace(".", ",");
+                    d.Input_value = d.Input_value.Replace(",", ".");
                     d.DebValue = Convert.ToDouble(d.Input_value);
                 }
                 if(d.Multiplier != 0) //Sto modificando un debito a rate

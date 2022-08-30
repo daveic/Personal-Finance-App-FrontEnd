@@ -179,7 +179,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 if (t.Input_value != null)
                 {
-                    t.Input_value = t.Input_value.Replace(".", ",");
+                    t.Input_value = t.Input_value.Replace(",", ".");
                     t.TrsValue = Convert.ToDouble(t.Input_value);
                 }
                 if (t.Type == false) t.TrsValue = -t.TrsValue;
