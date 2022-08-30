@@ -175,25 +175,36 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }               
             }
-            if(!t.DebCredChoice.StartsWith("SCD") && !t.DebCredChoice.StartsWith("MVF"))
+            if (t.DebCredChoice.StartsWith("SCD") || t.DebCredChoice.StartsWith("MVF"))
             {
-                if (t.Input_value != null)
-                {
-                    t.Input_value = t.Input_value.Replace(",", ".");
-                    t.TrsValue = Convert.ToDouble(t.Input_value);
-                }
-                if (t.Type == false) t.TrsValue = -t.TrsValue;
-                if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
-                t.DebCredChoice ??= "";
-                t.TrsCode ??= "";
-                t.TrsTitle ??= "";
-                t.TrsDateTimeExp ??= DateTime.MinValue;
-                if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
-            }
-            if (t.DebCredChoice.StartsWith("SCD") && t.DebCredChoice.StartsWith("MVF")) t.TrsCode = t.DebCredChoice;
-            
-
+                t.TrsCode = t.DebCredChoice;
                 using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
+                    var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
+                    postTask.Wait();
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        BalanceUpdate(t.Usr_OID, false);
+                        TempData["sendFlagTr"] = 3;
+                        return RedirectToAction(nameof(Transactions));
+                    }
+                }
+            }
+            if (t.Input_value != null)
+            {
+                t.Input_value = t.Input_value.Replace(",", ".");
+                t.TrsValue = Convert.ToDouble(t.Input_value);
+            }
+            if (t.Type == false) t.TrsValue = -t.TrsValue;
+            if (t.NewTrsCode != null) t.TrsCode = t.NewTrsCode;
+            t.DebCredChoice ??= "";
+            t.TrsCode ??= "";
+            t.TrsTitle ??= "";
+            t.TrsDateTimeExp ??= DateTime.MinValue;
+            if (t.TrsDateTime == DateTime.MinValue) t.TrsDateTime = DateTime.Now;
+            using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
                 var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
@@ -206,7 +217,6 @@ namespace PersonalFinanceFrontEnd.Controllers
                     return RedirectToAction(nameof(Transactions));
                 }
             }
-
 
             return View();
         }
