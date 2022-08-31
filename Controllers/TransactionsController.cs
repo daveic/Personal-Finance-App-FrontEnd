@@ -191,7 +191,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     {
                         if (t.DebCredChoice == credit.CredCode)
                         {
-                            if (t.DebCredInValue > credit.CredValue) 
+                            if (t.DebCredInValue > Math.Round(credit.CredValue, 2)) 
                             {
                                 _notyf.Error("Importo inserito maggiore del valore del debito. Transazione annullata.");
                                 //TempData["sendFlagTr"] = 2;
@@ -212,7 +212,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         {
                             BalanceUpdate(t.Usr_OID, false);
                             _notyf.Success("Transazione inserita correttamente.");
-                            //TempData["sendFlagTr"] = 3;
+                            
                             return RedirectToAction(nameof(Index));
                         }
                     }

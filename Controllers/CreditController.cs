@@ -16,7 +16,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 CreditList = GetAllItems<Credit>("Credits", User_OID)
             };
-            ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
+            //ViewBag.state = (int)(TempData.ContainsKey("sendFlagCred") ? TempData["sendFlagCred"] : 0);
             return View(Credits);
         }
         public ActionResult Credit_Details(int id)
@@ -41,7 +41,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Credit>("Credits", c);
             if (result == 0)
             {
-                TempData["sendFlagCred"] = 3;
+                _notyf.Success("Credito inserito correttamente.");
                 return RedirectToAction(nameof(Credits));
             }
             return View();
@@ -62,7 +62,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Credit>("Credits", c);
             if (result == 0)
             {
-                TempData["sendFlagCred"] = 2;
+                _notyf.Success("Credito modificato correttamente.");
                 return RedirectToAction(nameof(Credits));
             }
             return View();
@@ -77,7 +77,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Credits", c.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagCred"] = 1;
+                _notyf.Warning("Credito rimosso correttamente.");
                 return RedirectToAction(nameof(Credits));
             }
             return View();

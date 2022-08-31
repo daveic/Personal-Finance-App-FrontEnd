@@ -46,7 +46,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Debit>("Debits", d);
             if (result == 0)
             {
-                TempData["sendFlagDeb"] = 3;
+                _notyf.Success("Debito inserito correttamente.");
 
                 return RedirectToAction(nameof(Debits));
             }
@@ -73,8 +73,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Debit>("Debits", d);
             if (result == 0)
             {
-                TempData["sendFlagDeb"] = 3;
-
+                _notyf.Success("Debito a rate inserito correttamente.");
                 return RedirectToAction(nameof(Debits));
             }
             return View();
@@ -103,7 +102,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Debit>("Debits", d);
             if (result == 0)
             {
-                TempData["sendFlagDeb"] = 2;
+                _notyf.Success("Debito modificato correttamente.");
                 return RedirectToAction(nameof(Debits));
             }
             return View();
@@ -118,7 +117,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Debits", d.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagDeb"] = 1;
+                _notyf.Warning("Debito rimosso correttamente.");
                 return RedirectToAction(nameof(Debits));
             }
             return View();
