@@ -114,7 +114,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
-            ViewBag.MonthExpirations = detection.MonthExpirations;
+            //ViewBag.MonthExpirations = detection.MonthExpirations;
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
             var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
@@ -209,8 +209,8 @@ namespace PersonalFinanceFrontEnd.Controllers
                             _notyf.Success("Transazione inserita correttamente.");                            
                             return RedirectToAction(nameof(Index));
                         } else {
-                            _notyf.Error("Errore API: T1 - NoSuccess.");
-                            return RedirectToAction(nameof(Index));
+                            _notyf.Error("Errore API: T1 - NoSuccess. Verifica che il movimento sia replicato nelle scadenze");
+                            return RedirectToAction(nameof(Expirations));
                         }
                     }
                 }
