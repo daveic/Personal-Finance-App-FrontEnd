@@ -29,7 +29,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             if(Future_Date <= DateTime.UtcNow.Date && Future_Date != new DateTime())
             {
-                _notyf.Error("Sellezionare una data successiva a quella attuale");
+                _notyf.Error("Selezionare una data successiva a quella attuale");
                 return RedirectToAction(nameof(Budget));
             }
             if (stimated_total == 0)

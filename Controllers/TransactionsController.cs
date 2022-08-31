@@ -133,6 +133,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Transaction_Add(Transaction t)
         {
             t.Usr_OID = GetUserData().Result;
+            IEnumerable<Transaction> AllTransactions = GetAllItems<Transaction>("Transactions", t.Usr_OID);
+            IEnumerable<Transaction> transactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
             //if cred or deb code is existing, throw error - 
             //if debcredinput is > remain to pay o creditvalue, throw error
             if (t.TrsTitle != null)
@@ -157,6 +159,14 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (t.DebCredChoice.StartsWith("DEB"))
                 {
                     var Debits = GetAllItems<Debit>("Debits", t.Usr_OID);
+                    foreach (var tr in transactions)
+                    {
+                        if(t.DebCredChoice == tr.TrsCode)
+                        {
+                            _notyf.Error("La rata mensile di questo debito è già stata pagata. Transazione annullata.");
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
                     foreach (var debit in Debits)
                     {
                         if (t.DebCredChoice == debit.DebCode)
@@ -197,7 +207,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         if (result.IsSuccessStatusCode)
                         {
                             BalanceUpdate(t.Usr_OID, false);
-                            _notyf.Success("Transazione inserita correttamente");
+                            _notyf.Success("Transazione inserita correttamente.");
                             //TempData["sendFlagTr"] = 3;
                             return RedirectToAction(nameof(Index));
                         }
@@ -227,7 +237,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     BalanceUpdate(t.Usr_OID, false);
-                    _notyf.Success("Transazione inserita correttamente");
+                    _notyf.Success("Transazione inserita correttamente.");
                     return RedirectToAction(nameof(Index));
                 }
             }
@@ -244,7 +254,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Transactions", t.ID, GetUserData().Result);
             if (result == 0)
             {
-                _notyf.Warning("Transazione rimossa correttamente");
+                _notyf.Warning("Transazione rimossa correttamente.");
                 BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Transactions));
             }

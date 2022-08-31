@@ -64,6 +64,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Bank>("Banks", b);
             if (result == 0)
             {
+                _notyf.Success("Banca aggiunta correttamente.");
                 BalanceUpdate(b.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -76,12 +77,18 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Deposit_Add(Deposit d)
         {
+            if (d.EndDate <= DateTime.UtcNow.Date)
+            {
+                _notyf.Error("Selezionare una data successiva a quella attuale");
+                return RedirectToAction(nameof(Wallet));
+            }
             d.input_value = d.input_value.Replace(",", ".");
             d.DepValue = Convert.ToDouble(d.input_value);
             d.Usr_OID = GetUserData().Result;
             int result = AddItemN<Deposit>("Deposits", d);
             if (result == 0)
             {
+                _notyf.Success("Deposito aggiunta correttamente.");
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -99,6 +106,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<Ticket>("Tickets", t);
             if (result == 0)
             {
+                _notyf.Success("Ticket aggiunto correttamente.");
                 BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -119,6 +127,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Bank>("Banks", b);
             if (result == 0)
             {
+                _notyf.Success("Banca modificata correttamente.");
                 BalanceUpdate(b.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -137,6 +146,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Deposit>("Deposits", d);
             if (result == 0)
             {
+                _notyf.Success("Deposito modificato correttamente.");
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -154,6 +164,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = EditItemIDN<Ticket>("Tickets", t);
             if (result == 0)
             {
+                _notyf.Success("Ticket modificato correttamente.");
                 BalanceUpdate(t.Usr_OID, false);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -171,6 +182,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Banks", b.ID, GetUserData().Result);
             if (result == 0)
             {
+                _notyf.Warning("Banca rimossa correttamente.");
                 BalanceUpdate(GetUserData().Result, false);
                 return RedirectToAction(nameof(Wallet));
             }
@@ -186,6 +198,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Deposits", d.ID, GetUserData().Result);
             if (result == 0)
             {
+                _notyf.Warning("Deposito rimosso correttamente.");
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -200,6 +213,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Tickets", t.ID, GetUserData().Result);
             if (result == 0)
             {
+                _notyf.Warning("Ticket rimosso correttamente.");
                 BalanceUpdate(GetUserData().Result, false);
                 return RedirectToAction(nameof(Wallet));
             }

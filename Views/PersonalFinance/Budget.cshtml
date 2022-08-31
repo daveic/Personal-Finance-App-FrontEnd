@@ -2,7 +2,7 @@
 
 <h2>Previsioni e Budget</h2>
 <br />
-<!-- Modal ADD-->
+@*<!-- Modal ADD-->
 
 
 <!-- Modal EDIT-->
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 
 
@@ -135,6 +135,7 @@
                                                 </td>
                                                 <td>
                                                         <span>@item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))&nbsp;
+          
                                                         @foreach (var exp in ViewBag.ExpDone)
                                                         {
                                                             @if (exp.ExpTitle == @item.ExpTitle)
@@ -142,6 +143,7 @@
                                                                 <span class="material-icons" style="color: green; font-size: 18px; vertical-align: text-bottom">
                                                                     done
                                                                 </span>
+                                                                break;
                                                             }
                                                         }
                                                         </span>

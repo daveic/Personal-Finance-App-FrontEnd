@@ -10,20 +10,20 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="TicketName">Gestore</label>
-                <input type="text" class="form-control" asp-for="TicketName" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="TicketName">Gestore <font color="red">*</font></label>
+                <input type="text" class="form-control" asp-for="TicketName" style="background-color: #444" required>
                 <span asp-validation-for="TicketName" class="text-danger"></span>
             </div>
             <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="NumTicket">N° ticket attuale</label>
+                <label for="recipient-name" class="col-form-label" asp-for="NumTicket">N° ticket attuale&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="E' possibile modificare il numero di ticket solo dalla sezione EasyUpdate.">info</span></label>
                 <input type="number" class="form-control" readonly asp-for="NumTicket" style="background-color: #444">
                 <span asp-validation-for="NumTicket" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <label for="recipient-name" class="col-form-label" asp-for="input_value">Valore singolo ticket (in €)</label>
-                <input type="text" class="form-control" asp-for="input_value" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="input_value">Valore singolo ticket (in €) <font color="red">*</font></label>
+                <input type="number" step="0.01" class="form-control" asp-for="input_value" placeholder="€" style="background-color: #444" required>
                 <span asp-validation-for="input_value" class="text-danger"></span>
             </div>
         </div>
@@ -39,3 +39,9 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+    });
+</script>

@@ -48,6 +48,15 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Expiration_Add(Expiration e)
         {
+            if (e.ExpDateTime <= DateTime.UtcNow.Date)
+            {
+                _notyf.Error("Selezionare una data successiva a quella attuale");
+                return RedirectToAction(nameof(Expirations));
+            }           
+            if (e.ColorLabel == null)
+            {
+                e.ColorLabel = "rgb(255, 255, 255)";
+            }
             e.Input_value = e.Input_value.Replace(",", ".");
             e.ExpValue = Convert.ToDouble(e.Input_value);
             e.Usr_OID = GetUserData().Result;
@@ -75,7 +84,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("Expirations", e.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagT"] = 1;
+                _notyf.Warning("Scadenza rimossa correttamente.");
                 return RedirectToAction(nameof(Expirations));
             }
             return View();
