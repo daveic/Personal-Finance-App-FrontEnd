@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PersonalFinanceFrontEnd.Models;
@@ -197,21 +195,21 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }  else if (t.DebCredChoice.StartsWith("SCD") || t.DebCredChoice.StartsWith("MVF"))
                 {
                     t.TrsCode = t.DebCredChoice;
-                    using (var client = new HttpClient())
+                    using var client = new HttpClient();
+                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
+                    var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
+                    postTask.Wait();
+                    var result = postTask.Result;
+                    if (result.IsSuccessStatusCode)
                     {
-                        client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/api/Transactions/");
-                        var postTask = client.PostAsJsonAsync<Transaction>("Add", t);
-                        postTask.Wait();
-                        var result = postTask.Result;
-                        if (result.IsSuccessStatusCode)
-                        {
-                            BalanceUpdate(t.Usr_OID, false);
-                            _notyf.Success("Transazione inserita correttamente.");                            
-                            return RedirectToAction(nameof(Index));
-                        } else {
-                            _notyf.Error("Errore API: T1 - NoSuccess. Verifica che il movimento sia replicato nelle scadenze");
-                            return RedirectToAction(nameof(Expirations));
-                        }
+                        BalanceUpdate(t.Usr_OID, false);
+                        _notyf.Success("Transazione inserita correttamente.");
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        _notyf.Error("Errore API: T1 - NoSuccess. Verifica che il movimento sia replicato nelle scadenze");
+                        return RedirectToAction(nameof(Expirations));
                     }
                 }
             }
@@ -243,11 +241,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 else
                 {
-                    _notyf.Error("Errore API: T2 - NoSuccess.");
-                    return RedirectToAction(nameof(Index));
+                    _notyf.Error("Errore API: T2 - NoSuccess.");                    
                 }
             }
-            return View();
+            return RedirectToAction(nameof(Index));
         }
        
         public ActionResult Transaction_Delete(int id)
@@ -266,10 +263,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             else
             {
-                _notyf.Error("Errore API: T3 - NoSuccess.");
-                return RedirectToAction(nameof(Transactions));
+                _notyf.Error("Errore API: T3 - NoSuccess.");                
             }
-            return View();
+            return RedirectToAction(nameof(Transactions));
         }
     }
 }
