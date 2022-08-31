@@ -10,7 +10,7 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="CredCode">Codice Credito</label>
+                <label for="recipient-name" class="col-form-label" asp-for="CredCode">Codice Credito <font color="red">*</font></label>
                 @if (Model.FromTrs == 0)
                 {
                     <input type="text" class="form-control" asp-for="CredCode" style="background-color: #444">
@@ -21,13 +21,13 @@
                 <span asp-validation-for="CredCode" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="CredTitle">Titolo</label>
-                <input type="text" class="form-control" asp-for="CredTitle" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="CredTitle">Titolo <font color="red">*</font></label>
+                <input type="text" class="form-control" asp-for="CredTitle" style="background-color: #444" required>
                 <span asp-validation-for="CredTitle" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="CredDateTime">Data inserimento</label>
-                <input type="date" class="form-control" asp-for="CredDateTime" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="CredDateTime">Data inserimento <font color="red">*</font></label>
+                <input type="date" class="form-control" asp-for="CredDateTime" style="background-color: #444" required>
                 <span asp-validation-for="CredDateTime" class="text-danger"></span>
             </div>
         </div>
@@ -38,19 +38,19 @@
                 <span asp-validation-for="DebName" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
+                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
                 @if (Model.FromTrs == 0)
                 {
-                <input type="text" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">                
+                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>                
                 } else if (Model.FromTrs == 1)
                 {
-                    <input type="text" class="form-control" readonly asp-for="Input_value" placeholder="€" style="background-color: #444">
+                    <input type="number" step="0.01" class="form-control" readonly asp-for="Input_value" placeholder="€" style="background-color: #444">
                 }
                 <span asp-validation-for="Input_value" class="text-danger"></span>
             </div>
             <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="PrevDateTime">Data restituzione</label>
-                <input type="date" class="form-control" asp-for="PrevDateTime" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="PrevDateTime">Data restituzione <font color="red">*</font></label>
+                <input type="date" class="form-control" asp-for="PrevDateTime" style="background-color: #444" required>
                 <span asp-validation-for="PrevDateTime" class="text-danger"></span>
             </div>
         </div>

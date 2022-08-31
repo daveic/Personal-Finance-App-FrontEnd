@@ -32,12 +32,18 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Credit_Add(Credit c, int i)
         {
+            if(c.PrevDateTime <= c.CredDateTime)
+            {
+                _notyf.Error("La data di restituzione deve essere successiva a quella di inserimento.");
+                return RedirectToAction(nameof(Credits));
+            }
             if (i != 1)
             {
                 c.Input_value = c.Input_value.Replace(",", ".");
                 c.CredValue = Convert.ToDouble(c.Input_value);
                 c.Usr_OID = GetUserData().Result;
             }
+
             int result = AddItemN<Credit>("Credits", c);
             if (result == 0)
             {
