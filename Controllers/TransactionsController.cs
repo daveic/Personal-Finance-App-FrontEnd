@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PersonalFinanceFrontEnd.Models;
@@ -114,6 +115,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
             ViewBag.MonthExpirations = detection.MonthExpirations;
+
+            var monthExpNotDone = detection.MonthExpirations.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
+            ViewBag.MonthExpirations = monthExpNotDone;
             return View(TrsToView);
         }
 

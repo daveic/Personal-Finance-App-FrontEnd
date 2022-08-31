@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -45,6 +46,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.CreditList = detection.CreditsMono;
             ViewBag.MonthExpirations = detection.MonthExpirations;
 
+            var Transactions = (DOut.TransactionsIn ?? Enumerable.Empty<Transaction>()).Concat(DOut.TransactionsOut ?? Enumerable.Empty<Transaction>());
+            var monthExpNotDone = detection.MonthExpirations.Where(p => !Transactions.Any(p2 => p2.TrsCode == p.ExpTitle));
+            ViewBag.MonthExpirations = monthExpNotDone;
             return View(DOut);
         }
 

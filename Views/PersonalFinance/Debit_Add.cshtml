@@ -6,7 +6,7 @@
     <div class="modal-body">
         <div class="row">
             <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un codice identificativo personalizzato per riconoscere la tipologia di debito anche in futuro">info</span></label>
+                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un codice identificativo personalizzato per riconoscere la tipologia di debito anche in futuro; verrà aggiunto automaticamente il prefisso 'DEB'.">info</span></label>
                 <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
                 <span asp-validation-for="DebCode" class="text-danger"></span>
             </div>
@@ -50,6 +50,6 @@
 
 <script>
     $(document).ready(function () {
-        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+    $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
     });
 </script>

@@ -33,7 +33,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = AddItemN<KnownMovement>("KnownMovements", k);
             if (result == 0)
             {
-                TempData["sendFlagKM"] = 3;
+                _notyf.Success("Movimento inserito correttamente.");
                 return RedirectToAction(nameof(KnownMovements));
             }
             return View();
@@ -47,10 +47,14 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             k.KMValue = Convert.ToDouble(k.Input_value.Replace(",", "."));
             k.Usr_OID = GetUserData().Result;
+            if (!k.KMTitle.StartsWith("MVF"))
+            {
+                k.KMTitle = "MVF " + k.KMTitle;
+            }
             int result = EditItemIDN<KnownMovement>("KnownMovements", k);
             if (result == 0)
             {
-                TempData["sendFlagKM"] = 2;
+                _notyf.Success("Movimento modificato correttamente.");
                 return RedirectToAction(nameof(KnownMovements));
             }
             return View();
@@ -84,7 +88,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             int result = DeleteItemN("KnownMovements", k.ID, GetUserData().Result);
             if (result == 0)
             {
-                TempData["sendFlagKM"] = 1;
+                _notyf.Warning("Movimento rimosso correttamente.");
                 return RedirectToAction(nameof(KnownMovements));
             }
             return View();

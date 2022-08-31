@@ -10,13 +10,13 @@
         </div>
         <div class="row">
             <div class="form-group col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="KMTitle">Titolo</label>
+                <label for="recipient-name" class="col-form-label" asp-for="KMTitle">Titolo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Al titolo inserito verrà aggiunto automaticamente il prefisso 'MVF'.">info</span></label>
                 <input type="text" class="form-control" asp-for="KMTitle" style="background-color: #444">
                 <span asp-validation-for="KMTitle" class="text-danger"></span>
             </div>
             <div class="col-md-3">
-                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
-                <input type="text" class="form-control" asp-for="Input_value" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
+                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>
                 <span asp-validation-for="Input_value" class="text-danger"></span>
             </div>
             <div class="col-md-3">
@@ -37,3 +37,10 @@
         </div>
     </div>
 </form>
+
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip({ 'placement': 'right' });
+    });
+</script>
