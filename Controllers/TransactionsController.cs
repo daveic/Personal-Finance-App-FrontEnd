@@ -115,8 +115,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
             ViewBag.MonthExpirations = detection.MonthExpirations;
+            ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
-            var monthExpNotDone = detection.MonthExpirations.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
+            var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
             ViewBag.MonthExpirations = monthExpNotDone;
             return View(TrsToView);
         }
@@ -139,21 +140,18 @@ namespace PersonalFinanceFrontEnd.Controllers
             t.Usr_OID = GetUserData().Result;
             IEnumerable<Transaction> AllTransactions = GetAllItems<Transaction>("Transactions", t.Usr_OID);
             IEnumerable<Transaction> transactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
-            //if cred or deb code is existing, throw error - 
-            //if debcredinput is > remain to pay o creditvalue, throw error
+
             if (t.TrsTitle != null)
             {
             
                 if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE") || t.TrsTitle.StartsWith("MVF") || t.TrsTitle.StartsWith("SCD"))
                 {
-                    _notyf.Error("Il titolo della transazione non può iniziare per DEB, CRE, MVF o SCD. Inserimento annullato.");
-                    
+                    _notyf.Error("Il titolo della transazione non può iniziare per DEB, CRE, MVF o SCD. Inserimento annullato.");                    
                     return RedirectToAction(nameof(Index));
                 }
                 if (t.TrsCode is null && t.NewTrsCode is null)
                 {
-                    _notyf.Error("Occorre specificare una categoria. Transazione annullata.");
-                    //TempData["sendFlagTr"] = 5; 
+                    _notyf.Error("Occorre specificare una categoria. Transazione annullata.");                    
                     return RedirectToAction(nameof(Index));
                 }    
                   
@@ -174,12 +172,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                     foreach (var debit in Debits)
                     {
                         if (t.DebCredChoice == debit.DebCode)
-                        {
-                           // (item.DebValue / item.RtNum)
-                            if (t.DebCredInValue > debit.RemainToPay)
+                        {                           
+                            if (t.DebCredInValue > Math.Round(debit.RemainToPay, 2))
                             {
-                                _notyf.Error("Importo inserito maggiore del valore del credito. Transazione annullata.");
-                                //TempData["sendFlagTr"] = 4;
+                                _notyf.Error("Importo inserito maggiore del valore del credito. Transazione annullata.");                                
                                 return RedirectToAction(nameof(Index));
                             }
                         }
@@ -193,8 +189,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                         {
                             if (t.DebCredInValue > Math.Round(credit.CredValue, 2)) 
                             {
-                                _notyf.Error("Importo inserito maggiore del valore del debito. Transazione annullata.");
-                                //TempData["sendFlagTr"] = 2;
+                                _notyf.Error("Importo inserito maggiore del valore del debito. Transazione annullata.");                                
                                 return RedirectToAction(nameof(Index));
                             }
                         }
@@ -211,8 +206,10 @@ namespace PersonalFinanceFrontEnd.Controllers
                         if (result.IsSuccessStatusCode)
                         {
                             BalanceUpdate(t.Usr_OID, false);
-                            _notyf.Success("Transazione inserita correttamente.");
-                            
+                            _notyf.Success("Transazione inserita correttamente.");                            
+                            return RedirectToAction(nameof(Index));
+                        } else {
+                            _notyf.Error("Errore API: T1 - NoSuccess.");
                             return RedirectToAction(nameof(Index));
                         }
                     }
@@ -244,6 +241,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                     _notyf.Success("Transazione inserita correttamente.");
                     return RedirectToAction(nameof(Index));
                 }
+                else
+                {
+                    _notyf.Error("Errore API: T2 - NoSuccess.");
+                    return RedirectToAction(nameof(Index));
+                }
             }
             return View();
         }
@@ -260,6 +262,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 _notyf.Warning("Transazione rimossa correttamente.");
                 BalanceUpdate(t.Usr_OID, false);
+                return RedirectToAction(nameof(Transactions));
+            }
+            else
+            {
+                _notyf.Error("Errore API: T3 - NoSuccess.");
                 return RedirectToAction(nameof(Transactions));
             }
             return View();
