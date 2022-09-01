@@ -1,6 +1,9 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Mvc;
+using PersonalFinanceFrontEnd.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -98,6 +101,33 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
             }
             return (1);
+        }
+
+        public bool CheckNameExist(string Code, string type)
+        {
+            string User_OID = GetUserData().Result; //Fetch User Data
+
+            if (type == "Credits")
+            {
+                IEnumerable<Credit> list = GetAllItems<Credit>(type, User_OID);
+                if (!list.Any(x => x.CredCode == Code)) return false;
+            }
+            if (type == "Debits")
+            {
+                IEnumerable<Debit> list = GetAllItems<Debit>(type, User_OID);
+                if (!list.Any(x => x.DebCode == Code)) return false;
+            }
+            if (type == "KnownMovements")
+            {
+                IEnumerable<KnownMovement> list = GetAllItems<KnownMovement>(type, User_OID);
+                if (!list.Any(x => x.KMTitle == Code)) return false;
+            }
+            if (type == "Expirations")
+            {
+                IEnumerable<Expiration> list = GetAllItems<Expiration>(type, User_OID); 
+                if (!list.Any(x => x.ExpTitle == Code)) return false;
+            }           
+            return true;
         }
     }
 }

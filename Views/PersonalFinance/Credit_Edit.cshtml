@@ -1,6 +1,5 @@
 ﻿@model PersonalFinanceFrontEnd.Models.Credit
 
-
 <form asp-action="Credit_Edit" style="margin: 0 auto;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
@@ -9,18 +8,7 @@
             <h4>Modifica credito</h4>
         </div>
         <div class="row">
-            <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="CredCode">Codice Credito <font color="red">*</font></label>
-                @if (Model.FromTrs == 0)
-                {
-                    <input type="text" class="form-control" asp-for="CredCode" style="background-color: #444">
-                } else if (Model.FromTrs == 1)
-                {
-                    <input type="text" class="form-control" readonly asp-for="CredCode" style="background-color: #444">
-                }
-                <span asp-validation-for="CredCode" class="text-danger"></span>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <label for="recipient-name" class="col-form-label" asp-for="CredTitle">Titolo <font color="red">*</font></label>
                 <input type="text" class="form-control" asp-for="CredTitle" style="background-color: #444" required>
                 <span asp-validation-for="CredTitle" class="text-danger"></span>
@@ -41,7 +29,7 @@
                 <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
                 @if (Model.FromTrs == 0)
                 {
-                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>                
+                    <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>
                 } else if (Model.FromTrs == 1)
                 {
                     <input type="number" step="0.01" class="form-control" readonly asp-for="Input_value" placeholder="€" style="background-color: #444">
@@ -60,6 +48,7 @@
                 <textarea class="form-control" id="message-text" asp-for="CredNote" style="background-color: #444"></textarea>
             </div>
         </div>
+        <input type="hidden" class="form-control" readonly asp-for="CredCode" style="background-color: #444">
         <input type="hidden" class="form-control" asp-for="Exp_ID" style="background-color: #444">
         <input type="hidden" class="form-control" asp-for="FromTrs" style="background-color: #444">
         <div class="modal-footer">

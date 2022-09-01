@@ -5,33 +5,26 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un codice identificativo personalizzato per riconoscere la tipologia di debito anche in futuro; verrà aggiunto automaticamente il prefisso 'DEB'.">info</span></label>
-                <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
-                <span asp-validation-for="DebCode" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebTitle">Titolo</label>
-                <input type="text" class="form-control" asp-for="DebTitle" style="background-color: #444">
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="DebTitle">Titolo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un titolo univoco per riconoscere la tipologia di debito anche in futuro; verrà aggiunto automaticamente il prefisso 'DEB'.">info</span></label>
+                <input type="text" class="form-control" asp-for="DebTitle" style="background-color: #444" required>
                 <span asp-validation-for="DebTitle" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="CredName">Creditore</label>
                 <input type="text" class="form-control" asp-for="CredName" style="background-color: #444">
                 <span asp-validation-for="CredName" class="text-danger"></span>
             </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo</label>
-                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444">
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="Input_value">Importo <font color="red">*</font></label>
+                <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>
                 <span asp-validation-for="Input_value" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza</label>
-                <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444">
+                <label for="recipient-name" class="col-form-label" asp-for="DebDateTime">Data scadenza <font color="red">*</font></label>
+                <input type="date" class="form-control" asp-for="DebDateTime" style="background-color: #444" required>
             </div>
         </div>
         <div class="row">
@@ -40,13 +33,13 @@
                 <textarea class="form-control" id="message-text" asp-for="DebNote" style="background-color: #444"></textarea>
             </div>
         </div>
+        <input type="hidden" class="form-control" asp-for="DebCode" style="background-color: #444">
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
             <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
         </div>
     </div>
 </form>
-
 
 <script>
     $(document).ready(function () {

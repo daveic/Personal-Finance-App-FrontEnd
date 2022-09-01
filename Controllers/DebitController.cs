@@ -31,6 +31,16 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Add(Debit d, int i)
         {
+            if (d.DebDateTime <= DateTime.UtcNow)
+            {
+                _notyf.Error("La data di scadenza deve essere successiva a quella odierna.");
+                return RedirectToAction(nameof(Debits));
+            }
+            if (CheckNameExist("DEB " + d.DebTitle, "Debits"))
+            {
+                _notyf.Error("Il codice inserito è già presente. Scegliere un nome diverso");
+                return RedirectToAction(nameof(Debits));
+            }
             if (i != 1)
             {
                 d.Input_value = d.Input_value.Replace(",", ".");
@@ -59,6 +69,16 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Add_Part(Debit d, int i)
         {
+            if (d.DebDateTime <= DateTime.UtcNow)
+            {
+                _notyf.Error("La data di scadenza deve essere successiva a quella odierna.");
+                return RedirectToAction(nameof(Debits));
+            }
+            if (CheckNameExist("DEB " + d.DebTitle, "Debits"))
+            {
+                _notyf.Error("Il codice inserito è già presente. Scegliere un nome diverso");
+                return RedirectToAction(nameof(Debits));
+            }
             if (i != 1)
             {
                 d.Input_value = d.Input_value.Replace(",", ".");
@@ -85,17 +105,28 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Edit(Debit d, int i)
         {
+            if (d.DebDateTime <= DateTime.UtcNow)
+            {
+                _notyf.Error("La data di scadenza deve essere successiva a quella odierna.");
+                return RedirectToAction(nameof(Debits));
+            }
             if (i != 1)
             {
                 if(d.Input_value != null)
                 {
                     d.Input_value = d.Input_value.Replace(",", ".");
                     d.DebValue = Convert.ToDouble(d.Input_value);
+                    d.RemainToPay = d.DebValue;
                 }
                 if(d.Multiplier != 0) //Sto modificando un debito a rate
                 {
                     d.Input_value_remain = d.Input_value_remain.Replace(".", ",");
                     d.RemainToPay = Convert.ToDouble(d.Input_value_remain);
+                    if(d.RemainToPay > d.DebValue)
+                    {
+                        _notyf.Error("Non è possibile inserire un importo residuo maggiore del valore totale del debito.");
+                        return RedirectToAction(nameof(Debits));
+                    } 
                 }
             }
             d.Usr_OID = GetUserData().Result;

@@ -140,8 +140,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Transaction> transactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
 
             if (t.TrsTitle != null)
-            {
-            
+            {                
                 if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE") || t.TrsTitle.StartsWith("MVF") || t.TrsTitle.StartsWith("SCD"))
                 {
                     _notyf.Error("Il titolo della transazione non può iniziare per DEB, CRE, MVF o SCD. Inserimento annullato.");                    

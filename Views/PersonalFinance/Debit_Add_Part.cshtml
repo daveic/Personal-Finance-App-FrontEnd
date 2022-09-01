@@ -1,22 +1,14 @@
 ﻿@model PersonalFinanceFrontEnd.Models.Debit
 
-
 <form asp-action="Debit_Add_Part" style="margin: 0 auto;">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebCode">Codice Debito&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un codice identificativo personalizzato per riconoscere la tipologia di debito anche in futuro; verrà aggiunto automaticamente il prefisso 'DEB'.">info</span></label>
-                <input type="text" class="form-control" asp-for="DebCode" style="background-color: #444">
-                <span asp-validation-for="DebCode" class="text-danger"></span>
-            </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="DebTitle">Titolo <font color="red">*</font></label>
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="DebTitle">Titolo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire un titolo univoco per riconoscere la tipologia di debito anche in futuro; verrà aggiunto automaticamente il prefisso 'DEB'.">info</span></label>
                 <input type="text" class="form-control" asp-for="DebTitle" style="background-color: #444" required>
                 <span asp-validation-for="DebTitle" class="text-danger"></span>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-4">
                 <label for="recipient-name" class="col-form-label" asp-for="CredName">Creditore</label>
                 <input type="text" class="form-control" asp-for="CredName" style="background-color: #444">
@@ -27,21 +19,21 @@
                 <input type="number" step="0.01" class="form-control" asp-for="Input_value" placeholder="€" style="background-color: #444" required>
                 <span asp-validation-for="Input_value" class="text-danger"></span>
             </div>
-            <div class="col-md-4">
-                <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° rate totali</label>
-                <input type="text" class="form-control" asp-for="RtNum" style="background-color: #444">
-                <span asp-validation-for="RtNum" class="text-danger"></span>
-            </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="Multiplier">Ogni n</label>
-                <input type="number" class="form-control" asp-for="Multiplier" style="background-color: #444">
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="RtNum">N° rate totali <font color="red">*</font></label>
+                <input type="text" class="form-control" asp-for="RtNum" style="background-color: #444" required>
+                <span asp-validation-for="RtNum" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="Multiplier">Ogni n <font color="red">*</font></label>
+                <input type="number" class="form-control" asp-for="Multiplier" style="background-color: #444" required>
                 <span asp-validation-for="Multiplier" class="text-danger"></span>
             </div>
-            <div class="col-md-6">
-                <label for="recipient-name" class="col-form-label" asp-for="RtFreq">Frequenza</label>
-                <select class="form-control" id="RtFreq" name="RtFreq" asp-for="RtFreq" style="background-color: #444">
+            <div class="col-md-4">
+                <label for="recipient-name" class="col-form-label" asp-for="RtFreq">Frequenza <font color="red">*</font></label>
+                <select class="form-control" id="RtFreq" name="RtFreq" asp-for="RtFreq" style="background-color: #444" required>
                     <option>-- Seleziona --</option>
                     <option>Mesi</option>
                     <option>Anni</option>
@@ -55,14 +47,13 @@
                 <textarea class="form-control" id="message-text" asp-for="DebNote" style="background-color: #444"></textarea>
             </div>
         </div>
+        <input type="hidden" class="form-control" asp-for="DebCode" style="background-color: #444">
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Chiudi</button>
             <button type="submit" class="btn btn-primary" style="background-color: #2574A9">Aggiungi</button>
         </div>
     </div>
 </form>
-
-
 
 <script>
     $(document).ready(function () {
