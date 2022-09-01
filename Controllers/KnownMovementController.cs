@@ -27,6 +27,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult KnownMovement_Add(KnownMovement k)
         {
+            if (CheckNameExist("MVF " + k.KMTitle, "KnownMovements"))
+            {
+                _notyf.Error("Il codice inserito è già presente. Scegliere un nome diverso");
+                return RedirectToAction(nameof(Credits));
+            }
             k.Usr_OID = GetUserData().Result;
             k.KMValue = Convert.ToDouble(k.Input_value.Replace(",", "."));
             k.KMTitle = "MVF " + k.KMTitle;

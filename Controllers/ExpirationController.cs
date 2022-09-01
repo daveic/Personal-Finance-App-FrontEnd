@@ -52,7 +52,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 _notyf.Error("Selezionare una data successiva a quella attuale");
                 return RedirectToAction(nameof(Expirations));
-            }           
+            }
+            if (CheckNameExist("SCD " + e.ExpTitle, "Expirations"))
+            {
+                _notyf.Error("Il codice inserito è già presente. Scegliere un nome diverso");
+                return RedirectToAction(nameof(Credits));
+            }
             if (e.ColorLabel == null)
             {
                 e.ColorLabel = "rgb(255, 255, 255)";

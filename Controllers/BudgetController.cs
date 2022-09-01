@@ -53,7 +53,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 }
                 foreach (var item in transactions)
                 {
-                    if (item.TrsDateTimeExp != null)
+                    if (item.TrsTitle.StartsWith("CRE ") || item.TrsTitle.StartsWith("DEB ") || item.TrsTitle.StartsWith("MVF ") || item.TrsTitle.StartsWith("SCD "))
                     {
                         MonthExpirations.Add(new Expiration() { ExpTitle = item.TrsCode, ExpValue = item.TrsValue, ColorLabel = item.ExpColorLabel });
                     }
