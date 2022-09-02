@@ -124,8 +124,16 @@ namespace PersonalFinanceFrontEnd.Controllers
             }
             if (type == "Expirations")
             {
-                IEnumerable<Expiration> list = GetAllItems<Expiration>(type, User_OID); 
-                if (!list.Any(x => x.ExpTitle == Code)) return false;
+                IEnumerable<Expiration> detections = null;
+                string path = "api/" + type + "/GetAllExp" + "?User_OID=" + User_OID;
+                using (HttpClient client = new())
+                {
+                    client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
+                    client.GetAsync(path).Wait();
+                    client.GetAsync(path).Result.Content.ReadAsAsync<List<Expiration>>().Wait();
+                    detections = client.GetAsync(path).Result.Content.ReadAsAsync<List<Expiration>>().Result;
+                } 
+                if (!detections.Any(x => x.ExpTitle == Code)) return false;
             }           
             return true;
         }
