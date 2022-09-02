@@ -97,7 +97,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
 
-            
+            //List<string> CodeList = new();
+            //foreach(var code in TrsAPI.Codes)
+            //{
+            //    if(!code.Value.StartsWith("CRE") && !code.Value.StartsWith("DEB") && !code.Value.StartsWith("MVF") && !code.Value.StartsWith("SCD") && code.Value!="Fast_Update")
+            //    CodeList.Add(code.Value);
+            //}
             TempData["Codes"] = TrsAPI.Codes;
             TrsToView.Transaction = new Transaction();
             TransactionDetailsEdit detection = new();
@@ -139,7 +144,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             IEnumerable<Transaction> AllTransactions = GetAllItems<Transaction>("Transactions", t.Usr_OID);
             IEnumerable<Transaction> transactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
 
-            if (t.TrsTitle != null)
+            if (t.TrsTitle != null && t.DebCredChoice!= "NDeb" && t.DebCredChoice != "NCre")
             {                
                 if (t.TrsTitle.StartsWith("DEB") || t.TrsTitle.StartsWith("CRE") || t.TrsTitle.StartsWith("MVF") || t.TrsTitle.StartsWith("SCD"))
                 {
