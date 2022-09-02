@@ -100,25 +100,29 @@
                     <thead>
                         <tr>
                             <th scope="col">Codice transazione</th>
+                            <th scope="col">Descrizione</th>
                             <th scope="col">Importo</th>
                         </tr>
                     </thead>
-                    <tbody>  
-                                                  
-                            @{
-                                if(ViewBag.MonthExpirations != null)
-                                {
-                                @foreach (var item in ViewBag.MonthExpirations)
-                                    {
-    <tr>  
-                                        <td>
-                                            <input asp-for="DebCredChoice" type="radio" value="@item.ExpTitle" /><span>&nbsp;&nbsp;@item.ExpTitle</span><br />
-                                   </td>
-                                   <td>@(item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td> 
-                                   </tr>
-                                    }                          
-                                }
-                            }            
+                    <tbody>                                                    
+                        @{if(ViewBag.MonthExpirations != null)
+                        {
+                            @foreach (var item in ViewBag.MonthExpirations)
+                            {
+                                <tr>  
+                                    <td>
+                                        <input asp-for="DebCredChoice" type="radio" value="@item.ExpTitle" /><span>&nbsp;&nbsp;@item.ExpTitle</span>
+                                        <br />
+                                    </td>
+                                    <td>
+                                        @item.ExpDescription
+                                    </td>
+                                    <td>
+                                        @(item.ExpValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))
+                                    </td> 
+                                </tr>
+                            }                          
+                        }}            
                     </tbody>
                 </table>
                 <br /><br />
@@ -146,17 +150,17 @@
                             @{
                                 if(ViewBag.DebitListRat != null)
                                 {
-                                    @foreach (var item in ViewBag.DebitListRat)
+                                            @foreach (var item in ViewBag.DebitListRat)
                                     {
-    <tr>  
-                                        <td>
-                                        <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required/><span>&nbsp;&nbsp;@item.DebCode</span><br />
-                                   </td>
-                                                                           <td>
-                                        <span>&nbsp;&nbsp;@item.DebTitle</span>
-                                   </td>
-                                   <td>@((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td> 
-                                   </tr>
+            <tr>  
+                                                <td>
+                                                <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required/><span>&nbsp;&nbsp;@item.DebCode</span><br />
+                                           </td>
+                                                                                   <td>
+                                                <span>&nbsp;&nbsp;@item.DebTitle</span>
+                                           </td>
+                                           <td>@((item.DebValue/item.RtNum).ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es")))</td> 
+                                           </tr>
                                     }                          
                                 }
                             }            
@@ -172,7 +176,15 @@
         <div class="tab-pane fade" id="dpay">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <h5>Restituzione prestito</h5><br />
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5>Restituzione prestito</h5>
+                    </div>
+                    <div class="col-md-7" style="text-align: end">
+                        <i>(Ti hanno prestato, stai restituendo...)</i>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il debito da pagare:</label> 
@@ -187,25 +199,26 @@
                             @{
                                 if(ViewBag.DebitList != null)
                                 {
-                                    @foreach (var item in ViewBag.DebitList)
+                                            @foreach (var item in ViewBag.DebitList)
                                     {
-                                        <tr>
-                                            <td>
-                                               <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required />&nbsp;&nbsp;@item.DebCode
-                                            </td>
-                                            <td>                                    
-                                                @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
-                                            </td>
-                                        </tr>
+                                                <tr>
+                                                    <td>
+                                                       <input asp-for="DebCredChoice" type="radio" value="@item.DebCode" required />&nbsp;&nbsp;@item.DebCode
+                                                    </td>
+                                                    <td>                                    
+                                                        @item.RemainToPay.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                                    </td>
+                                                </tr>
                                      }                          
                                 }
                             }                                    
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-4">
-                        <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font></label>
-                        <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required>
+                    <div class="col-md-4" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin;">
+                        <br />
+                        <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire l'importo effettivo, anche se minore del prestito.">info</span></label>
+                        <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required><br /><br />
                         <span asp-validation-for="DebCredInValue" class="text-danger"></span>
                     </div>
                 </div>
@@ -218,7 +231,15 @@
         <div class="tab-pane fade" id="ncred">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <h5>Nuovo credito</h5>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5>Nuovo credito</h5>
+                    </div>
+                    <div class="col-md-7" style="text-align: end">
+                        <i>(Stai prestando...)</i>
+                    </div>
+                </div>
+                <br />
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4">
@@ -253,7 +274,15 @@
         <div class="tab-pane fade" id="ndeb">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <h5>Nuovo debito</h5>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5>Nuovo debito</h5>
+                    </div>
+                    <div class="col-md-7" style="text-align: end">
+                        <i>(Ti stanno prestando...)</i>
+                    </div>
+                </div>
+                <br />
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-4">
@@ -289,7 +318,15 @@
         <div class="tab-pane fade" id="creturn">
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                  <div asp-validation-summary="ModelOnly" class="text-danger"></div>      
-                                 <h5>Rientro anticipo</h5><br />
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5>Rientro anticipo</h5>
+                    </div>
+                    <div class="col-md-7" style="text-align: end">
+                        <i>(Hai prestato, stanno tornando...)</i>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il credito rientrato:</label> 
@@ -303,27 +340,28 @@
                             <tbody>                        
                             @{if(ViewBag.CreditList != null)
                             {
-                                @foreach (var item in ViewBag.CreditList)
+                                        @foreach (var item in ViewBag.CreditList)
                                 {
-                                    <tr>
-                                        <td>
-                                            <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" required/> @item.CredCode
-                                        </td>
-                                        <td>   
-                                            @item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
-                                        </td>
-                                    </tr>
+                                            <tr>
+                                                <td>
+                                                    <input asp-for="DebCredChoice" type="radio" value="@item.CredCode" required/> @item.CredCode
+                                                </td>
+                                                <td>   
+                                                    @item.CredValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))
+                                                </td>
+                                            </tr>
                                 }                          
                             }}                        
                             </tbody>
                         </table>
                     </div>
-                <div class="col-md-4" style="vertical-align:central">
-                    <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font></label>
-                    <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required>
-          
-                    <span asp-validation-for="DebCredInValue" class="text-danger"></span>
-                </div>   </div>  
+                    <div class="col-md-4" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin;">
+                        <br />
+                        <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire l'importo effettivo, anche se minore dell'anticipo.">info</span></label>  
+                        <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required>
+                        <span asp-validation-for="DebCredInValue" class="text-danger"></span><br /><br />
+                </div>  
+                </div>  
                 <br />
 
                 <div class="modal-footer">
