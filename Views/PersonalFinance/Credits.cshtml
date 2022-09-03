@@ -1,9 +1,15 @@
 ﻿@model Credits
 
-<h3>Crediti</h3>
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-12">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; text-align: end; background: url(https://i.postimg.cc/853DKzC6/prova-barra-01.png); background-size: cover;">
+            <p style="font-size:xx-large; margin-bottom: auto;">Crediti</p>
+        </div>
+    </div>
+</div>
 <br />
 <!-- Modal ADD-->
-<div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
+@*<div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -17,7 +23,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <br />
 <br />
 <!-- Modal EDIT-->
@@ -92,13 +98,15 @@
     </div>
     <div class="col-md-9">
         <div class="card shadow p-3 border-success mb-3" style="margin: 0 auto;">
-            <div class="card-header">         
-                <button type="button" class="btn btn-primary btn-sm" style="background-color: #2574A9; display: inline-flex;" data-toggle="modal" data-target="#newitem" data-whatever="getbootstrap">
-                    Aggiungi credito &nbsp;   
+            <div class="card-header">  
+                <a href="/PersonalFinance/Transactions">
+                <button type="button" class="btn btn-primary btn-sm" style="background-color: #2574A9; display: inline-flex;">
+                    Aggiungi credito da transazione &nbsp;   
                     <span class="material-icons" style="padding-right: 0px; font-size: 20px; line-height: 0.9">
                         playlist_add
                     </span>
                 </button>
+                   </a> 
             </div>
             <div class="card-body">
                 <div class="card-body">

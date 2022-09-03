@@ -1,6 +1,12 @@
 ﻿@model TrsToView
 
-<h2>Archivio Transazioni</h2>
+<div class="row" style="margin: 0 auto;">
+    <div class="col-md-12">
+        <div class="card shadow p-3 border-dark mb-3" style="margin: 0 auto; text-align: end; background: url(https://i.postimg.cc/853DKzC6/prova-barra-01.png); background-size: cover;">
+            <p style="font-size:xx-large; margin-bottom: auto;">Archivio transazioni</p>
+        </div>
+    </div>
+</div>
 <br />
 <!-- Modal ADD-->
 <div class="modal fade" id="newitem" tabindex="-1" role="dialog" aria-labelledby="newitemLabel" aria-hidden="true">
@@ -18,7 +24,6 @@
         </div>
     </div>
 </div>
-<br />
 
 
 @*<!-- Modal EDIT-->
@@ -74,18 +79,6 @@
         </div>
     </div>
 </div>
-
-@*@if (ViewBag.state == 1)
-{
-    <div class="alert alert-dismissible fade show" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <p><strong>Completato!</strong> Transazione rimossa correttamente.</p>
-    </div>
-}*@
-
-<br />
-
-
 
 @using (Html.BeginForm("Transactions", "PersonalFinance", FormMethod.Get))
 {
