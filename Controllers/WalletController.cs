@@ -65,7 +65,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Success("Banca aggiunta correttamente.");
-                BalanceUpdate(b.Usr_OID, false);
+                BalanceUpdate(b.Usr_OID, 3);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -107,7 +107,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Success("Ticket aggiunto correttamente.");
-                BalanceUpdate(t.Usr_OID, false);
+                BalanceUpdate(t.Usr_OID, 2);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -128,7 +128,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Success("Banca modificata correttamente.");
-                BalanceUpdate(b.Usr_OID, false);
+                BalanceUpdate(b.Usr_OID, 0);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -165,7 +165,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Success("Ticket modificato correttamente.");
-                BalanceUpdate(t.Usr_OID, false);
+                BalanceUpdate(t.Usr_OID, 0);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -183,7 +183,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Warning("Banca rimossa correttamente.");
-                BalanceUpdate(GetUserData().Result, false);
+                BalanceUpdate(GetUserData().Result, 1);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();
@@ -214,7 +214,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Warning("Ticket rimosso correttamente.");
-                BalanceUpdate(GetUserData().Result, false);
+                BalanceUpdate(GetUserData().Result, 1);
                 return RedirectToAction(nameof(Wallet));
             }
             return View();

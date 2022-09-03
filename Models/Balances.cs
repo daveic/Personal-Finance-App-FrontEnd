@@ -8,6 +8,6 @@ namespace PersonalFinanceFrontEnd.Models
         public int ID { get; set; }
         public DateTime BalDateTime { get; set; }
         public double ActBalance { get; set; }
-        public bool FromFU { get; set; }
+        public int FromFU { get; set; }
     }
 }

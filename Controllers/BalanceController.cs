@@ -67,11 +67,11 @@ namespace PersonalFinanceFrontEnd.Controllers
                     }
                 }
             }
-            BalanceUpdate(User_OID , true);
+            BalanceUpdate(User_OID , 1);
             return RedirectToAction(nameof(Index));
         }
         [HttpPost]
-        public int BalanceUpdate(string User_OID, bool fromFU)
+        public int BalanceUpdate(string User_OID, int fromFU)
         {
             Balance b = new()
             {

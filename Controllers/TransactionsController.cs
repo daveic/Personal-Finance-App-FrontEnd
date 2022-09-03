@@ -206,7 +206,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     var result = postTask.Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        BalanceUpdate(t.Usr_OID, false);
+                        BalanceUpdate(t.Usr_OID, 0);
                         _notyf.Success("Transazione inserita correttamente.");
                         return RedirectToAction(nameof(Index));
                     }
@@ -239,7 +239,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    BalanceUpdate(t.Usr_OID, false);
+                    BalanceUpdate(t.Usr_OID, 0);
                     _notyf.Success("Transazione inserita correttamente.");
                     return RedirectToAction(nameof(Index));
                 }
@@ -262,7 +262,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             if (result == 0)
             {
                 _notyf.Warning("Transazione rimossa correttamente.");
-                BalanceUpdate(t.Usr_OID, false);
+                BalanceUpdate(t.Usr_OID, 0);
                 return RedirectToAction(nameof(Transactions));
             }
             else
