@@ -43,7 +43,19 @@ namespace PersonalFinanceFrontEnd.Controllers
   
         public async Task<string> GetUserData()
         {
+
+            //DeviceCodeProvider authProvider = new DeviceCodeProvider(publicClientApplication, scopes);
+            // Create a new instance of GraphServiceClient with the authentication provider.
+            //var graphClient = new GraphServiceClient(authProvider);
+
             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
+            //return await graphClient.Me
+            //         .Request()
+            //         .Select(u => new {
+            //             u.DisplayName,
+            //             u.MailboxSettings
+            //         })
+            //         .GetAsync();
             // Get user photo
             using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
             {
