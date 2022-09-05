@@ -26,6 +26,10 @@
             <a class="nav-link" data-bs-toggle="tab" href="#ndeb" style="padding: 0.5rem 1.2rem"><span class="material-icons">bookmark_remove</span></a>
         </li>
     </ul>
+                                @{
+
+                                var banks = (IEnumerable<SelectListItem>)TempData["Banks"];
+                            }
     <br />
     <div id="myTabContent" class="tab-content">
 
@@ -38,11 +42,11 @@
                             <div class="col-2"><label for="recipient-name" class="col-form-label" asp-for="TrsCode">Conto <font color="red">*</font></label></div>
                             <div class="col-6">
 
-                                @{
+@*                            @{
 
-                                    var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
-                                }
-                                @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Nuova categoria"})
+                                var banks = (IEnumerable<SelectListItem>)TempData["Banks"];
+                            }*@
+                            @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
 
                             </div>
                         <div class="col-1">
@@ -88,7 +92,7 @@
                             <div class="col-md-12">
                                 <label for="recipient-name" class="col-form-label" asp-for="TrsCode">Seleziona esistente</label>
                                 @{
-                                    codes = (IEnumerable<SelectListItem>)TempData["Codes"];
+                                    var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                                 }
                                 @Html.DropDownList("TrsCode", (List<SelectListItem>)codes, "-- Nessuna --", new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Nuova categoria"})
                                 </div>
@@ -113,15 +117,11 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Transazione mensile</h5><br />
                 <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
-                    <div class="col-2"><label for="recipient-name" class="col-form-label" asp-for="TrsCode">Conto <font color="red">*</font></label></div>
-                    <div class="col-6">
-
-                        @{
-
-                            var banks = (IEnumerable<SelectListItem>)TempData["Banks"];
-                        }
-                        @Html.DropDownList("TrsCode", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
-
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
                     </div>
                 </div>
                 <br />
@@ -166,6 +166,15 @@
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Pagamento rata debito</h5><br />
+                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
+                    </div>
+                </div>
+                <br />
                 <p>Seleziona il debito di cui pagare la rata:</p>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -212,6 +221,15 @@
                     </div>
                     <div class="col-md-7" style="text-align: end">
                         <i>(Ti hanno prestato, stai restituendo...)</i>
+                    </div>
+                </div>
+                <br />
+                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
                     </div>
                 </div>
                 <br />
@@ -270,7 +288,15 @@
                     </div>
                 </div>
                 <br />
-
+                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
+                    </div>
+                </div>
+                <br />
                 <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6">
@@ -316,6 +342,15 @@
                     </div>
                     <div class="col-md-7" style="text-align: end">
                         <i>(Ti stanno prestando...)</i>
+                    </div>
+                </div>
+                <br />
+                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
                     </div>
                 </div>
                 <br />
@@ -372,6 +407,15 @@
                     </div>
                 </div>
                 <br />
+                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                    <div class="col-2" style="margin-left: 20px;">
+                        <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
+                    </div>
+                    <div class="col-9">
+                        @Html.DropDownList("TrsBank", (List<SelectListItem>)banks, new { @class = "form-control", type = "button", style = "background-color: #444", placeholder = "Banca"})
+                    </div>
+                </div>
+                <br />54
                 <div class="row">
                     <div class="col-md-8">
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredChoice">Seleziona il credito rientrato:</label> 
