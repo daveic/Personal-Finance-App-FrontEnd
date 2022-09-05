@@ -62,11 +62,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                 byte[] photoByte = ((MemoryStream)photoStream).ToArray();
                 ViewData["Photo"] = Convert.ToBase64String(photoByte);
             }
-            //ViewData["Me"] = currentUser;
+            
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;
             ClaimsPrincipal LoggedUser = this.User;
+            ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
