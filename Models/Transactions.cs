@@ -45,6 +45,7 @@ namespace PersonalFinanceFrontEnd.Models
         public List<SelectListItem> ItemListYear { get; set; }
         public List<SelectListItem> ItemListMonth { get; set; }
         public List<SelectListItem> Codes { get; set; }
+        public List<SelectListItem> BankList { get; set; }
     }
     public class TrsToView
     {

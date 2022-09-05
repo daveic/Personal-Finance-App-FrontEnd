@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
 using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
@@ -97,13 +98,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
 
-            //List<string> CodeList = new();
-            //foreach(var code in TrsAPI.Codes)
-            //{
-            //    if(!code.Value.StartsWith("CRE") && !code.Value.StartsWith("DEB") && !code.Value.StartsWith("MVF") && !code.Value.StartsWith("SCD") && code.Value!="Fast_Update")
-            //    CodeList.Add(code.Value);
-            //}
             TempData["Codes"] = TrsAPI.Codes;
+            TempData["Banks"] = TrsAPI.BankList;
             TrsToView.Transaction = new Transaction();
             TransactionDetailsEdit detection = new();
             path = "api/Transactions/DetailsEdit?User_OID=" + GetUserData().Result;
@@ -206,7 +202,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     var result = postTask.Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        BalanceUpdate(t.Usr_OID, 0);
+                        BankUpdater(t.TrsBank, t.TrsValue);
                         _notyf.Success("Transazione inserita correttamente.");
                         return RedirectToAction(nameof(Index));
                     }
@@ -220,7 +216,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             
             if (t.Input_value != null)
             {
-                //CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
                 t.Input_value = t.Input_value.Replace(",", ".");
                 t.TrsValue = Convert.ToDouble(t.Input_value);
             }
@@ -239,7 +234,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    BalanceUpdate(t.Usr_OID, 0);
+                    BankUpdater(t.TrsBank, t.TrsValue);
                     _notyf.Success("Transazione inserita correttamente.");
                     return RedirectToAction(nameof(Index));
                 }
@@ -270,6 +265,25 @@ namespace PersonalFinanceFrontEnd.Controllers
                 _notyf.Error("Errore API: T3 - NoSuccess.");                
             }
             return RedirectToAction(nameof(Transactions));
+        }
+
+        public bool BankUpdater(string BankName, double value)
+        {
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("Banks", GetUserData().Result);
+            foreach (Bank b in Banks)
+            {
+                if (b.BankName == BankName)
+                {
+                    b.BankValue += value;
+                    int result = EditItemIDN<Bank>("Banks", b);
+                    if (result == 0)
+                    {
+                        BalanceUpdate(b.Usr_OID, 0);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
