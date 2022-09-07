@@ -43,26 +43,19 @@ namespace PersonalFinanceFrontEnd.Controllers
   
         public async Task<string> GetUserData()
         {
-
-            //DeviceCodeProvider authProvider = new DeviceCodeProvider(publicClientApplication, scopes);
-            // Create a new instance of GraphServiceClient with the authentication provider.
-            //var graphClient = new GraphServiceClient(authProvider);
-
             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
-            //return await graphClient.Me
-            //         .Request()
-            //         .Select(u => new {
-            //             u.DisplayName,
-            //             u.MailboxSettings
-            //         })
-            //         .GetAsync();
             // Get user photo
-            using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+            try
             {
-                byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                ViewData["Photo"] = Convert.ToBase64String(photoByte);
-            }
-            
+                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+                {
+                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                }
+            } catch
+            {
+                return null;
+            }            
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;
@@ -70,6 +63,5 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
             return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
-
     }
 }

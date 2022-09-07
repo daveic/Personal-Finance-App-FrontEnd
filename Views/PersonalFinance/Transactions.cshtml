@@ -101,6 +101,11 @@
                         var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                     }
                     @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
+                    <label style="padding-bottom: 10px; padding-top: 8px">Conto:</label>
+                    @{
+                        var banks = (IEnumerable<SelectListItem>)TempData["Banks"];
+                    }
+                    @Html.DropDownList("selectedBank", (List<SelectListItem>)banks, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label style="padding-bottom: 10px; padding-top: 8px">Mese:</label>
                     @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label style="padding-bottom: 10px; padding-top: 8px">Anno:</label>

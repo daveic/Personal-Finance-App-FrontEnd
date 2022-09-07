@@ -4,14 +4,13 @@ using System.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json.Linq;
 using PersonalFinanceFrontEnd.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
+        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedBank, string selectedYear, string selectedMonth, int page = 0)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             //GET
@@ -47,6 +46,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.Type = types;
 
             if (!String.IsNullOrEmpty(selectedCode)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsCode == selectedCode);
+            if (!String.IsNullOrEmpty(selectedBank)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsBank == selectedBank);
             if (!String.IsNullOrEmpty(selectedType))
             {
                 if (selectedType == "Entrate") TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsValue >= 0);
@@ -61,10 +61,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             SelectListItem datetimeAsc = new() { Text = "Data crescente", Value = "Data crescente" };
             SelectListItem datetimeDesc = new() { Text = "Data decrescente", Value = "Data decrescente" };
             SelectListItem categ = new() { Text = "Categoria", Value = "Categoria" };
+            SelectListItem conto = new() { Text = "Conto", Value = "Conto" };
             SelectListItem type = new() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
             orderByList.Add(datetimeAsc);
             orderByList.Add(datetimeDesc);
             orderByList.Add(categ);
+            orderByList.Add(conto);
             orderByList.Add(type);
 
             ViewBag.OrderBy = orderByList;
@@ -73,6 +75,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (orderBy == "Data crescente") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsDateTime);
                 else if (orderBy == "Data decrescente") TrsAPI.Trs = TrsAPI.Trs.OrderByDescending(x => x.TrsDateTime);
                 else if (orderBy == "Categoria") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsCode);
+                else if (orderBy == "Conto") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsBank);
                 else if (orderBy == "Entrate/Uscite") TrsAPI.Trs = TrsAPI.Trs.OrderByDescending(x => x.TrsValue);
             }
             List<string> LastChoices = new()
@@ -80,6 +83,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 orderBy,
                 selectedType,
                 selectedCode,
+                selectedBank,
                 selectedMonth,
                 selectedYear
             };
@@ -113,7 +117,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
-            //ViewBag.MonthExpirations = detection.MonthExpirations;
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
             var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
