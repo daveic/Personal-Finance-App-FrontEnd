@@ -38,8 +38,8 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="col-md-12">
                     
-                    <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">                      
-                            <div class="col-2"><label for="recipient-name" class="col-form-label" asp-for="TrsCode">Conto <font color="red">*</font></label></div>
+                    <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                        <div class="col-2"><label for="recipient-name" class="col-form-label" asp-for="TrsCode">Conto <font color="red">*</font></label></div>
                             <div class="col-6">
 
 @*                            @{
@@ -82,7 +82,7 @@
                             <span asp-validation-for="TrsDateTime" class="text-danger"></span>
                                 </div>
                             </div>
-                        </div><div class="col-4" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; padding-bottom: 12px;">
+                        </div><div class="col-4" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; padding-bottom: 12px;">
                             <div class="col-md-12">
                                 <label for="recipient-name" class="col-form-label">Categoria <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="Seleziona una categoria esistente oppure creane una nuova nel campo sotto.">info</span></label>
                             <input type="text" class="form-control" asp-for="NewTrsCode" style="background-color: #444" value="" placeholder="Nuova categoria">
@@ -116,7 +116,7 @@
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Transazione mensile</h5><br />
-                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -166,7 +166,7 @@
             <form asp-action="Transaction_Add" style="margin: 0 auto;">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <h5>Pagamento rata debito</h5><br />
-                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -224,7 +224,7 @@
                     </div>
                 </div>
                 <br />
-                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid;border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -263,7 +263,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-4" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin;">
+                    <div class="col-md-4" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin;">
                         <br />
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire l'importo effettivo, anche se minore del prestito.">info</span></label>
                         <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required><br /><br />
@@ -288,7 +288,7 @@
                     </div>
                 </div>
                 <br />
-                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -345,7 +345,7 @@
                     </div>
                 </div>
                 <br />
-                <div class="row" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -407,7 +407,7 @@
                     </div>
                 </div>
                 <br />
-                <div class="row" style="align-self: center; border:solid; border-color: whitesmoke; border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
+                <div class="row" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin; margin-bottom: -14px; padding-bottom: 12px; padding-top: 12px;">
                     <div class="col-2" style="margin-left: 20px;">
                         <label for="recipient-name" class="col-form-label" asp-for="TrsCode"> Conto <font color="red">*</font></label>
                     </div>
@@ -444,7 +444,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="col-md-4" style="align-self: center; border:solid; border-color: #2d3139; border-width: thin;">
+                    <div class="col-md-4" style="align-self: center; border:solid; border-color: rgb(255,255,255,0.1); border-width: thin;">
                         <br />
                         <label for="recipient-name" class="col-form-label" asp-for="DebCredInValue">Importo <font color="red">*</font>&nbsp;&nbsp;<span class="material-icons md-24 orange600" style="display: inline-flex; vertical-align: text-bottom; font-size: 15px" data-toggle="tooltip" title="Inserire l'importo effettivo, anche se minore dell'anticipo.">info</span></label>  
                         <input type="number" step="0.01" min="0" class="form-control" asp-for="DebCredInValue" style="background-color: #444" value="" placeholder="€" required>
