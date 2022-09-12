@@ -71,13 +71,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                 ViewBag.MonthCount = ((Future_Date - DateTime.Now).TotalDays) / 30;
                 
             }
-         
 
+            foreach (var trs in transactions) MonthFlux += trs.TrsValue;
             foreach (var item in ExpirationToShow)
             { 
                 foreach (var tr in transactions)
-                {
-                    MonthFlux += tr.TrsValue;
+                {                    
                     if (item.ExpTitle == tr.TrsCode)
                     {
                         ExpDone.Add(item);
