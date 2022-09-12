@@ -75,14 +75,17 @@
                                                 <div class="card shadow p-3 md-3" style="margin: 0 auto; border-color: @exp.ExpItem.ColorLabel; background-color: #2d3138">
                                                     <div class="card-title">
                                                         <div class="row">
-                                                            <div class="col-md-9">
-                                                                <small><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="@exp.ExpItem.ExpDescription">info</span>&nbsp;<b>@exp.ExpItem.ExpTitle</b></small>
-                                                            </div>
-                                                            <div class="col-md-3" style="text-align:right">
-                                                                <span class="material-icons md-24" type="button" onclick="Delete(@exp.ExpItem.ID)" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px">delete</span>
-
-                                                            </div>
-                                                        </div>
+                                                            @if (exp.ExpItem.ExpTitle.StartsWith("SCD")){
+                                                                <div class="col-md-9">
+                                                                    <small><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="@exp.ExpItem.ExpDescription">info</span>&nbsp;<b>@exp.ExpItem.ExpTitle</b></small>
+                                                                </div>
+                                                                <div class="col-md-3" style="text-align:right">
+                                                                        <span class="material-icons md-24" type="button" onclick="Delete(@exp.ExpItem.ID)" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px">delete</span>                                                        
+                                                                </div> 
+                                                            } else {
+                                                                    <small><span class="material-icons md-24" style="color:@exp.ExpItem.ColorLabel; display: inline-flex; vertical-align: text-bottom; font-size: 18px" data-toggle="tooltip" title="@exp.ExpItem.ExpDescription">info</span>&nbsp;<b>@exp.ExpItem.ExpTitle</b></small>
+                                                            } 
+                                                        </div>  
 
                                                     </div>
                                                     <div class="card-text">
