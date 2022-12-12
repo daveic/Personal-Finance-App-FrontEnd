@@ -131,9 +131,9 @@
     <footer class="footer text-muted" style="bottom: 0;position: fixed;width: 14vw;">
 
         <div>
-            @await Component.InvokeAsync("PriorityList", new { User_OID = "AAAAAAAAAAAAAAAAAAAAANgDJxkCf2VKqG87lDnSoGg" })
+            @await Component.InvokeAsync("PriorityList", new { User_OID = ViewData["Me"] })
         </div>
-
+        
 
 
 

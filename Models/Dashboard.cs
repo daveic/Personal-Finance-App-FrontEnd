@@ -19,6 +19,7 @@ namespace PersonalFinanceFrontEnd.Models
         public List<SelectListItem> ItemListMonthTr { get; set; }
         public string Balances { get; set; }
         public List<SelectListItem> Codes { get; set; }
+        public List<SelectListItem> BankList { get; set; }
         public string Transactions { get; set; }
         public IEnumerable<Transaction> TransactionsIn { get; set; }
         public IEnumerable<Transaction> TransactionsOut { get; set; }

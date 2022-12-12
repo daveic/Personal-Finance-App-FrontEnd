@@ -101,6 +101,11 @@
                         var codes = (IEnumerable<SelectListItem>)TempData["Codes"];
                     }
                     @Html.DropDownList("selectedCode", (List<SelectListItem>)codes, "Tutte", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
+                    <label style="padding-bottom: 10px; padding-top: 8px">Conto:</label>
+                    @{
+                        var banks = (IEnumerable<SelectListItem>)TempData["Banks"];
+                    }
+                    @Html.DropDownList("selectedBank", (List<SelectListItem>)banks, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label style="padding-bottom: 10px; padding-top: 8px">Mese:</label>
                     @Html.DropDownList("selectedMonth", (List<SelectListItem>)ViewBag.ItemListMonth, "Tutti", new { onchange = "form.submit();", @class = "form-control", type = "button", style = "background-color: #2d3139; color: #fff" })
                     <label style="padding-bottom: 10px; padding-top: 8px">Anno:</label>
@@ -131,6 +136,7 @@
                                     <th scope="col">Descrizione</th>
                                     <th scope="col">Importo</th>
                                     <th scope="col">Data</th>
+                                    <th scope="col">Conto</th>
                                     <th scope="col">Note</th>
                                     <th scope="col">Azioni</th>
                                 </tr>
@@ -154,6 +160,16 @@
                                     <td>@item.TrsValue.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("es-es"))</td>
                                     <td>
                                         @item.TrsDateTime.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                            @if (@item.TrsBank != null && @item.TrsBank.Length > 20)
+                                        {
+                                                @(item.TrsBank.Substring(0, 20) + " ...")
+                                        }
+                                        else
+                                        {
+                                                @item.TrsBank
+                                        }
                                     </td>
                                     <td>
                                         @if (@item.TrsNote != null && @item.TrsNote.Length > 35)

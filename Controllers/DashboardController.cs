@@ -19,7 +19,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
-            
             DashAPIOut DOut = new();
             string path = "api/Dashboard/Main" + "?sY=" + selectedYear + "&sM=" + selectedMonth + "&sYT=" + selectedYearTr + "&sMT=" + selectedMonthTr + "&User_OID=" + GetUserData().Result;
             using (HttpClient client = new())
@@ -32,6 +31,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             GetDonutData(DOut.TransactionsIn, 1);
             GetDonutData(DOut.TransactionsOut, 0);
             TempData["Codes"] = DOut.Codes;
+            TempData["Banks"] = DOut.BankList;
+
             TransactionDetailsEdit detection = new();
             path = "api/Transactions/DetailsEdit?User_OID=" + GetUserData().Result;
             using (HttpClient client = new())

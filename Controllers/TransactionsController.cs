@@ -10,7 +10,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedYear, string selectedMonth, int page = 0)
+        public ActionResult Transactions(string orderBy, string selectedType, string selectedCode, string selectedBank, string selectedYear, string selectedMonth, int page = 0)
         {
             string User_OID = GetUserData().Result; //Fetch User Data
             //GET
@@ -46,6 +46,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.Type = types;
 
             if (!String.IsNullOrEmpty(selectedCode)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsCode == selectedCode);
+            if (!String.IsNullOrEmpty(selectedBank)) TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsBank == selectedBank);
             if (!String.IsNullOrEmpty(selectedType))
             {
                 if (selectedType == "Entrate") TrsAPI.Trs = TrsAPI.Trs.AsQueryable().Where(x => x.TrsValue >= 0);
@@ -60,10 +61,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             SelectListItem datetimeAsc = new() { Text = "Data crescente", Value = "Data crescente" };
             SelectListItem datetimeDesc = new() { Text = "Data decrescente", Value = "Data decrescente" };
             SelectListItem categ = new() { Text = "Categoria", Value = "Categoria" };
+            SelectListItem conto = new() { Text = "Conto", Value = "Conto" };
             SelectListItem type = new() { Text = "Entrate/Uscite", Value = "Entrate/Uscite" };
             orderByList.Add(datetimeAsc);
             orderByList.Add(datetimeDesc);
             orderByList.Add(categ);
+            orderByList.Add(conto);
             orderByList.Add(type);
 
             ViewBag.OrderBy = orderByList;
@@ -72,6 +75,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (orderBy == "Data crescente") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsDateTime);
                 else if (orderBy == "Data decrescente") TrsAPI.Trs = TrsAPI.Trs.OrderByDescending(x => x.TrsDateTime);
                 else if (orderBy == "Categoria") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsCode);
+                else if (orderBy == "Conto") TrsAPI.Trs = TrsAPI.Trs.OrderBy(x => x.TrsBank);
                 else if (orderBy == "Entrate/Uscite") TrsAPI.Trs = TrsAPI.Trs.OrderByDescending(x => x.TrsValue);
             }
             List<string> LastChoices = new()
@@ -79,6 +83,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 orderBy,
                 selectedType,
                 selectedCode,
+                selectedBank,
                 selectedMonth,
                 selectedYear
             };
@@ -97,13 +102,8 @@ namespace PersonalFinanceFrontEnd.Controllers
             };
             ViewBag.state = (int)(TempData.ContainsKey("sendFlagTr") ? TempData["sendFlagTr"] : 0);
 
-            //List<string> CodeList = new();
-            //foreach(var code in TrsAPI.Codes)
-            //{
-            //    if(!code.Value.StartsWith("CRE") && !code.Value.StartsWith("DEB") && !code.Value.StartsWith("MVF") && !code.Value.StartsWith("SCD") && code.Value!="Fast_Update")
-            //    CodeList.Add(code.Value);
-            //}
             TempData["Codes"] = TrsAPI.Codes;
+            TempData["Banks"] = TrsAPI.BankList;
             TrsToView.Transaction = new Transaction();
             TransactionDetailsEdit detection = new();
             path = "api/Transactions/DetailsEdit?User_OID=" + GetUserData().Result;
@@ -117,7 +117,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
-            //ViewBag.MonthExpirations = detection.MonthExpirations;
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
             var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
@@ -206,7 +205,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     var result = postTask.Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        BalanceUpdate(t.Usr_OID, 0);
+                        BankUpdater(t.TrsBank, t.TrsValue);
                         _notyf.Success("Transazione inserita correttamente.");
                         return RedirectToAction(nameof(Index));
                     }
@@ -220,7 +219,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             
             if (t.Input_value != null)
             {
-                //CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("es-ES");
                 t.Input_value = t.Input_value.Replace(",", ".");
                 t.TrsValue = Convert.ToDouble(t.Input_value);
             }
@@ -239,7 +237,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                 var result = postTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    BalanceUpdate(t.Usr_OID, 0);
+                    BankUpdater(t.TrsBank, t.TrsValue);
                     _notyf.Success("Transazione inserita correttamente.");
                     return RedirectToAction(nameof(Index));
                 }
@@ -270,6 +268,25 @@ namespace PersonalFinanceFrontEnd.Controllers
                 _notyf.Error("Errore API: T3 - NoSuccess.");                
             }
             return RedirectToAction(nameof(Transactions));
+        }
+
+        public bool BankUpdater(string BankName, double value)
+        {
+            IEnumerable<Bank> Banks = GetAllItems<Bank>("Banks", GetUserData().Result);
+            foreach (Bank b in Banks)
+            {
+                if (b.BankName == BankName)
+                {
+                    b.BankValue += value;
+                    int result = EditItemIDN<Bank>("Banks", b);
+                    if (result == 0)
+                    {
+                        BalanceUpdate(b.Usr_OID, 0);
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
