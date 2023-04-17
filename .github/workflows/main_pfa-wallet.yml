@@ -23,6 +23,10 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
+        env:
+          Domain: ${{ secrets.DOMAIN }}
+          ClientId: ${{ secrets.CLIENTID }}
+          ClientSecret: ${{ secrets.CLIENTSECRET }}
         run: dotnet build --configuration Release
 
       - name: dotnet publish
