@@ -28,14 +28,12 @@ jobs:
           files: '**/appsettings.json'
         env:
           AzureAd.Domain: ${{ secrets.DOMAIN }}
-         # AzureAd.ClientId: ${{ secrets.CLIENTID }}
-         # AzureAd.ClientSecret: ${{ secrets.CLIENTSECRET }}
+          AzureAd.ClientId: ${{ secrets.CLIENTID }}
+          AzureAd.ClientSecret: ${{ secrets.CLIENTSECRET }}
           
       - name: Build with dotnet
         run: dotnet build --configuration Release
-
-
-          
+        
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
