@@ -22,12 +22,12 @@ jobs:
           dotnet-version: '7.0'
           include-prerelease: true
           
-      #- name: App Settings Variable Substitution
-       # uses: microsoft/variable-substitution@v1
-       # with:
-         # files: '**/appsettings.json'
-       # env:
-         # AzureAd.Domain: ${{ secrets.DOMAIN }}
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: '**/appsettings.json'
+        env:
+          AzureAd.Domain: ${{ secrets.DOMAIN }}
          # AzureAd.ClientId: ${{ secrets.CLIENTID }}
          # AzureAd.ClientSecret: ${{ secrets.CLIENTSECRET }}
           
