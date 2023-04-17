@@ -45,15 +45,15 @@ namespace PersonalFinanceFrontEnd.Controllers
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
-           
+            DateTime Now = DateTime.Now; 
 
             var Transactions = (DOut.TransactionsIn ?? Enumerable.Empty<Transaction>()).Concat(DOut.TransactionsOut ?? Enumerable.Empty<Transaction>());
-
+            var MonthTransactions = Transactions.Where(y => y.TrsDateTime.Month == Now.Month).Intersect(Transactions.Where(x => x.TrsDateTime.Year == Now.Year));
 
 
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
-            var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !Transactions.Any(p2 => p2.TrsCode == p.ExpTitle));
+            var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !MonthTransactions.Any(p2 => p2.TrsCode == p.ExpTitle));
             ViewBag.MonthExpirations = monthExpNotDone;
             return View(DOut);
         }
