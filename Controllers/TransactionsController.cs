@@ -164,7 +164,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                     var Debits = GetAllItems<Debit>("Debits", t.Usr_OID);
                     foreach (var tr in transactions)
                     {
-                        if(t.DebCredChoice == tr.TrsCode)
+                        if(t.DebCredChoice == tr.TrsCode && tr.TrsValue < 0)
                         {
                             _notyf.Error("La rata mensile di questo debito è già stata pagata. Transazione annullata.");
                             return RedirectToAction(nameof(Index));
