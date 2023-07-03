@@ -69,11 +69,11 @@ namespace PersonalFinanceFrontEnd.Controllers
         [HttpPost]
         public ActionResult Debit_Add_Part(Debit d, int i)
         {
-            if (d.DebDateTime <= DateTime.UtcNow)
-            {
-                _notyf.Error("La data di scadenza deve essere successiva a quella odierna.");
-                return RedirectToAction(nameof(Debits));
-            }
+            //if (d.DebDateTime <= DateTime.UtcNow)
+            //{
+            //    _notyf.Error("La data di scadenza deve essere successiva a quella odierna.");
+            //    return RedirectToAction(nameof(Debits));
+            //}
             if (CheckNameExist("DEB " + d.DebTitle, "Debits"))
             {
                 _notyf.Error("Il codice inserito è già presente. Scegliere un nome diverso");
