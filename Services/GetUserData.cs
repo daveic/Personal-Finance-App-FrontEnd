@@ -54,7 +54,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             // Ensure client isn't null
 
 
-            var test = await _graphServiceClient.Me.Photo.GetAsync();
+          //  var test = await _graphServiceClient.Me.Photo.GetAsync();
 
 
                 //var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
