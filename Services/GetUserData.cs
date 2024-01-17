@@ -42,9 +42,9 @@ namespace PersonalFinanceFrontEnd.Controllers
             _notyf = notyf;
         }
 
-        public async Task<string> GetUserData()
+        public async Task<string> GetUserData() 
         {
-            User currentUser = await _graphServiceClient.Me.GetAsync();
+             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
 
             try
             {
@@ -57,11 +57,7 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 return null;
             }            
-                         }
-                    } catch
-                    {
-                       return null;
-                  }
+     
 
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
