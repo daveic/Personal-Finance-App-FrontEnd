@@ -7,7 +7,6 @@ using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using System;
