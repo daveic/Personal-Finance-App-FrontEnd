@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.Graph.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.Graph.Models;
 using GraphServiceClient = Microsoft.Graph.GraphServiceClient;
 //using GraphBetaServiceClient = Microsoft.Graph.GraphBetaServiceClient;
@@ -41,8 +43,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
-                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler, INotyfService notyf, IDownstreamApi downstreamWebApi) 
-        {
+                            MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler, INotyfService notyf) 
+        {        
             _logger = logger;
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
@@ -50,42 +52,33 @@ namespace PersonalFinanceFrontEnd.Controllers
             _notyf = notyf;
             _downstreamWebApi = downstreamWebApi;
         }
-
-
-
-        
-
-
-    public async Task OnGet()
-    {
-        using var response = await _downstreamWebApi.CallApiForUserAsync("DownstreamApi").ConfigureAwait(false);
-        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+  
+        public async Task<string> GetUserData()
         {
-            var apiResult = await response.Content.ReadFromJsonAsync<JsonDocument>().ConfigureAwait(false);
-            ViewData["ApiResult"] = JsonSerializer.Serialize(apiResult, new JsonSerializerOptions { WriteIndented = true });
-        }
-        else
-        {
-            var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            throw new HttpRequestException($"Invalid status code in the HttpResponseMessage: {response.StatusCode}: {error}");
-        }
-    }
-    
+            User currentUser = await _graphServiceClient.Me.GetAsync();
 
-    public async Task<string> GetUserData() 
-        {
-            //var currentUser = await _graphServiceClient.Me.GetAsync();
+            var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
+ 
+            // Get user photo
+                     try
+            {
+               using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
 
+                            {
+                               byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                              ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                         }
+                    } catch
+                    {
+                       return null;
+                  }
 
-            ViewData["Photo"] = "photo";
-
-            //ViewBag.Name = currentUser.GivenName;
-            //ViewBag.Email = currentUser.UserPrincipalName;
-            //ViewBag.id = currentUser;
-            //ClaimsPrincipal LoggedUser = this.User;
-            //ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            //return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return "AAAAAAAAAAAAAAAAAAAAANgDJxkCf2VKqG87lDnSoGg";
+            ViewBag.Name = currentUser.GivenName;
+            ViewBag.Email = currentUser.UserPrincipalName;
+            ViewBag.id = currentUser;
+            ClaimsPrincipal LoggedUser = this.User;
+            ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
     }
 }

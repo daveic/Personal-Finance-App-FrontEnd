@@ -11,8 +11,7 @@ using System.Globalization;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Azure;
-using Azure.Security.KeyVault.Secrets;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
@@ -43,11 +42,12 @@ namespace PersonalFinanceFrontEnd
         {
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
-            //services.AddMicrosoftGraph();
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAd")
-                    .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
-                        .AddDownstreamApi("DownstreamApi", Configuration.GetSection("DownstreamApi"))
-                        .AddInMemoryTokenCaches();
+            services.AddMicrosoftGraph();
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(Configuration)
+                .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
+                .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
+                .AddInMemoryTokenCaches();
 
 
             services.AddRazorPages().AddMvcOptions(options =>
