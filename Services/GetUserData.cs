@@ -47,18 +47,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             User currentUser = await _graphServiceClient.Me.GetAsync();
             // Get user photo
-            try
-            {
-                using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
-                {
-                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                }
-            }
-            catch
-            {
-                return null;
-            }
+
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;
