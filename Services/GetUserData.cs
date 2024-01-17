@@ -30,6 +30,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private readonly INotyfService _notyf;
 
+
         public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
