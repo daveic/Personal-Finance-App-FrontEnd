@@ -48,7 +48,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             User currentUser = await _graphServiceClient.Me.GetAsync();
 
-            var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
+            //var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
  
             // Get user photo
         //     try
