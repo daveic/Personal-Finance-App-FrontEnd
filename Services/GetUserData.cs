@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.Graph.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.Graph.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
@@ -34,7 +36,7 @@ namespace PersonalFinanceFrontEnd.Controllers
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
                             MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler, INotyfService notyf) 
-        {
+        {        
             _logger = logger;
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
@@ -44,19 +46,24 @@ namespace PersonalFinanceFrontEnd.Controllers
   
         public async Task<string> GetUserData()
         {
-            User currentUser = await _graphServiceClient.Me.Request().GetAsync();
+            User currentUser = await _graphServiceClient.Me.GetAsync();
+
+            var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
+ 
             // Get user photo
-            try
+                     try
             {
-                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
-                {
-                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                }
-            } catch
-            {
-                return null;
-            }            
+               using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
+
+                            {
+                               byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                              ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                         }
+                    } catch
+                    {
+                       return null;
+                  }
+
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;

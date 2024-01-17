@@ -5,9 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Azure;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 
 using Microsoft.AspNetCore.Authorization;
 
@@ -37,6 +34,7 @@ namespace PersonalFinanceFrontEnd
         {
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
+            services.AddMicrosoftGraph();
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration)
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
@@ -95,7 +93,7 @@ namespace PersonalFinanceFrontEnd
                 }
             });
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
