@@ -19,7 +19,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-        
+
         private readonly ILogger<PersonalFinanceController> _logger;
 
         private readonly GraphServiceClient _graphServiceClient;
@@ -41,11 +41,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
             _notyf = notyf;
         }
-  
+
         public async Task<string> GetUserData()
         {
-            User currentUser = await _graphServiceClient.Me.Request().GetAsync();
-            // Get user photo
+            User currentUser = await _graphServiceClient.Me.GetAsync();
+
             try
             {
                 using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
@@ -57,6 +57,12 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 return null;
             }            
+                         }
+                    } catch
+                    {
+                       return null;
+                  }
+
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;

@@ -20,7 +20,7 @@ namespace PersonalFinanceFrontEnd.Controllers
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
             DashAPIOut DOut = new();
-            string path = "api/Dashboard/Main" + "?sY=" + selectedYear + "&sM=" + selectedMonth + "&sYT=" + selectedYearTr + "&sMT=" + selectedMonthTr + "&User_OID=" + GetUserData().Result;
+            string path = "api/Dashboard/Main" + "?sY=" + selectedYear + "&sM=" + selectedMonth + "&sYT=" + selectedYearTr + "&sMT=" + selectedMonthTr + "&User_OID=AAAAAAAAAAAAAAAAAAAAANgDJxkCf2VKqG87lDnSoGg";
             using (HttpClient client = new())
             {
                 client.BaseAddress = new Uri("https://personalfinanceappapi.azurewebsites.net/");
