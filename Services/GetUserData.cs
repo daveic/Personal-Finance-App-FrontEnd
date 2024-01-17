@@ -15,6 +15,7 @@ using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.Graph.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Graph.Models.ODataErrors;
 //using Microsoft.Graph.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
@@ -48,22 +49,30 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
             User currentUser = await _graphServiceClient.Me.GetAsync();
 
-            //var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
- 
-            // Get user photo
-        //     try
-         //   {
-        //       using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
-         //       {
-          //          byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-           //         ViewData["Photo"] = Convert.ToBase64String(photoByte);
-            //    }
-           //     } catch
-          //      {
-          //          return null;
-          //      }
 
-            ViewBag.Name = currentUser.GivenName;
+
+            // Ensure client isn't null
+
+
+            var test = await _graphServiceClient.Me.Photo.GetAsync();
+
+
+                //var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
+
+                // Get user photo
+                //     try
+                //   {
+                //       using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
+                //       {
+                //          byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                //         ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                //    }
+                //     } catch
+                //      {
+                //          return null;
+                //      }
+
+                ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;
             ClaimsPrincipal LoggedUser = this.User;
