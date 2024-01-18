@@ -48,8 +48,8 @@ namespace PersonalFinanceFrontEnd.Controllers
         {
              User currentUser = await _graphServiceClient.Me.GetAsync();
 
-      
-     
+
+            ViewData["Photo"] = "photo";
 
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
