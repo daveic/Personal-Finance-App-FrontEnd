@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>daa262a5-8f20-4c22-8da3-339ee81958c3</UserSecretsId>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
