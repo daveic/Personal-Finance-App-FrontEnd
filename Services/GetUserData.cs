@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.Graph.Models;
 
 
 namespace PersonalFinanceFrontEnd.Controllers
@@ -45,19 +46,9 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         public async Task<string> GetUserData() 
         {
-             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
+             User currentUser = await _graphServiceClient.Me.GetAsync();
 
-            try
-            {
-                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
-                {
-                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                }
-            } catch
-            {
-                return null;
-            }            
+      
      
 
             ViewBag.Name = currentUser.GivenName;
