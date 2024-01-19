@@ -14,6 +14,8 @@ using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
 //using Microsoft.Graph.Models;
+using GraphServiceClient = Microsoft.Graph.GraphServiceClient;
+//using GraphBetaServiceClient = Microsoft.Graph.GraphBetaServiceClient;
 
 
 namespace PersonalFinanceFrontEnd.Controllers
