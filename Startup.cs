@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.Graph;
 
 namespace PersonalFinanceFrontEnd
 {

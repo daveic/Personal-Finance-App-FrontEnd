@@ -48,7 +48,7 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         public async Task<string> GetUserData() 
         {
-             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
+             var currentUser = await _graphServiceClient.Me.GetAsync();
 
 
             ViewData["Photo"] = "photo";
