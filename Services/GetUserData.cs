@@ -15,10 +15,6 @@ using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
 //using Microsoft.Graph.Models;
 using GraphServiceClient = Microsoft.Graph.GraphServiceClient;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Identity.Abstractions;
-using System.Text.Json;
-using System.Net.Http.Json;
 //using GraphBetaServiceClient = Microsoft.Graph.GraphBetaServiceClient;
 
 
