@@ -78,17 +78,18 @@ namespace PersonalFinanceFrontEnd.Controllers
 
     public async Task<string> GetUserData() 
         {
-             var currentUser = await _graphServiceClient.Me.GetAsync();
+            //var currentUser = await _graphServiceClient.Me.GetAsync();
 
 
             ViewData["Photo"] = "photo";
 
-            ViewBag.Name = currentUser.GivenName;
-            ViewBag.Email = currentUser.UserPrincipalName;
-            ViewBag.id = currentUser;
-            ClaimsPrincipal LoggedUser = this.User;
-            ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //ViewBag.Name = currentUser.GivenName;
+            //ViewBag.Email = currentUser.UserPrincipalName;
+            //ViewBag.id = currentUser;
+            //ClaimsPrincipal LoggedUser = this.User;
+            //ViewData["Me"] = LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            //return LoggedUser.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return "AAAAAAAAAAAAAAAAAAAAANgDJxkCf2VKqG87lDnSoGg";
         }
     }
 }
