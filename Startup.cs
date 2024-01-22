@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Azure;
-using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -23,12 +23,14 @@ using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.Graph;
 
+//IEnumerable<string>? initialScopes = builder.Configuration["DownstreamApi:Scopes"]?.Split(' ');
+
 namespace PersonalFinanceFrontEnd
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {            
+        {
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
@@ -37,23 +39,21 @@ namespace PersonalFinanceFrontEnd
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
             services.AddMicrosoftGraph();
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration)
-                .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
-                .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
-                .AddInMemoryTokenCaches();
+            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAd")
+                    .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
+                        .AddDownstreamApi("DownstreamApi", Configuration.GetSection("DownstreamApi"))
+                        .AddInMemoryTokenCaches();
 
-            services.AddControllersWithViews(options =>
+
+            services.AddRazorPages().AddMvcOptions(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
+                              .RequireAuthenticatedUser()
+                              .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            });
+            }).AddMicrosoftIdentityUI();
 
-            services.AddRazorPages()
-                  .AddMicrosoftIdentityUI();
-
+            //WebApplication app = Build();
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
@@ -96,14 +96,18 @@ namespace PersonalFinanceFrontEnd
                     ci,
                 }
             });
+        
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseNotyf();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
