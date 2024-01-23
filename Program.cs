@@ -1,6 +1,13 @@
+using Microsoft.Extensions.Hosting;
+
+
+
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -16,6 +23,6 @@ namespace PersonalFinanceFrontEnd
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });        
+                });
     }
 }
