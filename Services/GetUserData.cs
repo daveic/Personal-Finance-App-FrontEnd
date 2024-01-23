@@ -13,21 +13,13 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
-using Microsoft.Graph.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 //using Microsoft.Graph.Models;
-using GraphServiceClient = Microsoft.Graph.GraphServiceClient;
-//using GraphBetaServiceClient = Microsoft.Graph.GraphBetaServiceClient;
-
-
-
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-    [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
     public partial class PersonalFinanceController
     {
-
+        
         private readonly ILogger<PersonalFinanceController> _logger;
 
         private readonly GraphServiceClient _graphServiceClient;
@@ -38,41 +30,33 @@ namespace PersonalFinanceFrontEnd.Controllers
 
         private readonly INotyfService _notyf;
 
-        private readonly IDownstreamApi _downstreamWebApi;
-
         public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
                             GraphServiceClient graphServiceClient,
                             MicrosoftIdentityConsentAndConditionalAccessHandler consentHandler, INotyfService notyf) 
-        {        
+        {
             _logger = logger;
             _graphServiceClient = graphServiceClient;
             this._consentHandler = consentHandler;
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
             _notyf = notyf;
-            _downstreamWebApi = downstreamWebApi;
         }
   
         public async Task<string> GetUserData()
         {
-            User currentUser = await _graphServiceClient.Me.GetAsync();
-
-            var requestUserPhoto = await _graphServiceClient.Me.Photo.GetAsync();
- 
+            User currentUser = await _graphServiceClient.Me.Request().GetAsync();
             // Get user photo
-                     try
+            try
             {
-               using (var photoStream = await _graphServiceClient.Me.Photo.Content.GetAsync())
-
-                            {
-                               byte[] photoByte = ((MemoryStream)photoStream).ToArray();
-                              ViewData["Photo"] = Convert.ToBase64String(photoByte);
-                         }
-                    } catch
-                    {
-                       return null;
-                  }
-
+                using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
+                {
+                    byte[] photoByte = ((MemoryStream)photoStream).ToArray();
+                    ViewData["Photo"] = Convert.ToBase64String(photoByte);
+                }
+            } catch
+            {
+                return null;
+            }            
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;

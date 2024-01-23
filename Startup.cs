@@ -1,18 +1,16 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Globalization;
-
-
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Azure;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
 using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using System;
@@ -25,16 +23,13 @@ using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using Microsoft.Graph;
-
-//IEnumerable<string>? initialScopes = builder.Configuration["DownstreamApi:Scopes"]?.Split(' ');
 
 namespace PersonalFinanceFrontEnd
 {
     public class Startup
     {
         public Startup(IConfiguration configuration)
-        {
+        {            
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
@@ -42,23 +37,23 @@ namespace PersonalFinanceFrontEnd
         {
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
-            services.AddMicrosoftGraph();
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration)
                 .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
                 .AddMicrosoftGraph(Configuration.GetSection("DownstreamApi"))
                 .AddInMemoryTokenCaches();
 
-
-            services.AddRazorPages().AddMvcOptions(options =>
+            services.AddControllersWithViews(options =>
             {
                 var policy = new AuthorizationPolicyBuilder()
-                              .RequireAuthenticatedUser()
-                              .Build();
+                    .RequireAuthenticatedUser()
+                    .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            }).AddMicrosoftIdentityUI();
+            });
 
-            //WebApplication app = Build();
+            services.AddRazorPages()
+                  .AddMicrosoftIdentityUI();
+
             // Add the UI support to handle claims challenges
             services.AddServerSideBlazor()
                .AddMicrosoftIdentityConsentHandler();
@@ -78,8 +73,6 @@ namespace PersonalFinanceFrontEnd
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-                // Visualizza una pagina di errore personalizzata
-                app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
             }
 
             //Codice per impostare lingua e regione (formattazione valuta) sia su IIS che su browser in produzione
@@ -101,18 +94,14 @@ namespace PersonalFinanceFrontEnd
                     ci,
                 }
             });
-
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseNotyf();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
