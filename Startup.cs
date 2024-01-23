@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Azure;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-
 using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -23,6 +22,7 @@ using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.Identity.Client;
 
 namespace PersonalFinanceFrontEnd
 {
@@ -81,6 +81,7 @@ namespace PersonalFinanceFrontEnd
             ci.NumberFormat.NumberDecimalSeparator = ".";
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
 
+            
             // Configure the Localization middleware
             app.UseRequestLocalization(new RequestLocalizationOptions
             {

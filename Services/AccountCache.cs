@@ -6,7 +6,16 @@ using System.Threading.Tasks;
 
 namespace PersonalFinanceFrontEnd.Controllers;
 internal class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthenticationEvents
-{
+{    
+    
+    
+    
+    
+   
+
+
+
+
     public async override Task ValidatePrincipal(CookieValidatePrincipalContext context)
     {
         try
@@ -15,6 +24,9 @@ internal class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthentica
             string token = await tokenAcquisition.GetAccessTokenForUserAsync(
                 scopes: new[] { "profile" },
                 user: context.Principal);
+           
+
+
         }
         catch (MicrosoftIdentityWebChallengeUserException ex) when (AccountDoesNotExitInTokenCache(ex))
         {
@@ -30,4 +42,32 @@ internal class RejectSessionCookieWhenAccountNotInCacheEvents : CookieAuthentica
     {
         return ex.InnerException is MsalUiRequiredException && (ex.InnerException as MsalUiRequiredException).ErrorCode == "user_null";
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
 }
