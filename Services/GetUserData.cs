@@ -13,13 +13,13 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Security.Claims;
 using AspNetCoreHero.ToastNotification.Abstractions;
-
+//using Microsoft.Graph.Models;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController
     {
-
+        
         private readonly ILogger<PersonalFinanceController> _logger;
 
         private readonly GraphServiceClient _graphServiceClient;
@@ -29,7 +29,6 @@ namespace PersonalFinanceFrontEnd.Controllers
         private readonly string[] _graphScopes;
 
         private readonly INotyfService _notyf;
-
 
         public PersonalFinanceController(ILogger<PersonalFinanceController> logger,
                             IConfiguration configuration,
@@ -42,11 +41,11 @@ namespace PersonalFinanceFrontEnd.Controllers
             _graphScopes = configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
             _notyf = notyf;
         }
-
-        public async Task<string> GetUserData() 
+  
+        public async Task<string> GetUserData()
         {
-             User currentUser = await _graphServiceClient.Me.Request().GetAsync();
-
+            User currentUser = await _graphServiceClient.Me.Request().GetAsync();
+            // Get user photo
             try
             {
                 using (var photoStream = await _graphServiceClient.Me.Photo.Content.Request().GetAsync())
@@ -58,8 +57,6 @@ namespace PersonalFinanceFrontEnd.Controllers
             {
                 return null;
             }            
-     
-
             ViewBag.Name = currentUser.GivenName;
             ViewBag.Email = currentUser.UserPrincipalName;
             ViewBag.id = currentUser;

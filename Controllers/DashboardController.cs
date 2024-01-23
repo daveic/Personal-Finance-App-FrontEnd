@@ -11,7 +11,6 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 
-
 namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController : Controller

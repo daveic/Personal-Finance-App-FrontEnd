@@ -10,6 +10,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
 using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using System;
@@ -72,8 +73,6 @@ namespace PersonalFinanceFrontEnd
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
-                // Visualizza una pagina di errore personalizzata
-                app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
             }
 
             //Codice per impostare lingua e regione (formattazione valuta) sia su IIS che su browser in produzione
