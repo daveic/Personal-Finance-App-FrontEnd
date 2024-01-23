@@ -1,8 +1,13 @@
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Globalization;
+
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -38,7 +43,7 @@ namespace PersonalFinanceFrontEnd
         {
             string[] initialScopes = Configuration.GetValue<string>("DownstreamApi:Scopes")?.Split(' ');
 
-            services.AddMicrosoftGraph();
+            //services.AddMicrosoftGraph();
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAd")
                     .EnableTokenAcquisitionToCallDownstreamApi(initialScopes)
                         .AddDownstreamApi("DownstreamApi", Configuration.GetSection("DownstreamApi"))
@@ -96,7 +101,7 @@ namespace PersonalFinanceFrontEnd
                     ci,
                 }
             });
-        
+
             ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
             app.UseHttpsRedirection();
@@ -107,7 +112,7 @@ namespace PersonalFinanceFrontEnd
             app.UseNotyf();
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

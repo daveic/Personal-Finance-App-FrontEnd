@@ -26,7 +26,7 @@ using System.Net.Http.Json;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
-    //[AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+    [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
     public partial class PersonalFinanceController
     {
 

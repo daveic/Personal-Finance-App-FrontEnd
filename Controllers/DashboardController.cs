@@ -16,8 +16,8 @@ namespace PersonalFinanceFrontEnd.Controllers
 {
     public partial class PersonalFinanceController : Controller
     {
-        //[Authorize]
-        //[AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
+        [Authorize]
+        [AuthorizeForScopes(ScopeKeySection = "DownstreamApi:Scopes")]
         public ActionResult Index(string selectedYear, string selectedMonth, string selectedYearTr, string selectedMonthTr)
         {
             DashAPIOut DOut = new();
