@@ -7,9 +7,6 @@ using Microsoft.Identity.Web;
 using PersonalFinanceFrontEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
-using AspNetCoreHero.ToastNotification.Abstractions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Graph;
 
 namespace PersonalFinanceFrontEnd.Controllers
 {
@@ -49,7 +46,6 @@ namespace PersonalFinanceFrontEnd.Controllers
 
             var Transactions = (DOut.TransactionsIn ?? Enumerable.Empty<Transaction>()).Concat(DOut.TransactionsOut ?? Enumerable.Empty<Transaction>());
             var MonthTransactions = Transactions.Where(y => y.TrsDateTime.Month == Now.Month).Intersect(Transactions.Where(x => x.TrsDateTime.Year == Now.Year));
-
 
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 

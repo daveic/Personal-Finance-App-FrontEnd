@@ -5,16 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Azure;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authorization;
-
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using System;
 using Microsoft.Identity.Web.UI;
-using Microsoft.AspNetCore.Mvc;
 using PersonalFinanceFrontEnd.Controllers;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Globalization;
@@ -22,7 +15,6 @@ using Microsoft.AspNetCore.Localization;
 using System.Collections.Generic;
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
-using Microsoft.Identity.Client;
 
 namespace PersonalFinanceFrontEnd
 {
