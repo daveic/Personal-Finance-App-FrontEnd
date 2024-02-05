@@ -39,6 +39,22 @@ namespace PersonalFinanceFrontEnd.Controllers
                 client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Wait();
                 detection = client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Result;
             }
+            //Recupero la lista di transazioni di questo mese, così da poter filtrare i debiti/crediti già pagati/riscossi
+            IEnumerable<Transaction> AllTransactions = GetAllItems<Transaction>("Transactions", GetUserData().Result);
+            IEnumerable<Transaction> monthTransactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
+            TransactionDetailsEdit detectionToShow = new();
+            detectionToShow = detection;
+            foreach (var debRat in detection.DebitsRat.ToList())
+            {
+                foreach (var tr in monthTransactions)
+                {
+                    if (tr.TrsCode == debRat.DebCode)
+                    {
+                        detectionToShow.DebitsRat.Remove(debRat);
+                    }
+                }
+            }
+
             ViewBag.DebitListRat = detection.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;

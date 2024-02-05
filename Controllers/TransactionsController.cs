@@ -114,12 +114,32 @@ namespace PersonalFinanceFrontEnd.Controllers
                 client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Wait();
                 detection = client.GetAsync(path).Result.Content.ReadAsAsync<TransactionDetailsEdit>().Result;
             }
-            ViewBag.DebitListRat = detection.DebitsRat;
+            //Recupero la lista di transazioni di questo mese, così da poter filtrare i debiti/crediti già pagati/riscossi
+            IEnumerable<Transaction> AllTransactions = GetAllItems<Transaction>("Transactions", User_OID);
+            IEnumerable<Transaction> monthTransactions = AllTransactions.OrderBy(x => x.TrsDateTime).Where(x => x.TrsDateTime.Month == DateTime.Now.Month);
+            TransactionDetailsEdit detectionToShow = new();
+            detectionToShow = detection;
+            foreach (var debRat in detection.DebitsRat.ToList())
+            {
+                foreach (var tr in monthTransactions)
+                {
+                    if (tr.TrsCode == debRat.DebCode)
+                    {
+                        detectionToShow.DebitsRat.Remove(debRat);
+                    }
+                }
+            }
+
+            ViewBag.DebitListRat = detectionToShow.DebitsRat;
             ViewBag.DebitList = detection.DebitsMono;
             ViewBag.CreditList = detection.CreditsMono;
+            DateTime Now = DateTime.Now;
+            
+            var MonthTransactions = AllTransactions.Where(y => y.TrsDateTime.Month == Now.Month).Intersect(AllTransactions.Where(x => x.TrsDateTime.Year == Now.Year));
+
             ViewBag.MonthExpirationsOnExp = detection.MonthExpirationsOnExp;
 
-            var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !TrsAPI.Trs.Any(p2 => p2.TrsCode == p.ExpTitle));
+            var monthExpNotDone = detection.MonthExpirationsOnExp.Where(p => !MonthTransactions.Any(p2 => p2.TrsCode == p.ExpTitle));
             ViewBag.MonthExpirations = monthExpNotDone;
             return View(TrsToView);
         }
@@ -162,18 +182,12 @@ namespace PersonalFinanceFrontEnd.Controllers
                 if (t.DebCredChoice.StartsWith("DEB"))
                 {
                     var Debits = GetAllItems<Debit>("Debits", t.Usr_OID);
-                    foreach (var tr in transactions)
-                    {
-                        if(t.DebCredChoice == tr.TrsCode && tr.TrsValue < 0)
-                        {
-                            _notyf.Error("La rata mensile di questo debito è già stata pagata. Transazione annullata.");
-                            return RedirectToAction(nameof(Index));
-                        }
-                    }
+                    bool isDebRat = false;
                     foreach (var debit in Debits)
                     {
                         if (t.DebCredChoice == debit.DebCode)
-                        {                           
+                        {
+                            if (debit.RtNum > 1) isDebRat = true;
                             if (t.DebCredInValue > Math.Round(debit.RemainToPay, 2))
                             {
                                 _notyf.Error("Importo inserito maggiore del valore del credito. Transazione annullata.");                                
@@ -181,6 +195,15 @@ namespace PersonalFinanceFrontEnd.Controllers
                             }
                         }
                     }
+                    foreach (var tr in transactions)
+                    {
+                        if(t.DebCredChoice == tr.TrsCode && tr.TrsValue < 0 && isDebRat == true)
+                        {
+                            _notyf.Error("La rata mensile di questo debito è già stata pagata. Transazione annullata.");
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+
                 } else if (t.DebCredChoice.StartsWith("CRE")) 
                 {
                     var Credits = GetAllItems<Credit>("Credits", t.Usr_OID);
